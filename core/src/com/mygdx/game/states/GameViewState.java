@@ -21,8 +21,9 @@ public class GameViewState extends State {
     }
 
     @Override
-    public void render(SpriteBatch sb) {
-        ScreenUtils.clear(Color.BLACK);
+    public void render(SpriteBatch batch) {
+
+        ScreenUtils.clear(Color.PINK);
     }
 
     @Override

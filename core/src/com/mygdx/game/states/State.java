@@ -7,7 +7,7 @@ public abstract class State {
     protected State(){}
 
     public abstract void update(float dt);
-    public abstract void render(SpriteBatch sb);
+    public abstract void render(SpriteBatch batch);
 
     public abstract void handleInput();
 

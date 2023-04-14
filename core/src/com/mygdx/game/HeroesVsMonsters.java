@@ -11,7 +11,7 @@ import com.mygdx.game.states.GameMenuState;
 import com.mygdx.game.states.GameStateManager;
 
 public class HeroesVsMonsters extends ApplicationAdapter {
-	SpriteBatch sb;
+	SpriteBatch batch;
 	private GameStateManager gsm;
 	//FireBaseInterface FBIC;
 
@@ -22,7 +22,7 @@ public class HeroesVsMonsters extends ApplicationAdapter {
 
 	@Override
 	public void create () {
-		sb = new SpriteBatch();
+		batch = new SpriteBatch();
 		gsm = GameStateManager.getGsm();
 		gsm.push(new GameMenuState());
 		/*FBIC.SomeFunction();
@@ -33,14 +33,14 @@ public class HeroesVsMonsters extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		ScreenUtils.clear(1, 0, 0, 1);
+		ScreenUtils.clear(Color.BLACK);
 		gsm.update(Gdx.graphics.getDeltaTime());
-		gsm.render(sb);
+		gsm.render(batch);
 	}
 
 	@Override
 	public void dispose () {
-		sb.dispose();
+		batch.dispose();
 	}
 
 }
