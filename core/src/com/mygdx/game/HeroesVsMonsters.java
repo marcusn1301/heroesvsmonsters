@@ -24,7 +24,7 @@ public class HeroesVsMonsters extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		gsm = GameStateManager.getGsm();
-		gsm.push(new GameMenuState(gsm));
+		gsm.push(new GameMenuState());
 		/*FBIC.SomeFunction();
 		FBIC.FirstFirebaseTest();
 		FBIC.SetOnValueChangedListener();

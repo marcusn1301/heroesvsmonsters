@@ -7,8 +7,9 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class GameViewState extends State {
     private GameStateManager gsm;
 
-    public GameViewState(GameStateManager gsm) {
-        super(gsm);
+    public GameViewState() {
+        super();
+        gsm = GameStateManager.getGsm();
     }
 
     public void create() {
@@ -22,12 +23,16 @@ public class GameViewState extends State {
 
     @Override
     public void render(SpriteBatch batch) {
-
         ScreenUtils.clear(Color.PINK);
     }
 
     @Override
     public void handleInput() {
+
+    }
+
+    @Override
+    public void dispose() {
 
     }
 }
