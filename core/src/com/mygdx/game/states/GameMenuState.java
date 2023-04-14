@@ -11,11 +11,12 @@ import com.mygdx.game.FireBaseInterface;
 
 public class GameMenuState extends State {
     private GameStateManager gsm;
-    SpriteBatch batch;
+    private SpriteBatch batch;
     Texture startButton;
     Texture lobbyButton;
     int width;
     int height;
+    private GameViewState gameViewState;
 
     FireBaseInterface FBIC;
 
@@ -35,10 +36,11 @@ public class GameMenuState extends State {
         height = Gdx.graphics.getHeight();
         startButton = new Texture("Start-button.png");
         lobbyButton = new Texture("Lobby-button.png");
+        /*
         FBIC.SomeFunction();
         FBIC.FirstFirebaseTest();
         FBIC.SetOnValueChangedListener();
-        FBIC.SetValueInDb("message", "Updated message!");
+        FBIC.SetValueInDb("message", "Updated message!"); */
     }
 
     @Override
@@ -86,8 +88,7 @@ public class GameMenuState extends State {
 
     @Override
     public void handleInput() {
-        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-            gsm.push(new GameMenuState());
-        }
+        gsm.push(new GameViewState());
+
     }
 }

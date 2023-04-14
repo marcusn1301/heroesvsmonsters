@@ -4,10 +4,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-public class GameViewState2 extends State {
+public class GameViewState extends State {
     private GameStateManager gsm;
 
-    public GameViewState2() {
+    public GameViewState() {
 
     }
 
