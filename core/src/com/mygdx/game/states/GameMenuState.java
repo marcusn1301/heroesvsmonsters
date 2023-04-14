@@ -55,6 +55,7 @@ public class GameMenuState extends State {
         batch.begin();
 
         batch.draw(logo, centerX - logo.getWidth() / 16f, height * 0.42f, logo.getWidth() / 4f, logo.getHeight() / 4f);
+        //batch.draw(logo, centerX - logo.getWidth() / 4f, centerY + centerY / 3f, logo.getWidth() / 10f, logo.getHeight() / 10f);
 
         //batch.draw(startButton, centerX - startButton.getWidth() / 3f, height * 0.2f, startButton.getWidth() * 1.5f, startButton.getHeight() * 1.5f);
         batch.draw(startButton, centerX - startButton.getWidth() / 4f, height * 0.2f, startButton.getWidth() / 1.5f, startButton.getHeight() / 1.5f);
@@ -82,14 +83,12 @@ public class GameMenuState extends State {
     }
 
     private boolean isLobbyButtonClicked(int x, int y) {
-        int buttonX = (width/2) - (height/2);
-        int buttonY = height/6;
-        int buttonWidth = lobbyButton.getWidth()/2;
-        int buttonHeight = lobbyButton.getHeight()/2;
-        System.out.println(buttonWidth);
-        System.out.println(buttonHeight);
-
-        return (x >= buttonX && x <= buttonX + buttonWidth && y >= buttonY && y <= buttonY + buttonHeight);
+        int buttonX = (int) (width / 2f - lobbyButton.getWidth() / 3f);
+        int buttonY = (int) (height * 0.1f);
+        int buttonWidth = lobbyButton.getWidth() / 2;
+        int buttonHeight = lobbyButton.getHeight() / 2;
+        return Gdx.input.justTouched() && buttonX <= x && x <= buttonX + buttonWidth &&
+                buttonY <= Gdx.graphics.getHeight() - y && Gdx.graphics.getHeight() - y <= buttonY + buttonHeight;
     }
 
     @Override
@@ -105,6 +104,7 @@ public class GameMenuState extends State {
             gsm.push(new GameViewState());
         }*/
     }
+
 
     @Override
     public void dispose() {
