@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "704201851839",
+    "firebase_url": "https://heroesvszombies-ntnu-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "heroesvszombies-ntnu",
+    "storage_bucket": "heroesvszombies-ntnu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:704201851839:android:4acc63af3d67a2c4a7d70a",
+        "android_client_info": {
+          "package_name": "com.mygdx.game"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "704201851839-dq10gd67cpajnapt4oof35l624h65ok7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQ-QK0uPxv9aUJfsaf1WrG-I3jV-6BVxM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "704201851839-dq10gd67cpajnapt4oof35l624h65ok7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
