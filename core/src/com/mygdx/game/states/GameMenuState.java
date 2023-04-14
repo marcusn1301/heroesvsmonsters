@@ -54,10 +54,11 @@ public class GameMenuState extends State {
 
         batch.begin();
 
-        batch.draw(logo, centerX - logo.getWidth() / 16f, height * 0.55f, logo.getWidth() / 8f, logo.getHeight() / 8f);
+        batch.draw(logo, centerX - logo.getWidth() / 16f, height * 0.42f, logo.getWidth() / 4f, logo.getHeight() / 4f);
 
-        batch.draw(startButton, centerX - startButton.getWidth() / 4f, height * 0.2f, startButton.getWidth() / 2f, startButton.getHeight() / 2f);
-        batch.draw(lobbyButton, centerX - lobbyButton.getWidth() / 4f, height * 0.1f, lobbyButton.getWidth() / 2f, lobbyButton.getHeight() / 2f);
+        //batch.draw(startButton, centerX - startButton.getWidth() / 3f, height * 0.2f, startButton.getWidth() * 1.5f, startButton.getHeight() * 1.5f);
+        batch.draw(startButton, centerX - startButton.getWidth() / 4f, height * 0.2f, startButton.getWidth() / 1.5f, startButton.getHeight() / 1.5f);
+        batch.draw(lobbyButton, centerX - lobbyButton.getWidth() / 4f, height * 0.2f, lobbyButton.getWidth() / 1.5f, lobbyButton.getHeight() / 1.5f);
         batch.end();
 
 
@@ -72,12 +73,12 @@ public class GameMenuState extends State {
     }
 
     private boolean isStartButtonClicked(int x, int y) {
-        int buttonX = (width/2) - (height/2);
-        int buttonY = height/4;
-        int buttonWidth = startButton.getWidth()/2;
-        int buttonHeight = startButton.getHeight()/2;
-        return Gdx.input.justTouched() && buttonX <= Gdx.input.getX() && Gdx.input.getX() <= buttonX + buttonWidth &&
-                buttonY <= Gdx.graphics.getHeight() - Gdx.input.getY() && Gdx.graphics.getHeight() - Gdx.input.getY() <= buttonY + buttonHeight;
+        int buttonX = (int) (width / 2f - startButton.getWidth() / 3f);
+        int buttonY = (int) (height * 0.2f);
+        int buttonWidth = startButton.getWidth() / 2;
+        int buttonHeight = startButton.getHeight() / 2;
+        return Gdx.input.justTouched() && buttonX <= x && x <= buttonX + buttonWidth &&
+                buttonY <= Gdx.graphics.getHeight() - y && Gdx.graphics.getHeight() - y <= buttonY + buttonHeight;
     }
 
     private boolean isLobbyButtonClicked(int x, int y) {
