@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-public class GameMenu extends ApplicationAdapter {
+public class GameMenuState extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture startButton;
 	Texture lobbyButton;
@@ -20,7 +20,7 @@ public class GameMenu extends ApplicationAdapter {
 	FireBaseInterface FBIC;
 
 
-	public GameMenu(FireBaseInterface FBIC) {
+	public GameMenuState(FireBaseInterface FBIC) {
 		this.FBIC = FBIC;
 	}
 

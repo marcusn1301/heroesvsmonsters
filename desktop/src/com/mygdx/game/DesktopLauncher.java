@@ -9,6 +9,6 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
 		config.setTitle("HeroesVsMonsters");
-		new Lwjgl3Application(new GameMenu(new DesktopInterfaceClass()), config);
+		new Lwjgl3Application(new GameMenuState(new DesktopInterfaceClass()), config);
 	}
 }
