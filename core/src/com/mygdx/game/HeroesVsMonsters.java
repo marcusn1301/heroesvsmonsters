@@ -29,11 +29,9 @@ public class HeroesVsMonsters extends ApplicationAdapter {
 		gsm = GameStateManager.getGsm();
 		gsm.push(new GameMenuState());
 		/*FBIC.SomeFunction();
-		/*FBIC.SomeFunction();
 		FBIC.FirstFirebaseTest();
 		FBIC.SetOnValueChangedListener();
 		FBIC.SetValueInDb("message", "Updated message!");*/
-
 	}
 
 	@Override
