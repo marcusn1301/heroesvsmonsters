@@ -12,6 +12,8 @@ public class GameMenu extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture startButton;
 	Texture lobbyButton;
+
+	Texture logo;
 	int width;
 	int height;
 
@@ -27,6 +29,7 @@ public class GameMenu extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		width = Gdx.graphics.getWidth();
 		height = Gdx.graphics.getHeight();
+		logo = new Texture("HvsMstor.png");
 		startButton = new Texture("Start-button.png");
 		lobbyButton = new Texture("Lobby-button.png");
 		FBIC.SomeFunction();
@@ -37,13 +40,19 @@ public class GameMenu extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		ScreenUtils.clear(Color.BLUE);
+		ScreenUtils.clear(Color.BLACK);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(startButton, (width/2) - (height/2), height/4, startButton.getWidth()/2, startButton.getHeight()/2);
-		batch.draw(lobbyButton, (width/2) - (height/2), height/6, lobbyButton.getWidth()/2, lobbyButton.getHeight()/2);
+		float centerX = width / 2f;
+		float logoWidth = width * 8f;
+		float logoHeight = logoWidth * (logo.getHeight() / (float) logo.getWidth());
 
+		batch.begin();
+		batch.draw(logo, centerX - logo.getWidth() / 8f, height * 0.4f, logo.getWidth() / 4f, logo.getHeight() / 4f);
+
+		batch.draw(startButton, centerX - startButton.getWidth() / 4f, height * 0.20f, startButton.getWidth() / 2f, startButton.getHeight() / 2f);
+		batch.draw(lobbyButton, centerX - lobbyButton.getWidth() / 4f, height * 0.15f, lobbyButton.getWidth() / 2f, lobbyButton.getHeight() / 2f);
 		batch.end();
+
 
 		if (Gdx.input.isTouched()) {
 			int x = Gdx.input.getX();
@@ -55,6 +64,7 @@ public class GameMenu extends ApplicationAdapter {
 			}
 		}
 	}
+
 	private boolean isStartButtonClicked(int x, int y) {
 		int buttonX = (width/2) - (height/2);
 		int buttonY = height/4;
@@ -68,8 +78,6 @@ public class GameMenu extends ApplicationAdapter {
 		int buttonY = height/6;
 		int buttonWidth = lobbyButton.getWidth()/2;
 		int buttonHeight = lobbyButton.getHeight()/2;
-		System.out.println(buttonWidth);
-		System.out.println(buttonHeight);
 
 		return (x >= buttonX && x <= buttonX + buttonWidth && y >= buttonY && y <= buttonY + buttonHeight);
 	}
@@ -91,5 +99,6 @@ public class GameMenu extends ApplicationAdapter {
 	public void dispose () {
 		batch.dispose();
 		startButton.dispose();
+		logo.dispose();
 	}
 }
