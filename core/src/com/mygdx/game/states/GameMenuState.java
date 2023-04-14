@@ -1,5 +1,7 @@
 package com.mygdx.game.states;
 
+import static com.badlogic.gdx.Gdx.input;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -20,14 +22,17 @@ public class GameMenuState extends State {
 
     FireBaseInterface FBIC;
 
-    public void create() {
+    public GameMenuState(GameStateManager gsm) {
+        super(gsm);
         batch = new SpriteBatch();
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
         startButton = new Texture("Start-button.png");
         lobbyButton = new Texture("Lobby-button.png");
         img = new Texture("badlogic.jpg");
+    }
 
+    public void create() {
         /*FBIC.SomeFunction();
         FBIC.FirstFirebaseTest();
         FBIC.SetOnValueChangedListener();
@@ -43,21 +48,22 @@ public class GameMenuState extends State {
     public void render(SpriteBatch batch) {
         ScreenUtils.clear(Color.BLUE);
         batch.begin();
-        batch.draw(img,0,0);
-        //batch.draw(img,60, 60);
-        //batch.draw(startButton, (width/2) - (height/2), height/4, startButton.getWidth()/2, startButton.getHeight()/2);
-        /*batch.draw(lobbyButton, (width/2) - (height/2), height/6, lobbyButton.getWidth()/2, lobbyButton.getHeight()/2);
+        batch.draw(startButton, (width/2) - (height/2), height/4, startButton.getWidth()/2, startButton.getHeight()/2);
+        batch.draw(lobbyButton, (width/2) - (height/2), height/6, lobbyButton.getWidth()/2, lobbyButton.getHeight()/2);
 
         batch.end();
 
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+            handleInput();
+        }
+
+        /*if (Gdx.input.isTouched()) {
             int x = Gdx.input.getX();
             int y = Gdx.input.getY();
             if (isStartButtonClicked(x, y) || isLobbyButtonClicked(x,y) ) {
                 handleInput();
             }
         }*/
-        batch.end();
     }
 
     private boolean isStartButtonClicked(int x, int y) {
@@ -81,8 +87,9 @@ public class GameMenuState extends State {
 
     @Override
     public void handleInput() {
-        gsm.push(new GameViewState());
+        gsm.push(new GameViewState(gsm));
     }
+
     /*
 
     public GameMenuState(FireBaseInterface FBIC) {

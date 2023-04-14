@@ -7,8 +7,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class GameViewState extends State {
     private GameStateManager gsm;
 
-    public GameViewState() {
-
+    public GameViewState(GameStateManager gsm) {
+        super(gsm);
     }
 
     public void create() {
