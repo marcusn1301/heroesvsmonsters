@@ -10,13 +10,29 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.FireBaseInterface;
 
 public class GameMenuState extends State {
-    private GameStateManager gsm;
-    private SpriteBatch batch;
+    @Override
+    public void update(float dt) {
+
+    }
+
+    @Override
+    public void render(SpriteBatch sb) {
+        ScreenUtils.clear(1,0,1,1);
+        sb.begin();
+        sb.end();
+    }
+
+    @Override
+    public void handleInput() {
+
+    }
+    /*
+    * private GameStateManager gsm;
+    SpriteBatch batch;
     Texture startButton;
     Texture lobbyButton;
     int width;
     int height;
-    private GameViewState gameViewState;
 
     FireBaseInterface FBIC;
 
@@ -36,11 +52,10 @@ public class GameMenuState extends State {
         height = Gdx.graphics.getHeight();
         startButton = new Texture("Start-button.png");
         lobbyButton = new Texture("Lobby-button.png");
-        /*
         FBIC.SomeFunction();
         FBIC.FirstFirebaseTest();
         FBIC.SetOnValueChangedListener();
-        FBIC.SetValueInDb("message", "Updated message!"); */
+        FBIC.SetValueInDb("message", "Updated message!");
     }
 
     @Override
@@ -88,7 +103,11 @@ public class GameMenuState extends State {
 
     @Override
     public void handleInput() {
-        gsm.push(new GameViewState());
-
+        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+            gsm.push(new GameMenuState());
+        }
     }
+    * */
+
+
 }
