@@ -6,8 +6,6 @@ public abstract class State {
 
     protected State(){}
 
-    public abstract void create();
-
     public abstract void update(float dt);
     public abstract void render(SpriteBatch sb);
 

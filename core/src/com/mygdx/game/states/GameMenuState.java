@@ -10,7 +10,24 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.FireBaseInterface;
 
 public class GameMenuState extends State {
-    private GameStateManager gsm;
+    @Override
+    public void update(float dt) {
+
+    }
+
+    @Override
+    public void render(SpriteBatch sb) {
+        ScreenUtils.clear(1,0,1,1);
+        sb.begin();
+        sb.end();
+    }
+
+    @Override
+    public void handleInput() {
+
+    }
+    /*
+    * private GameStateManager gsm;
     SpriteBatch batch;
     Texture startButton;
     Texture lobbyButton;
@@ -90,4 +107,7 @@ public class GameMenuState extends State {
             gsm.push(new GameMenuState());
         }
     }
+    * */
+
+
 }

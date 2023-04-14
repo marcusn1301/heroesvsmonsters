@@ -11,7 +11,6 @@ public class GameViewState2 extends State {
 
     }
 
-    @Override
     public void create() {
 
     }
