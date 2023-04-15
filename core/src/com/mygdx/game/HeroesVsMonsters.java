@@ -11,6 +11,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.states.GameMenuState;
 import com.mygdx.game.states.GameStateManager;
 import com.mygdx.game.states.GameStateManager;
+import com.mygdx.game.states.PlayState;
+import com.mygdx.game.states.SettingsState;
 
 public class HeroesVsMonsters extends ApplicationAdapter {
 	private GameStateManager gsm;
@@ -31,7 +33,10 @@ public class HeroesVsMonsters extends ApplicationAdapter {
 		/*FBIC.SomeFunction();
 		FBIC.FirstFirebaseTest();
 		FBIC.SetOnValueChangedListener();
-		FBIC.SetValueInDb("message", "Updated message!");*/
+		FBIC.SetValueInDb("message", "Updated message!");
+		 */
+		gsm = GameStateManager.getGsm();
+		gsm.push(new SettingsState(SettingsState.SettingsBackground.CITY));
 	}
 
 	@Override

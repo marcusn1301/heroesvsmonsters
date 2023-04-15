@@ -2,7 +2,6 @@ package com.mygdx.game.states;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -25,9 +24,10 @@ public class PlayState extends State{
     BitmapFont font;
     Stage stage;
     ShapeRenderer shapeRenderer;
+    GameStateManager gsm = GameStateManager.getGsm();
     @Override
     public void update(float dt) {
-
+        handleInput();
     }
 
     @Override
@@ -37,8 +37,8 @@ public class PlayState extends State{
 
 
 
-
-
+        //Skal ikke ha dupliserte spritebatches
+        batch = new SpriteBatch();
         buttonTextures = new Texture[5];
         for (int i = 0; i < 5; i++) {
             buttonTextures[i] = new Texture("characterIcon" + (i + 1) + ".png");
@@ -140,7 +140,11 @@ public class PlayState extends State{
 
     @Override
     public void handleInput() {
-
+        if (Gdx.input.isTouched()) {
+            //To be implemented
+            //PlayState.pause
+            gsm.push(new SettingsState(SettingsState.SettingsBackground.CITY));
+        }
     }
 
 
@@ -161,7 +165,6 @@ public class PlayState extends State{
 
         shapeRenderer.end();
     }
-
 
     private void drawLaneDividers() {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
