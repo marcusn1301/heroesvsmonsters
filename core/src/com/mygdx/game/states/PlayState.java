@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.game.entities.HeroFactory;
 
 
 public class PlayState extends State{
@@ -138,7 +139,9 @@ public class PlayState extends State{
 
     @Override
     public void handleInput() {
-
+        if (Gdx.input.isTouched()) {
+            //HeroFactory.createHero()
+        }
     }
 
 
