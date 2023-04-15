@@ -30,7 +30,6 @@ public class GameMenuState extends State {
         startButton = new Texture("Start-button.png");
         lobbyButton = new Texture("Lobby-button.png");
         logo = new Texture("HvsMstor.png");
-        img = new Texture("badlogic.jpg");
     }
 
     public void create() {
@@ -54,12 +53,12 @@ public class GameMenuState extends State {
 
         batch.begin();
 
-        batch.draw(logo, centerX - logo.getWidth() / 16f, height * 0.42f, logo.getWidth() / 4f, logo.getHeight() / 4f);
-        //batch.draw(logo, centerX - logo.getWidth() / 4f, centerY + centerY / 3f, logo.getWidth() / 10f, logo.getHeight() / 10f);
+        //batch.draw(logo, centerX - logo.getWidth() / 16f, height * 0.42f, logo.getWidth() / 4f, logo.getHeight() / 4f);
+        batch.draw(logo, centerX - logo.getWidth() / 14f, centerY + centerY / 10f, logo.getWidth() /5f, logo.getHeight() / 5f);
 
         //batch.draw(startButton, centerX - startButton.getWidth() / 3f, height * 0.2f, startButton.getWidth() * 1.5f, startButton.getHeight() * 1.5f);
-        batch.draw(startButton, centerX - startButton.getWidth() / 4f, height * 0.2f, startButton.getWidth() / 1.5f, startButton.getHeight() / 1.5f);
-        batch.draw(lobbyButton, centerX - lobbyButton.getWidth() / 4f, height * 0.2f, lobbyButton.getWidth() / 1.5f, lobbyButton.getHeight() / 1.5f);
+        batch.draw(startButton, centerX - startButton.getWidth() / 4f, height * 0.18f, startButton.getWidth() / 1.5f, startButton.getHeight() / 1.5f);
+        batch.draw(lobbyButton, centerX - lobbyButton.getWidth() / 4f, height * 0.12f, lobbyButton.getWidth() / 1.5f, lobbyButton.getHeight() / 1.5f);
         batch.end();
 
 
@@ -96,8 +95,11 @@ public class GameMenuState extends State {
         if (Gdx.input.isTouched()) {
             int x = Gdx.input.getX();
             int y = Gdx.input.getY();
-            if (isStartButtonClicked(x, y) || isLobbyButtonClicked(x,y) ) {
+            if (isStartButtonClicked(x, y) ) {
                 gsm.push(new PlayState());
+            }
+            if (isLobbyButtonClicked(x,y)){
+                gsm.push(new DummyState());
             }
         }
         /*if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
