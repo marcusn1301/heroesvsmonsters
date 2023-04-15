@@ -38,7 +38,7 @@ public class PlayState extends State{
 
 
 
-        batch = new SpriteBatch();
+
         buttonTextures = new Texture[5];
         for (int i = 0; i < 5; i++) {
             buttonTextures[i] = new Texture("characterIcon" + (i + 1) + ".png");
@@ -52,7 +52,8 @@ public class PlayState extends State{
         leftTable.setFillParent(true);
         leftTable.top().left().padLeft(Gdx.graphics.getWidth() / 40).padTop(Gdx.graphics.getHeight() / 40);
         for (int i = 0; i < 5; i++) {
-            float circleRadius = 75;
+            //This line changes the size of the characters, based on device
+            float circleRadius = Gdx.graphics.getHeight() / 15;
 
             Stack stack = new Stack();
             Image whiteCircle = new Image(createWhiteCircle(circleRadius));
@@ -71,13 +72,14 @@ public class PlayState extends State{
 
         Table rightTable = new Table();
         rightTable.setFillParent(true);
-        rightTable.top().right().padRight(Gdx.graphics.getWidth() / 40);
+        rightTable.top().right().padRight(Gdx.graphics.getWidth() / 60);
 
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         float menuButtonSize = Gdx.graphics.getWidth() / 8;
         TextButton menuButton = new TextButton("≡", skin, "default");
         menuButton.setSize(menuButtonSize, menuButtonSize);
         menuButton.getStyle().up = menuButton.getStyle().down;
+        menuButton.setColor(1f,1f,1f,1f);
         menuButton.setPosition(Gdx.graphics.getWidth() * 7 / 8 + 10, 10);
 
         float iconSize = Gdx.graphics.getWidth() / 30;
