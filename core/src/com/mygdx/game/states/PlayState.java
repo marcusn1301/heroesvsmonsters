@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.game.components.PriceComponent;
 import com.mygdx.game.entities.DisplayHero;
 import com.mygdx.game.entities.Hero;
 import com.mygdx.game.entities.HeroFactory;
@@ -33,6 +34,7 @@ public class PlayState extends State{
     private BitmapFont font;
     private Stage stage;
     private ShapeRenderer shapeRenderer;
+    private List<DisplayHero> displayHeroes;
 
 
     public PlayState() {
@@ -43,6 +45,7 @@ public class PlayState extends State{
 
     private void init() {
         batch = new SpriteBatch();
+        setDisplayHeroes();
         buttonTextures = new Texture[5];
         for (int i = 0; i < 5; i++) {
             buttonTextures[i] = new Texture("characterIcon" + (i + 1) + ".png");
@@ -60,6 +63,14 @@ public class PlayState extends State{
         leftTable.setFillParent(true);
         leftTable.top().left().padLeft(Gdx.graphics.getWidth() / 40).padTop(Gdx.graphics.getHeight() / 40);
         for (int i = 0; i < 5; i++) {
+            System.out.println(i);
+            for (DisplayHero hero : displayHeroes) {
+                //TODO fiks
+                int heroPrice = hero.price.getPrice();
+                System.out.println(heroPrice);
+
+
+            }
             //This line changes the size of the characters, based on device
             float circleRadius = Gdx.graphics.getHeight() / 15;
 
@@ -230,5 +241,16 @@ public class PlayState extends State{
         font.dispose();
         stage.dispose();
         shapeRenderer.dispose();
+    }
+    public void setDisplayHeroes() {
+        displayHeroes = new ArrayList<DisplayHero>();
+        DisplayHero hulk = HeroFactory.createDisplayHero(HeroType.HULK);
+        DisplayHero cpt_america = HeroFactory.createDisplayHero(HeroType.CAPTAIN_AMERICA);
+        DisplayHero ironman = HeroFactory.createDisplayHero(HeroType.IRONMAN);
+        DisplayHero thor = HeroFactory.createDisplayHero(HeroType.THOR);
+        this.displayHeroes.add(hulk);
+        this.displayHeroes.add(cpt_america);
+        this.displayHeroes.add(ironman);
+        this.displayHeroes.add(thor);
     }
 }
