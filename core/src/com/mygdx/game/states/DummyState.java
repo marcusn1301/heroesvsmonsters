@@ -22,4 +22,9 @@ public class DummyState extends State {
     public void handleInput() {
 
     }
+
+    @Override
+    public void dispose() {
+
+    }
 }

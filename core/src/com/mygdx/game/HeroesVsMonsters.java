@@ -2,15 +2,21 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.mygdx.game.states.DummyState;
+import com.mygdx.game.states.GameMenuState;
+import com.mygdx.game.states.GameStateManager;
 import com.mygdx.game.states.GameStateManager;
 
 public class HeroesVsMonsters extends ApplicationAdapter {
+	private GameStateManager gsm;
+	//FireBaseInterface FBIC;
+
 	SpriteBatch sb;
-	GameStateManager gsm;
 	//FireBaseInterface FBIC;
 
 	public HeroesVsMonsters(FireBaseInterface FBIC) {
@@ -20,22 +26,21 @@ public class HeroesVsMonsters extends ApplicationAdapter {
 	@Override
 	public void create () {
 		sb = new SpriteBatch();
+		gsm = GameStateManager.getGsm();
+		gsm.push(new GameMenuState());
 		/*FBIC.SomeFunction();
 		FBIC.FirstFirebaseTest();
 		FBIC.SetOnValueChangedListener();
-		FBIC.SetValueInDb("message", "Updated message!");
-		 */
-		gsm = GameStateManager.getGsm();
-		gsm.push(new DummyState());
+		FBIC.SetValueInDb("message", "Updated message!");*/
 	}
 
 	@Override
 	public void render () {
-		ScreenUtils.clear(1, 0, 0, 1);
+		ScreenUtils.clear(Color.BLACK);
 		gsm.update(Gdx.graphics.getDeltaTime());
 		gsm.render(sb);
 	}
-	
+
 	@Override
 	public void dispose () {
 		sb.dispose();
