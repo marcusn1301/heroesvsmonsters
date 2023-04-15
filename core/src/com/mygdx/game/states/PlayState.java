@@ -20,25 +20,21 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 
 public class PlayState extends State{
-    SpriteBatch batch;
-    Texture[] buttonTextures;
-    BitmapFont font;
-    Stage stage;
-    ShapeRenderer shapeRenderer;
-    @Override
-    public void update(float dt) {
+    private SpriteBatch batch;
+    private Texture[] buttonTextures;
+    private BitmapFont font;
+    private Stage stage;
+    private ShapeRenderer shapeRenderer;
 
+
+    public PlayState() {
+        //super(gsm);
+        init();
     }
 
-    @Override
-    public void render(SpriteBatch sb) {
-        SpriteBatch batch = sb;
 
-
-
-
-
-
+    private void init() {
+        batch = new SpriteBatch();
         buttonTextures = new Texture[5];
         for (int i = 0; i < 5; i++) {
             buttonTextures[i] = new Texture("characterIcon" + (i + 1) + ".png");
@@ -47,6 +43,11 @@ public class PlayState extends State{
         stage = new Stage(new ScreenViewport());
         shapeRenderer = new ShapeRenderer();
         Gdx.input.setInputProcessor(stage);
+
+        // Add tables and actors to the stage here
+        // ...
+
+
 
         Table leftTable = new Table();
         leftTable.setFillParent(true);
@@ -123,12 +124,19 @@ public class PlayState extends State{
 
 
 
+    }
+    @Override
+    public void update(float dt) {
 
+    }
 
-
+    @Override
+    public void render(SpriteBatch sb) {
 
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+
 
         drawPaneBackgrounds();
         drawLaneDividers();
