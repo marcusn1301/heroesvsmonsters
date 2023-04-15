@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -17,7 +18,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.game.entities.DisplayHero;
+import com.mygdx.game.entities.Hero;
 import com.mygdx.game.entities.HeroFactory;
+import com.mygdx.game.types.HeroType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class PlayState extends State{
@@ -26,6 +33,7 @@ public class PlayState extends State{
     BitmapFont font;
     Stage stage;
     ShapeRenderer shapeRenderer;
+    List<DisplayHero> displayHeroes;
     @Override
     public void update(float dt) {
 
@@ -214,5 +222,17 @@ public class PlayState extends State{
         font.dispose();
         stage.dispose();
         shapeRenderer.dispose();
+    }
+
+    public void setDisplayHeroes() {
+        displayHeroes = new ArrayList<DisplayHero>();
+        DisplayHero hulk = HeroFactory.createDisplayHero(HeroType.HULK);
+        DisplayHero cpt_america = HeroFactory.createDisplayHero(HeroType.CAPTAIN_AMERICA);
+        DisplayHero ironman = HeroFactory.createDisplayHero(HeroType.IRONMAN);
+        DisplayHero thor = HeroFactory.createDisplayHero(HeroType.THOR);
+        this.displayHeroes.add(hulk);
+        this.displayHeroes.add(cpt_america);
+        this.displayHeroes.add(ironman);
+        this.displayHeroes.add(thor);
     }
 }

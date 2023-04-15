@@ -1,10 +1,10 @@
 package com.mygdx.game.components;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.Texture;
 
 public class SpriteComponent {
-    TextureRegion sprite;
-    public SpriteComponent(TextureRegion sprite) {
+    Texture sprite;
+    public SpriteComponent(Texture sprite) {
         this.sprite = sprite;
     }
 }

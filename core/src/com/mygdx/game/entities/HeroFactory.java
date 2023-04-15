@@ -31,22 +31,20 @@ public class HeroFactory {
         return displayHero;
     }
     
-    private static TextureRegion getHeroSprite(HeroType heroType) {
+    private static Texture getHeroSprite(HeroType heroType) {
         //TODO endre path her
         Texture texture = null;
         switch (heroType) {
-            case SUPERMAN:
-                return new TextureRegion(new Texture(Gdx.files.internal("superman.png")));
             case IRONMAN:
-                return new TextureRegion(new Texture(Gdx.files.internal("ironman.png")));
+                return new Texture(Gdx.files.internal("characterIcon3.png"));
             case HULK:
-                return new TextureRegion(new Texture(Gdx.files.internal("hulk.png")));
+                return new Texture(Gdx.files.internal("characterIcon1.png"));
             case SPIDERMAN:
-                return new TextureRegion(new Texture(Gdx.files.internal("spiderman.png")));
+                return new Texture(Gdx.files.internal("characterIcon2.png"));
             case THOR:
-                return new TextureRegion(new Texture(Gdx.files.internal("thor.png")));
+                return new Texture(Gdx.files.internal("characterIcon4.png"));
             case CAPTAIN_AMERICA:
-                return new TextureRegion(new Texture(Gdx.files.internal("captain_america.png")));
+                return new Texture(Gdx.files.internal("characterIcon5.png"));
             default:
                 return null;
         }
