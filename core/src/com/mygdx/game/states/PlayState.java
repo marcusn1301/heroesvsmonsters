@@ -225,16 +225,4 @@ public class PlayState extends State{
         stage.dispose();
         shapeRenderer.dispose();
     }
-
-    public void setDisplayHeroes() {
-        displayHeroes = new ArrayList<DisplayHero>();
-        DisplayHero hulk = HeroFactory.createDisplayHero(HeroType.HULK);
-        DisplayHero cpt_america = HeroFactory.createDisplayHero(HeroType.CAPTAIN_AMERICA);
-        DisplayHero ironman = HeroFactory.createDisplayHero(HeroType.IRONMAN);
-        DisplayHero thor = HeroFactory.createDisplayHero(HeroType.THOR);
-        this.displayHeroes.add(hulk);
-        this.displayHeroes.add(cpt_america);
-        this.displayHeroes.add(ironman);
-        this.displayHeroes.add(thor);
-    }
 }
