@@ -44,8 +44,7 @@ public class PlayState extends State{
         shapeRenderer = new ShapeRenderer();
         Gdx.input.setInputProcessor(stage);
 
-        // Add tables and actors to the stage here
-        // ...
+
 
 
 
