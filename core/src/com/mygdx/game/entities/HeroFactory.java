@@ -2,48 +2,55 @@ package com.mygdx.game.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.components.AttackDamageComponent;
 import com.mygdx.game.components.AttackSpeedComponent;
 import com.mygdx.game.components.PositionComponent;
+import com.mygdx.game.components.PriceComponent;
 import com.mygdx.game.components.SpriteComponent;
-import com.mygdx.game.entities.Hero;
 import com.mygdx.game.types.HeroType;
 
 public class HeroFactory {
-    public static Hero createHero(HeroType heroType) {
+    //Creates a hero that is placed on the board
+    public static Hero createHero(HeroType heroType, Vector2 boardPosition) {
         Hero hero = new Hero();
-        hero.sprite = new SpriteComponent(getSpriteForHero(heroType));
-        hero.position = new PositionComponent(getStartingPositionForHero(heroType));
-        hero.attackSpeed = new AttackSpeedComponent(getAttackSpeedForHero(heroType));
-        hero.attackDamage = new AttackDamageComponent(getAttackDamageForHero(heroType));
+        hero.setSpriteComponent(new SpriteComponent(getHeroSprite(heroType)));
+        hero.setPositionComponent(new PositionComponent(boardPosition));
+        hero.setAttackSpeedComponent(new AttackSpeedComponent(getHeroAttackSpeed(heroType)));
+        hero.setAttackDamageComponent(new AttackDamageComponent(getHeroAttackDamage(heroType)));
         return hero;
     }
 
-    private static TextureRegion getSpriteForHero(HeroType heroType) {
+    //Create a display version of the hero on the left-hand side of the screen
+    public static DisplayHero createDisplayHero(HeroType heroType) {
+        DisplayHero displayHero = new DisplayHero();
+        displayHero.setSpriteComponent(new SpriteComponent(getHeroSprite(heroType)));
+        displayHero.setPositionComponent(new PositionComponent(getHeroStartingPosition(heroType)));
+        displayHero.setPriceComponent(new PriceComponent(getHeroPrice(heroType)));
+        return displayHero;
+    }
+    
+    private static Texture getHeroSprite(HeroType heroType) {
         //TODO endre path her
+        Texture texture = null;
         switch (heroType) {
-            case SUPERMAN:
-                return new TextureRegion(new Texture(Gdx.files.internal("superman.png")));
             case IRONMAN:
-                return new TextureRegion(new Texture(Gdx.files.internal("ironman.png")));
+                return new Texture(Gdx.files.internal("characterIcon3.png"));
             case HULK:
-                return new TextureRegion(new Texture(Gdx.files.internal("hulk.png")));
+                return new Texture(Gdx.files.internal("characterIcon1.png"));
             case SPIDERMAN:
-                return new TextureRegion(new Texture(Gdx.files.internal("spiderman.png")));
+                return new Texture(Gdx.files.internal("characterIcon2.png"));
             case THOR:
-                return new TextureRegion(new Texture(Gdx.files.internal("thor.png")));
+                return new Texture(Gdx.files.internal("characterIcon4.png"));
             case CAPTAIN_AMERICA:
-                return new TextureRegion(new Texture(Gdx.files.internal("captain_america.png")));
+                return new Texture(Gdx.files.internal("characterIcon5.png"));
             default:
                 return null;
         }
     }
 
-    private static Vector2 getStartingPositionForHero(HeroType heroType) {
-        // TODO Endre på dette. Position kommer ikke til å være
-        // TODO hard-kodet
+    private static Vector2 getHeroStartingPosition(HeroType heroType) {
+        // Position for the display heroes
         switch (heroType) {
             case SUPERMAN:
                 return new Vector2(50, 100);
@@ -62,8 +69,7 @@ public class HeroFactory {
         }
     }
 
-    private static float getAttackSpeedForHero(HeroType heroType) {
-        // TODO: Implement this method to return the appropriate attack speed for the hero type.
+    private static float getHeroAttackSpeed(HeroType heroType) {
         switch (heroType) {
             case SUPERMAN:
                 return 2f;
@@ -82,7 +88,7 @@ public class HeroFactory {
         }
     }
 
-    private static float getAttackDamageForHero(HeroType heroType) {
+    private static float getHeroAttackDamage(HeroType heroType) {
         switch (heroType) {
             case SUPERMAN:
                 return 20f;
@@ -96,6 +102,25 @@ public class HeroFactory {
                 return 35f;
             case CAPTAIN_AMERICA:
                 return 50f;
+            default:
+                return 0;
+        }
+    }
+
+    private static int getHeroPrice(HeroType heroType) {
+        switch (heroType) {
+            case SUPERMAN:
+                return 400;
+            case IRONMAN:
+                return 350;
+            case HULK:
+                return 500;
+            case SPIDERMAN:
+                return 200;
+            case THOR:
+                return 300;
+            case CAPTAIN_AMERICA:
+                return 650;
             default:
                 return 0;
         }
