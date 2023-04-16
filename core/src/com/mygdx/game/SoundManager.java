@@ -115,6 +115,7 @@ public class SoundManager implements Disposable {
             }
             currentMusic = musicMap.get(musicName);
             currentMusic.setLooping(loop);
+            currentMusic.setVolume(0.6f);
             currentMusic.play();
         }
     }
