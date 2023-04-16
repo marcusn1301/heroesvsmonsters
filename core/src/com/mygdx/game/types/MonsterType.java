@@ -1,4 +1,10 @@
 package com.mygdx.game.types;
 
-public class MonsterType {
+public enum MonsterType {
+    MAGNETO,
+    JUGGERNAUT,
+    VENOM,
+    HOBGOBLIN,
+    GOBLIN_GLIDER,
+    MYSTIQUE,
 }
