@@ -7,9 +7,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.FireBaseInterface;
+import com.mygdx.game.SoundManager;
 
 public class GameMenuState extends State {
     private GameStateManager gsm;
+    SoundManager soundManager = SoundManager.getInstance();
     SpriteBatch sb;
     Texture startButton;
     Texture lobbyButton;
@@ -96,7 +98,10 @@ public class GameMenuState extends State {
             int x = Gdx.input.getX();
             int y = Gdx.input.getY();
             if (isStartButtonClicked(x, y) ) {
+                soundManager.playSound("menuNavigate");
+
                 gsm.push(new PlayState());
+
             }
             if (isLobbyButtonClicked(x,y)){
                 gsm.push(new DummyState());
