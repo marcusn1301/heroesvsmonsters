@@ -15,6 +15,7 @@ public class GameMenuState extends State {
     SpriteBatch sb;
     Texture startButton;
     Texture lobbyButton;
+    private Texture menuBackground;
 
     Texture logo;
     Texture img;
@@ -32,6 +33,7 @@ public class GameMenuState extends State {
         startButton = new Texture("Start-button.png");
         lobbyButton = new Texture("Lobby-button.png");
         logo = new Texture("HvsMstor.png");
+        menuBackground = new Texture("menuBackground.png");
     }
 
     public void create() {
@@ -53,43 +55,58 @@ public class GameMenuState extends State {
         float centerX = Gdx.graphics.getWidth() / 2f;
         float centerY = Gdx.graphics.getHeight() / 2f;
 
+
+
+        // Calculate the logo position and size
+        float logoWidth = width / 2.5f;
+        float logoHeight = logoWidth * ((float) logo.getHeight() / logo.getWidth());
+        float logoX = (width - logoWidth) / 2f;
+        float logoY = ((height - logoHeight) / 2f) + height / 5f;
+
+
+
+        // Calculate the button positions and sizes
+        float buttonWidth = width / 7f;
+        float startButtonHeight = buttonWidth * ((float) startButton.getHeight() / startButton.getWidth());
+        float lobbyButtonHeight = buttonWidth * ((float) lobbyButton.getHeight() / lobbyButton.getWidth());
+
+        float buttonX = (width - buttonWidth) / 2f;
+        float startButtonY = height * 0.3f - startButtonHeight / 2f;
+        float lobbyButtonY = height * 0.12f - lobbyButtonHeight / 2f;
+
+
         batch.begin();
+        batch.draw(menuBackground, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        //batch.draw(logo, centerX - logo.getWidth() / 16f, height * 0.42f, logo.getWidth() / 4f, logo.getHeight() / 4f);
-        batch.draw(logo, centerX - logo.getWidth() / 14f, centerY + centerY / 10f, logo.getWidth() /5f, logo.getHeight() / 5f);
+        batch.draw(logo, logoX, logoY, logoWidth, logoHeight);
+        batch.draw(startButton, buttonX, startButtonY, buttonWidth, startButtonHeight);
+        batch.draw(lobbyButton, buttonX, lobbyButtonY, buttonWidth, lobbyButtonHeight);
 
-        //batch.draw(startButton, centerX - startButton.getWidth() / 3f, height * 0.2f, startButton.getWidth() * 1.5f, startButton.getHeight() * 1.5f);
-        batch.draw(startButton, centerX - startButton.getWidth() / 4f, height * 0.18f, startButton.getWidth() / 1.5f, startButton.getHeight() / 1.5f);
-        batch.draw(lobbyButton, centerX - lobbyButton.getWidth() / 4f, height * 0.12f, lobbyButton.getWidth() / 1.5f, lobbyButton.getHeight() / 1.5f);
         batch.end();
 
 
 
-        /*if (Gdx.input.isTouched()) {
-            int x = Gdx.input.getX();
-            int y = Gdx.input.getY();
-            if (isStartButtonClicked(x, y) || isLobbyButtonClicked(x,y) ) {
-                handleInput();
-            }
-        }*/
+
     }
 
     private boolean isStartButtonClicked(int x, int y) {
-        int buttonX = (int) (width / 2f - startButton.getWidth() / 3f);
-        int buttonY = (int) (height * 0.2f);
-        int buttonWidth = startButton.getWidth() / 2;
-        int buttonHeight = startButton.getHeight() / 2;
+        float buttonWidth = width / 7f;
+        float startButtonHeight = buttonWidth * ((float) startButton.getHeight() / startButton.getWidth());
+        float buttonX = (width - buttonWidth) / 2f;
+        float startButtonY = height * 0.3f - startButtonHeight / 2f;
+
         return Gdx.input.justTouched() && buttonX <= x && x <= buttonX + buttonWidth &&
-                buttonY <= Gdx.graphics.getHeight() - y && Gdx.graphics.getHeight() - y <= buttonY + buttonHeight;
+                startButtonY <= Gdx.graphics.getHeight() - y && Gdx.graphics.getHeight() - y <= startButtonY + startButtonHeight;
     }
 
     private boolean isLobbyButtonClicked(int x, int y) {
-        int buttonX = (int) (width / 2f - lobbyButton.getWidth() / 3f);
-        int buttonY = (int) (height * 0.1f);
-        int buttonWidth = lobbyButton.getWidth() / 2;
-        int buttonHeight = lobbyButton.getHeight() / 2;
+        float buttonWidth = width / 7f;
+        float lobbyButtonHeight = buttonWidth * ((float) lobbyButton.getHeight() / lobbyButton.getWidth());
+        float buttonX = (width - buttonWidth) / 2f;
+        float lobbyButtonY = height * 0.12f - lobbyButtonHeight / 2f;
+
         return Gdx.input.justTouched() && buttonX <= x && x <= buttonX + buttonWidth &&
-                buttonY <= Gdx.graphics.getHeight() - y && Gdx.graphics.getHeight() - y <= buttonY + buttonHeight;
+                lobbyButtonY <= Gdx.graphics.getHeight() - y && Gdx.graphics.getHeight() - y <= lobbyButtonY + lobbyButtonHeight;
     }
 
     @Override
@@ -97,20 +114,16 @@ public class GameMenuState extends State {
         if (Gdx.input.isTouched()) {
             int x = Gdx.input.getX();
             int y = Gdx.input.getY();
-            if (isStartButtonClicked(x, y) ) {
+            if (isStartButtonClicked(x, y)) {
                 soundManager.playSound("menuNavigate");
-
                 gsm.push(new PlayState());
-
             }
-            if (isLobbyButtonClicked(x,y)){
+            if (isLobbyButtonClicked(x, y)) {
                 gsm.push(new DummyState());
             }
         }
-        /*if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-            gsm.push(new GameViewState());
-        }*/
     }
+
 
 
     @Override
