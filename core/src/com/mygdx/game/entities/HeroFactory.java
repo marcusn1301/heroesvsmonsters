@@ -2,7 +2,6 @@ package com.mygdx.game.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.components.AttackDamageComponent;
 import com.mygdx.game.components.AttackSpeedComponent;
@@ -15,19 +14,19 @@ public class HeroFactory {
     //Creates a hero that is placed on the board
     public static Hero createHero(HeroType heroType, Vector2 boardPosition) {
         Hero hero = new Hero();
-        hero.sprite = new SpriteComponent(getHeroSprite(heroType));
-        hero.position = new PositionComponent(boardPosition);
-        hero.attackSpeed = new AttackSpeedComponent(getHeroAttackSpeed(heroType));
-        hero.attackDamage = new AttackDamageComponent(getHeroAttackDamage(heroType));
+        hero.setSpriteComponent(new SpriteComponent(getHeroSprite(heroType)));
+        hero.setPositionComponent(new PositionComponent(boardPosition));
+        hero.setAttackSpeedComponent(new AttackSpeedComponent(getHeroAttackSpeed(heroType)));
+        hero.setAttackDamageComponent(new AttackDamageComponent(getHeroAttackDamage(heroType)));
         return hero;
     }
 
     //Create a display version of the hero on the left-hand side of the screen
     public static DisplayHero createDisplayHero(HeroType heroType) {
         DisplayHero displayHero = new DisplayHero();
-        displayHero.sprite = new SpriteComponent(getHeroSprite(heroType));
-        displayHero.position = new PositionComponent(getHeroStartingPosition(heroType));
-        displayHero.price = new PriceComponent(getHeroPrice(heroType));
+        displayHero.setSpriteComponent(new SpriteComponent(getHeroSprite(heroType)));
+        displayHero.setPositionComponent(new PositionComponent(getHeroStartingPosition(heroType)));
+        displayHero.setPriceComponent(new PriceComponent(getHeroPrice(heroType)));
         return displayHero;
     }
     

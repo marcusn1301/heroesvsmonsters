@@ -65,8 +65,8 @@ public class PlayState extends State{
         for (int i = 0; i < 5; i++) {
             System.out.println(i);
             for (DisplayHero hero : displayHeroes) {
-                //TODO fiks
-                int heroPrice = hero.price.getPrice();
+                //Example
+                int heroPrice = hero.getPriceComponent().getPrice();
                 System.out.println(heroPrice);
 
 
