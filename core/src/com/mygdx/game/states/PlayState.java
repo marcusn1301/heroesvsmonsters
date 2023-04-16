@@ -2,6 +2,7 @@ package com.mygdx.game.states;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -19,25 +20,20 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 
 public class PlayState extends State{
-    SpriteBatch batch;
-    Texture[] buttonTextures;
-    BitmapFont font;
-    Stage stage;
-    ShapeRenderer shapeRenderer;
-    GameStateManager gsm = GameStateManager.getGsm();
-    @Override
-    public void update(float dt) {
-        handleInput();
+    private SpriteBatch batch;
+    private Texture[] buttonTextures;
+    private BitmapFont font;
+    private Stage stage;
+    private ShapeRenderer shapeRenderer;
+
+
+    public PlayState() {
+        //super(gsm);
+        init();
     }
 
-    @Override
-    public void render(SpriteBatch sb) {
-        SpriteBatch batch = sb;
 
-
-
-
-        //Skal ikke ha dupliserte spritebatches
+    private void init() {
         batch = new SpriteBatch();
         buttonTextures = new Texture[5];
         for (int i = 0; i < 5; i++) {
@@ -47,6 +43,10 @@ public class PlayState extends State{
         stage = new Stage(new ScreenViewport());
         shapeRenderer = new ShapeRenderer();
         Gdx.input.setInputProcessor(stage);
+
+
+
+
 
         Table leftTable = new Table();
         leftTable.setFillParent(true);
@@ -123,12 +123,19 @@ public class PlayState extends State{
 
 
 
+    }
+    @Override
+    public void update(float dt) {
 
+    }
 
-
+    @Override
+    public void render(SpriteBatch sb) {
 
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+
 
         drawPaneBackgrounds();
         drawLaneDividers();
@@ -140,11 +147,7 @@ public class PlayState extends State{
 
     @Override
     public void handleInput() {
-        if (Gdx.input.isTouched()) {
-            //To be implemented
-            //PlayState.pause
-            gsm.push(new SettingsState(SettingsState.SettingsBackground.CITY));
-        }
+
     }
 
 
@@ -165,6 +168,7 @@ public class PlayState extends State{
 
         shapeRenderer.end();
     }
+
 
     private void drawLaneDividers() {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
