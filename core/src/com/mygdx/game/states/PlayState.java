@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.game.SoundManager;
 import com.mygdx.game.components.PriceComponent;
 import com.mygdx.game.entities.DisplayHero;
 import com.mygdx.game.entities.Hero;
@@ -35,6 +36,7 @@ public class PlayState extends State{
     private Stage stage;
     private ShapeRenderer shapeRenderer;
     private List<DisplayHero> displayHeroes;
+    SoundManager soundManager = SoundManager.getInstance();
 
 
     public PlayState() {
@@ -133,6 +135,7 @@ public class PlayState extends State{
 
         stage.addActor(rightTable);
         stage.addActor(menuButton);
+        soundManager.playSequence();
 
 
 
