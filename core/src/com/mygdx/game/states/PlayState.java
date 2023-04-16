@@ -11,12 +11,9 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-<<<<<<< HEAD
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-=======
 import com.badlogic.gdx.math.Vector2;
->>>>>>> 56119cd0614a7d33a7c312c8eb77d5216c543216
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -43,16 +40,13 @@ public class PlayState extends State{
     private BitmapFont font;
     private Stage stage;
     private ShapeRenderer shapeRenderer;
-<<<<<<< HEAD
     private boolean isGridTableVisible = true;
 
     private Table gridTable;
 
     private String chosenCharacter = "";
-=======
     private List<DisplayHero> displayHeroes;
     SoundManager soundManager = SoundManager.getInstance();
->>>>>>> 56119cd0614a7d33a7c312c8eb77d5216c543216
 
 
     public PlayState() {
