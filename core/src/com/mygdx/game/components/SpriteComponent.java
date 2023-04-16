@@ -1,10 +1,19 @@
 package com.mygdx.game.components;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.graphics.Texture;
 
-public class SpriteComponent {
-    TextureRegion sprite;
-    public SpriteComponent(TextureRegion sprite) {
+public class SpriteComponent implements Component {
+    private Texture sprite;
+    public SpriteComponent(Texture sprite) {
+        this.sprite = sprite;
+    }
+
+    public Texture getSprite() {
+        return sprite;
+    }
+
+    public void setSprite(Texture sprite) {
         this.sprite = sprite;
     }
 }
