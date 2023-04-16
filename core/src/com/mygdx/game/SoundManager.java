@@ -11,6 +11,7 @@ import java.util.Map;
 public class SoundManager implements Disposable {
     private Map<String, Sound> soundMap;
     private Map<String, Music> musicMap;
+    private Music currentMusic;
 
     public SoundManager() {
         soundMap = new HashMap<>();
@@ -48,17 +49,56 @@ public class SoundManager implements Disposable {
         }
     }
 
-    public void playMusic(String musicName, boolean loop) {
-        if (musicMap.containsKey(musicName)) {
-            Music music = musicMap.get(musicName);
-            music.setLooping(loop);
-            music.play();
-        }
-    }
+
 
     public void stopMusic(String musicName) {
         if (musicMap.containsKey(musicName)) {
             musicMap.get(musicName).stop();
+        }
+    }
+
+    public void playSequence() {
+        playMusic("avengers", false);
+        currentMusic.setOnCompletionListener(music -> {
+            playMusic("actionTheme", false);
+            currentMusic.setOnCompletionListener(music1 -> {
+                playMusic("portalsHype", false);
+                currentMusic.setOnCompletionListener(music2 -> {
+                    playMusic("avengers", false);
+                    currentMusic.setOnCompletionListener(music3 -> loopPortalsAndAvengers());
+                });
+            });
+        });
+    }
+
+    private void loopPortalsAndAvengers() {
+        playMusic("portalsHype", false);
+        currentMusic.setOnCompletionListener(music -> {
+            playMusic("avengers", false);
+            currentMusic.setOnCompletionListener(music1 -> loopPortalsAndAvengers());
+        });
+    }
+
+    public void playMusic(String musicName, boolean loop) {
+        if (musicMap.containsKey(musicName)) {
+            if (currentMusic != null) {
+                currentMusic.stop();
+            }
+            currentMusic = musicMap.get(musicName);
+            currentMusic.setLooping(loop);
+            currentMusic.play();
+        }
+    }
+
+    public void stopMusic() {
+        if (currentMusic != null) {
+            currentMusic.stop();
+        }
+    }
+
+    public void pauseMusic() {
+        if (currentMusic != null) {
+            currentMusic.pause();
         }
     }
 
