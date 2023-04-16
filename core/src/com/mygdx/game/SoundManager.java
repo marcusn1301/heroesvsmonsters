@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SoundManager implements Disposable {
+    private static SoundManager instance;
     private Map<String, Sound> soundMap;
     private Map<String, Music> musicMap;
     private Music currentMusic;
@@ -19,6 +20,12 @@ public class SoundManager implements Disposable {
 
         loadSounds();
         loadMusic();
+    }
+    public static SoundManager getInstance() {
+        if (instance == null) {
+            instance = new SoundManager();
+        }
+        return instance;
     }
 
     private void loadSounds() {
@@ -45,7 +52,7 @@ public class SoundManager implements Disposable {
 
     public void playSound(String soundName) {
         if (soundMap.containsKey(soundName)) {
-            soundMap.get(soundName).play();
+            soundMap.get(soundName).play(1.0f);
         }
     }
 
@@ -59,23 +66,45 @@ public class SoundManager implements Disposable {
 
     public void playSequence() {
         playMusic("avengers", false);
-        currentMusic.setOnCompletionListener(music -> {
-            playMusic("actionTheme", false);
-            currentMusic.setOnCompletionListener(music1 -> {
-                playMusic("portalsHype", false);
-                currentMusic.setOnCompletionListener(music2 -> {
-                    playMusic("avengers", false);
-                    currentMusic.setOnCompletionListener(music3 -> loopPortalsAndAvengers());
+        currentMusic.setOnCompletionListener(new Music.OnCompletionListener() {
+            @Override
+            public void onCompletion(Music music) {
+                playMusic("actionTheme", false);
+                currentMusic.setOnCompletionListener(new Music.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(Music music) {
+                        playMusic("portalsHype", false);
+                        currentMusic.setOnCompletionListener(new Music.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(Music music) {
+                                playMusic("avengers", false);
+                                currentMusic.setOnCompletionListener(new Music.OnCompletionListener() {
+                                    @Override
+                                    public void onCompletion(Music music) {
+                                        loopPortalsAndAvengers();
+                                    }
+                                });
+                            }
+                        });
+                    }
                 });
-            });
+            }
         });
     }
 
     private void loopPortalsAndAvengers() {
         playMusic("portalsHype", false);
-        currentMusic.setOnCompletionListener(music -> {
-            playMusic("avengers", false);
-            currentMusic.setOnCompletionListener(music1 -> loopPortalsAndAvengers());
+        currentMusic.setOnCompletionListener(new Music.OnCompletionListener() {
+            @Override
+            public void onCompletion(Music music) {
+                playMusic("avengers", false);
+                currentMusic.setOnCompletionListener(new Music.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(Music music) {
+                        loopPortalsAndAvengers();
+                    }
+                });
+            }
         });
     }
 
