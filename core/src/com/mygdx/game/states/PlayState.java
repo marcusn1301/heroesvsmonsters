@@ -58,9 +58,14 @@ public class PlayState extends State{
         batch = new SpriteBatch();
         setDisplayHeroes();
         buttonTextures = new Texture[5];
-        for (int i = 0; i < 5; i++) {
+        /*for (int i = 0; i < 5; i++) {
             buttonTextures[i] = new Texture("characterIcon" + (i + 1) + ".png");
+        }*/
+
+        for (int i = 0; i < displayHeroes.size(); i++) {
+            buttonTextures[i] = displayHeroes.get(i).getSpriteComponent().getSprite();
         }
+
         font = new BitmapFont();
         stage = new Stage(new ScreenViewport());
         shapeRenderer = new ShapeRenderer();
@@ -71,13 +76,7 @@ public class PlayState extends State{
         leftTable.top().left().padLeft(Gdx.graphics.getWidth() / 40).padTop(Gdx.graphics.getHeight() / 40);
         for (int i = 0; i < 5; i++) {
             System.out.println(i);
-            for (DisplayHero hero : displayHeroes) {
-                //Example
-                int heroPrice = hero.getPriceComponent().getPrice();
-                System.out.println(heroPrice);
 
-
-            }
             //This line changes the size of the characters, based on device
             float circleRadius = Gdx.graphics.getHeight() / 15;
 
@@ -104,7 +103,7 @@ public class PlayState extends State{
             leftTable.row();
             BitmapFont biggerFont = new BitmapFont();
             biggerFont.getData().setScale(2);
-            leftTable.add(new TextButton(Integer.toString(100 * (i + 1)), new TextButton.TextButtonStyle(null, null, null, biggerFont))).pad(5);
+            leftTable.add(new TextButton(Integer.toString(displayHeroes.get(i).getPriceComponent().getPrice()), new TextButton.TextButtonStyle(null, null, null, biggerFont))).pad(5);
             leftTable.row();
         }
         stage.addActor(leftTable);
@@ -178,9 +177,10 @@ public class PlayState extends State{
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         super.clicked(event, x, y);
-
+                        //TODO
+                        DisplayHero hulk = HeroFactory.createDisplayHero(HeroType.HULK);
                         // Create a new Image to fill the clicked cell
-                        Image fillImage = new Image(new Texture(chosenCharacter));
+                        Image fillImage = new Image(hulk.getSpriteComponent().getSprite());
                         fillImage.setSize(cellSize, cellSize);
 
                         // Replace the clicked cell with the new Image
@@ -311,14 +311,17 @@ public class PlayState extends State{
         font.dispose();
         stage.dispose();
         shapeRenderer.dispose();
+        //TODO dispose displayHeroes
     }
     public void setDisplayHeroes() {
         displayHeroes = new ArrayList<DisplayHero>();
         DisplayHero hulk = HeroFactory.createDisplayHero(HeroType.HULK);
+        DisplayHero spiderman = HeroFactory.createDisplayHero(HeroType.SPIDERMAN);
         DisplayHero cpt_america = HeroFactory.createDisplayHero(HeroType.CAPTAIN_AMERICA);
         DisplayHero ironman = HeroFactory.createDisplayHero(HeroType.IRONMAN);
         DisplayHero thor = HeroFactory.createDisplayHero(HeroType.THOR);
         this.displayHeroes.add(hulk);
+        this.displayHeroes.add(spiderman);
         this.displayHeroes.add(cpt_america);
         this.displayHeroes.add(ironman);
         this.displayHeroes.add(thor);
