@@ -1,5 +1,6 @@
 package com.mygdx.game.states;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -10,12 +11,16 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 
@@ -25,13 +30,17 @@ public class PlayState extends State{
     private BitmapFont font;
     private Stage stage;
     private ShapeRenderer shapeRenderer;
+    private boolean isGridTableVisible = true;
+
+    private Table gridTable;
+
+    private String chosenCharacter = "";
 
 
     public PlayState() {
         //super(gsm);
         init();
     }
-
 
     private void init() {
         batch = new SpriteBatch();
@@ -43,10 +52,6 @@ public class PlayState extends State{
         stage = new Stage(new ScreenViewport());
         shapeRenderer = new ShapeRenderer();
         Gdx.input.setInputProcessor(stage);
-
-
-
-
 
         Table leftTable = new Table();
         leftTable.setFillParent(true);
@@ -60,6 +65,19 @@ public class PlayState extends State{
             Image button = new Image(buttonTextures[i]);
             stack.add(whiteCircle);
             stack.add(button);
+
+            final int finalI = i;
+            button.addListener(new ClickListener() {
+
+
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    chosenCharacter = "characterIcon" + (finalI + 1) + ".png";
+                    isGridTableVisible = !isGridTableVisible;
+                    gridTable.setVisible(true);
+                }
+            });
 
             leftTable.add(stack).size(circleRadius * 2, circleRadius * 2).pad(5).fill().center();
             leftTable.row();
@@ -106,7 +124,6 @@ public class PlayState extends State{
         counterText2.setHeight(iconSize / 2);
         rightTable.add(counterText2);
 
-
         Texture counterIconTexture2 = new Texture("coin.png");
         Image counterIcon2 = new Image(counterIconTexture2);
         rightTable.add(counterIcon2).size(iconSize, iconSize).pad(5);
@@ -115,18 +132,73 @@ public class PlayState extends State{
         stage.addActor(rightTable);
         stage.addActor(menuButton);
 
+        // Create a new table for the grid
+        gridTable = new Table();
+        gridTable.setFillParent(true);
+        gridTable.center();
 
+        // Define the number of rows and columns in the grid
+        int numRows = 6;
+        int numCols = 9;
 
+        // Define the size of each cell in the grid
+        final float cellSize = Gdx.graphics.getHeight() / (numRows + 3);
 
+        // Loop through each row and column, adding an Image to represent each cell
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                // Create a new Image for the cell and add it to the table
+                final Image cellImage = new Image(new Texture("invisible.png"));
+                cellImage.setSize(cellSize, cellSize);
+                gridTable.add(cellImage).size(cellSize).padBottom(90).padRight(20);
 
+                cellImage.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        super.clicked(event, x, y);
 
+                        // Create a new Image to fill the clicked cell
+                        Image fillImage = new Image(new Texture(chosenCharacter));
+                        fillImage.setSize(cellSize, cellSize);
 
+                        // Replace the clicked cell with the new Image
+                        gridTable.getCell(cellImage).setActor(fillImage);
+                        //hidePanelCells();
+                        /*isGridTableVisible = false;
+                        gridTable.setVisible(isGridTableVisible);*/
 
+                    }
+                });
 
+            }
+            // Move to the next row in the grid
+            gridTable.row();
+        }
+
+        gridTable.setVisible(false);
+        // Add the grid table to the stage
+        stage.addActor(gridTable);
     }
+
+    public void hidePanelCells() {
+        System.out.println("HIDDEN");
+        // Loop through each cell in the grid
+        for (Cell cell : gridTable.getCells()) {
+            // Get the actor inside the cell
+            Actor actor = cell.getActor();
+            System.out.println(actor.getName());
+            if (actor != null && actor.getName() != null && actor.getName().equals("panel.png")) {
+                // Hide the actor
+                actor.setVisible(false);
+            }
+        }
+    }
+
+
+
     @Override
     public void update(float dt) {
-
+        stage.draw();
     }
 
     @Override
@@ -134,8 +206,6 @@ public class PlayState extends State{
 
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-
 
         drawPaneBackgrounds();
         drawLaneDividers();
@@ -149,10 +219,6 @@ public class PlayState extends State{
     public void handleInput() {
 
     }
-
-
-
-
 
     private void drawPaneBackgrounds() {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -168,6 +234,7 @@ public class PlayState extends State{
 
         shapeRenderer.end();
     }
+
 
 
     private void drawLaneDividers() {
