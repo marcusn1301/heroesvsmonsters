@@ -151,6 +151,7 @@ public class PlayState extends State{
 
         stage.addActor(rightTable);
         stage.addActor(menuButton);
+<<<<<<< HEAD
         soundManager.playSequence();
 
         // Define the number of rows and columns in the grid
@@ -207,6 +208,8 @@ public class PlayState extends State{
         gridTable.setVisible(false);
         // Add the grid table to the stage
         stage.addActor(gridTable);
+=======
+>>>>>>> 9ce6fc4e96b569ea0fba824f8315b4d58e0df448
     }
 
     public void hidePanelCells() {
