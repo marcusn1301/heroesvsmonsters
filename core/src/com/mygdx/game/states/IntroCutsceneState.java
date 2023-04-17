@@ -46,6 +46,7 @@ public class IntroCutsceneState extends State {
     public void update(float dt) {
         elapsedTime += dt;
         Boolean musicOn = false;
+        handleInput();
         switch (phase) {
             case 0:
                 nickPositionX -= slidingSpeed * dt;
@@ -86,8 +87,7 @@ public class IntroCutsceneState extends State {
             case 4:
                 if (elapsedTime >= 3.0f) {
                     //System.out.println("Cutscene finished!");
-                    soundmanager.stopMusic("avengersHype");
-                    gsm.push(new PlayState());
+                    goNext();
 
                 }
                 break;
@@ -119,9 +119,16 @@ public class IntroCutsceneState extends State {
 
     @Override
     public void handleInput() {
+        if (Gdx.input.isTouched()) {
+            goNext();
+        }
 
     }
 
+    public void goNext() {
+        soundmanager.stopMusic("avengersHype");
+        gsm.push(new PlayState());
+    }
     @Override
     public void dispose() {
         cityBackground.dispose();
