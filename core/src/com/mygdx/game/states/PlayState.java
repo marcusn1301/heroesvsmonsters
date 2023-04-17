@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -22,6 +23,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.SoundManager;
 import com.mygdx.game.components.PriceComponent;
@@ -70,6 +73,8 @@ public class PlayState extends State{
         stage = new Stage(new ScreenViewport());
         shapeRenderer = new ShapeRenderer();
         Gdx.input.setInputProcessor(stage);
+
+
 
         Table leftTable = new Table();
         leftTable.setFillParent(true);
@@ -151,24 +156,20 @@ public class PlayState extends State{
 
         stage.addActor(rightTable);
         stage.addActor(menuButton);
-<<<<<<< HEAD
         soundManager.playSequence();
 
         // Define the number of rows and columns in the grid
         int numRows = 6;
         int numCols = 9;
 
-// Define the grid as a 2D array of Images
         final Image[][] grid = new Image[numRows][numCols];
 
-// Define the size of each cell in the grid
         final float cellSize = Gdx.graphics.getHeight() / (numRows + 3);
 
-// Loop through each row and column, adding an Image to represent each cell
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {
-// Create a new Image for the cell and add it to the grid
                 grid[row][col] = new Image(new Texture("invisible.png"));
+
                 grid[row][col].setSize(cellSize, cellSize);
 
                 // Add a click listener to the Image
@@ -178,7 +179,6 @@ public class PlayState extends State{
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         super.clicked(event, x, y);
-                        // TODO
 
                         // Create a new Image to fill the clicked cell
                         Image fillImage = new Image(chosenCharacter);
@@ -208,22 +208,7 @@ public class PlayState extends State{
         gridTable.setVisible(false);
         // Add the grid table to the stage
         stage.addActor(gridTable);
-=======
->>>>>>> 9ce6fc4e96b569ea0fba824f8315b4d58e0df448
-    }
 
-    public void hidePanelCells() {
-        System.out.println("HIDDEN");
-        // Loop through each cell in the grid
-        for (Cell cell : gridTable.getCells()) {
-            // Get the actor inside the cell
-            Actor actor = cell.getActor();
-            System.out.println(actor.getName());
-            if (actor != null && actor.getName() != null && actor.getName().equals("panel.png")) {
-                // Hide the actor
-                actor.setVisible(false);
-            }
-        }
     }
 
 
