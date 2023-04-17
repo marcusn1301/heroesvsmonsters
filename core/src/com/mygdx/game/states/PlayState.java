@@ -44,7 +44,7 @@ public class PlayState extends State{
 
     private Table gridTable;
 
-    private String chosenCharacter = "";
+    private Texture chosenCharacter;
     private List<DisplayHero> displayHeroes;
     SoundManager soundManager = SoundManager.getInstance();
 
@@ -93,7 +93,7 @@ public class PlayState extends State{
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
-                    chosenCharacter = "characterIcon" + (finalI + 1) + ".png";
+                    chosenCharacter = buttonTextures[finalI];
                     isGridTableVisible = !isGridTableVisible;
                     gridTable.setVisible(true);
                 }
@@ -178,9 +178,9 @@ public class PlayState extends State{
                     public void clicked(InputEvent event, float x, float y) {
                         super.clicked(event, x, y);
                         //TODO
-                        DisplayHero hulk = HeroFactory.createDisplayHero(HeroType.HULK);
+
                         // Create a new Image to fill the clicked cell
-                        Image fillImage = new Image(hulk.getSpriteComponent().getSprite());
+                        Image fillImage = new Image(chosenCharacter);
                         fillImage.setSize(cellSize, cellSize);
 
                         // Replace the clicked cell with the new Image
