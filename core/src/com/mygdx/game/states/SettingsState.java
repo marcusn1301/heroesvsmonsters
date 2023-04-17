@@ -1,36 +1,35 @@
 package com.mygdx.game.states;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.mygdx.game.sprites.CircleButton;
+import com.mygdx.game.utils.Slider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SettingsState extends State {
     private GameStateManager gsm;
-    private ShapeRenderer shapeRenderer;
+    private BitmapFont font;
     public enum SettingsBackground {
         MENU,
         CITY,
     }
     private ArrayList<Float> bgColor;
     private Boolean isBlack;
-
-    private BitmapFont font;
+    private CircleButton exitButton;
+    private Slider audioBar;
+    private Slider sfxBar;
 
     public SettingsState(SettingsBackground bg) {
         gsm = GameStateManager.getGsm();
-        shapeRenderer = new ShapeRenderer();
+        font = new BitmapFont();
+
         switch (bg) {
             case MENU:
                 bgColor = new ArrayList<>(Arrays.asList(0.0f, 0.0f, 0.7f, 1f));
@@ -41,7 +40,10 @@ public class SettingsState extends State {
                 isBlack = false;
                 break;
         }
-        font = new BitmapFont();
+
+        exitButton = new CircleButton(70, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 140, "redExitCross.png");
+        audioBar = new Slider(Slider.SliderType.AUDIO, 600, 30, 100);
+        sfxBar = new Slider(Slider.SliderType.SFX, 600, 30, -100);
         if (isBlack) {
             font.setColor(Color.BLACK);
         } else {
@@ -59,20 +61,29 @@ public class SettingsState extends State {
         ScreenUtils.clear(bgColor.get(0), bgColor.get(1), bgColor.get(2), bgColor.get(3));
         sb.begin();
         renderHeader(sb);
-        renderExitButton();
+        renderExitButton(sb);
         sb.end();
+        renderAudioBar();
+        renderSfxBar();
     }
 
     @Override
     public void handleInput() {
         if (Gdx.input.isTouched()) {
-            return;
+            float touchX = Gdx.input.getX();
+            float touchY = Gdx.graphics.getHeight() - Gdx.input.getY();
+            if (exitButton.getBounds().contains(touchX, touchY)) {
+                dispose();
+                gsm.pop();
+            }
         }
     }
 
     @Override
     public void dispose() {
-
+        font.dispose();
+        audioBar.dispose();
+        sfxBar.dispose();
     }
 
     private void renderHeader(SpriteBatch sb) {
@@ -82,8 +93,16 @@ public class SettingsState extends State {
         font.draw(sb, "Settings", Gdx.graphics.getWidth() / 2 - glyphLayout.width / 2, Gdx.graphics.getHeight() - 80);
     }
 
-    private void renderExitButton() {
+    private void renderExitButton(SpriteBatch sb) {
+        sb.draw(exitButton.getImg(), exitButton.getPosition().x - 40, exitButton.getPosition().y - 40, 80, 80);
+    }
 
+    private void renderAudioBar() {
+        audioBar.render();
+    }
+
+    private void renderSfxBar() {
+        sfxBar.render();
     }
 
 }

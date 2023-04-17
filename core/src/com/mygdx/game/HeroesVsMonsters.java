@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.mygdx.game.states.DummyState;
 import com.mygdx.game.states.GameMenuState;
 import com.mygdx.game.states.GameStateManager;
 import com.mygdx.game.states.GameStateManager;
@@ -18,7 +19,7 @@ public class HeroesVsMonsters extends ApplicationAdapter {
 	private GameStateManager gsm;
 	//FireBaseInterface FBIC;
 
-	SpriteBatch sb;
+	private static SpriteBatch sb;
 	//FireBaseInterface FBIC;
 
 	public HeroesVsMonsters(FireBaseInterface FBIC) {
@@ -29,14 +30,14 @@ public class HeroesVsMonsters extends ApplicationAdapter {
 	public void create () {
 		sb = new SpriteBatch();
 		gsm = GameStateManager.getGsm();
-		gsm.push(new GameMenuState());
-		/*FBIC.SomeFunction();
+		/*
+		FBIC.SomeFunction();
 		FBIC.FirstFirebaseTest();
 		FBIC.SetOnValueChangedListener();
 		FBIC.SetValueInDb("message", "Updated message!");
-		 */
+		*/
 		gsm = GameStateManager.getGsm();
-		gsm.push(new SettingsState(SettingsState.SettingsBackground.CITY));
+		gsm.push(new SettingsState(SettingsState.SettingsBackground.MENU));
 	}
 
 	@Override
@@ -49,5 +50,9 @@ public class HeroesVsMonsters extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		sb.dispose();
+	}
+
+	public static SpriteBatch getSb() {
+		return sb;
 	}
 }
