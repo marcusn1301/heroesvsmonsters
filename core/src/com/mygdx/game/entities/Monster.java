@@ -11,7 +11,7 @@ import com.mygdx.game.components.SpriteComponent;
 public class Monster extends Entity {
     private SpriteComponent spriteComponent;
     private PositionComponent positionComponent;
-    private AttackSpeedComponent attackSpeedComponent;
+    private MovementSpeedComponent movementSpeedComponent;
     private AttackDamageComponent attackDamageComponent;
     private HealthComponent healthComponent;
 
@@ -32,11 +32,11 @@ public class Monster extends Entity {
     }
 
     public MovementSpeedComponent getMovementSpeedComponent() {
-        return this.movementSpeedComponent = movementSpeedComponent;
+        return movementSpeedComponent;
     }
 
-    public void setAttackSpeedComponent(AttackSpeedComponent attackSpeedComponent) {
-        this.attackSpeedComponent = attackSpeedComponent;
+    public void setMovementSpeedComponent(MovementSpeedComponent movementSpeedComponent) {
+        this.movementSpeedComponent = movementSpeedComponent;
     }
 
     public AttackDamageComponent getAttackDamageComponent() {

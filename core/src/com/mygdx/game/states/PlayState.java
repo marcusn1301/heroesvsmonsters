@@ -133,15 +133,6 @@ public class PlayState extends State{
 
         stage.addActor(rightTable);
         stage.addActor(menuButton);
-
-
-
-
-
-
-
-
-
     }
     @Override
     public void update(float dt) {
