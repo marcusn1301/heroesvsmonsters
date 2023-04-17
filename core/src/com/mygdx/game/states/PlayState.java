@@ -1,5 +1,6 @@
 package com.mygdx.game.states;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -9,14 +10,21 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.SoundManager;
 import com.mygdx.game.components.PriceComponent;
@@ -35,6 +43,11 @@ public class PlayState extends State{
     private BitmapFont font;
     private Stage stage;
     private ShapeRenderer shapeRenderer;
+    private boolean isGridTableVisible = true;
+
+    private Table gridTable;
+
+    private Texture chosenCharacter;
     private List<DisplayHero> displayHeroes;
     SoundManager soundManager = SoundManager.getInstance();
 
@@ -44,20 +57,22 @@ public class PlayState extends State{
         init();
     }
 
-
     private void init() {
         batch = new SpriteBatch();
         setDisplayHeroes();
         buttonTextures = new Texture[5];
-        for (int i = 0; i < 5; i++) {
+        /*for (int i = 0; i < 5; i++) {
             buttonTextures[i] = new Texture("characterIcon" + (i + 1) + ".png");
+        }*/
+
+        for (int i = 0; i < displayHeroes.size(); i++) {
+            buttonTextures[i] = displayHeroes.get(i).getSpriteComponent().getSprite();
         }
+
         font = new BitmapFont();
         stage = new Stage(new ScreenViewport());
         shapeRenderer = new ShapeRenderer();
         Gdx.input.setInputProcessor(stage);
-
-
 
 
 
@@ -66,13 +81,7 @@ public class PlayState extends State{
         leftTable.top().left().padLeft(Gdx.graphics.getWidth() / 40).padTop(Gdx.graphics.getHeight() / 40);
         for (int i = 0; i < 5; i++) {
             System.out.println(i);
-            for (DisplayHero hero : displayHeroes) {
-                //Example
-                int heroPrice = hero.getPriceComponent().getPrice();
-                System.out.println(heroPrice);
 
-
-            }
             //This line changes the size of the characters, based on device
             float circleRadius = Gdx.graphics.getHeight() / 15;
 
@@ -82,11 +91,24 @@ public class PlayState extends State{
             stack.add(whiteCircle);
             stack.add(button);
 
+            final int finalI = i;
+            button.addListener(new ClickListener() {
+
+
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    chosenCharacter = buttonTextures[finalI];
+                    isGridTableVisible = !isGridTableVisible;
+                    gridTable.setVisible(true);
+                }
+            });
+
             leftTable.add(stack).size(circleRadius * 2, circleRadius * 2).pad(5).fill().center();
             leftTable.row();
             BitmapFont biggerFont = new BitmapFont();
             biggerFont.getData().setScale(2);
-            leftTable.add(new TextButton(Integer.toString(100 * (i + 1)), new TextButton.TextButtonStyle(null, null, null, biggerFont))).pad(5);
+            leftTable.add(new TextButton(Integer.toString(displayHeroes.get(i).getPriceComponent().getPrice()), new TextButton.TextButtonStyle(null, null, null, biggerFont))).pad(5);
             leftTable.row();
         }
         stage.addActor(leftTable);
@@ -127,7 +149,6 @@ public class PlayState extends State{
         counterText2.setHeight(iconSize / 2);
         rightTable.add(counterText2);
 
-
         Texture counterIconTexture2 = new Texture("coin.png");
         Image counterIcon2 = new Image(counterIconTexture2);
         rightTable.add(counterIcon2).size(iconSize, iconSize).pad(5);
@@ -137,18 +158,64 @@ public class PlayState extends State{
         stage.addActor(menuButton);
         soundManager.playSequence();
 
+        // Define the number of rows and columns in the grid
+        int numRows = 6;
+        int numCols = 9;
+
+        final Image[][] grid = new Image[numRows][numCols];
+
+        final float cellSize = Gdx.graphics.getHeight() / (numRows + 3);
+
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                grid[row][col] = new Image(new Texture("invisible.png"));
+
+                grid[row][col].setSize(cellSize, cellSize);
+
+                // Add a click listener to the Image
+                final int finalRow = row;
+                final int finalCol = col;
+                grid[row][col].addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        super.clicked(event, x, y);
+
+                        // Create a new Image to fill the clicked cell
+                        Image fillImage = new Image(chosenCharacter);
+                        fillImage.setSize(cellSize, cellSize);
+
+                        // Replace the clicked cell with the new Image
+                        grid[finalRow][finalCol].setDrawable(fillImage.getDrawable());
+                    }
+                });
+            }
+        }
 
 
+// Create a new table for the grid
+        gridTable = new Table();
+        gridTable.setFillParent(true);
+        gridTable.center();
 
+// Add each Image in the grid to the table
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                gridTable.add(grid[row][col]).size(cellSize).padBottom(90).padRight(20);
+            }
+            gridTable.row();
+        }
 
-
-
-
+        gridTable.setVisible(false);
+        // Add the grid table to the stage
+        stage.addActor(gridTable);
 
     }
+
+
+
     @Override
     public void update(float dt) {
-
+        stage.draw();
     }
 
     @Override
@@ -156,8 +223,6 @@ public class PlayState extends State{
 
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-
 
         drawPaneBackgrounds();
         drawLaneDividers();
@@ -174,10 +239,6 @@ public class PlayState extends State{
         }
     }
 
-
-
-
-
     private void drawPaneBackgrounds() {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
@@ -192,6 +253,7 @@ public class PlayState extends State{
 
         shapeRenderer.end();
     }
+
 
 
     private void drawLaneDividers() {
@@ -244,14 +306,17 @@ public class PlayState extends State{
         font.dispose();
         stage.dispose();
         shapeRenderer.dispose();
+        //TODO dispose displayHeroes
     }
     public void setDisplayHeroes() {
         displayHeroes = new ArrayList<DisplayHero>();
         DisplayHero hulk = HeroFactory.createDisplayHero(HeroType.HULK);
+        DisplayHero spiderman = HeroFactory.createDisplayHero(HeroType.SPIDERMAN);
         DisplayHero cpt_america = HeroFactory.createDisplayHero(HeroType.CAPTAIN_AMERICA);
         DisplayHero ironman = HeroFactory.createDisplayHero(HeroType.IRONMAN);
         DisplayHero thor = HeroFactory.createDisplayHero(HeroType.THOR);
         this.displayHeroes.add(hulk);
+        this.displayHeroes.add(spiderman);
         this.displayHeroes.add(cpt_america);
         this.displayHeroes.add(ironman);
         this.displayHeroes.add(thor);
