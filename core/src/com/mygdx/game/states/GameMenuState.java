@@ -116,7 +116,7 @@ public class GameMenuState extends State {
             int y = Gdx.input.getY();
             if (isStartButtonClicked(x, y)) {
                 soundManager.playSound("menuNavigate");
-                gsm.push(new PlayState());
+                gsm.push(new IntroCutsceneState());
             }
             if (isLobbyButtonClicked(x, y)) {
                 gsm.push(new DummyState());
