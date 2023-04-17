@@ -153,47 +153,54 @@ public class PlayState extends State{
         stage.addActor(menuButton);
         soundManager.playSequence();
 
-        // Create a new table for the grid
-        gridTable = new Table();
-        gridTable.setFillParent(true);
-        gridTable.center();
-
         // Define the number of rows and columns in the grid
         int numRows = 6;
         int numCols = 9;
 
-        // Define the size of each cell in the grid
+// Define the grid as a 2D array of Images
+        final Image[][] grid = new Image[numRows][numCols];
+
+// Define the size of each cell in the grid
         final float cellSize = Gdx.graphics.getHeight() / (numRows + 3);
 
-        // Loop through each row and column, adding an Image to represent each cell
+// Loop through each row and column, adding an Image to represent each cell
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {
-                // Create a new Image for the cell and add it to the table
-                final Image cellImage = new Image(new Texture("invisible.png"));
-                cellImage.setSize(cellSize, cellSize);
-                gridTable.add(cellImage).size(cellSize).padBottom(90).padRight(20);
+// Create a new Image for the cell and add it to the grid
+                grid[row][col] = new Image(new Texture("invisible.png"));
+                grid[row][col].setSize(cellSize, cellSize);
 
-                cellImage.addListener(new ClickListener() {
+                // Add a click listener to the Image
+                final int finalRow = row;
+                final int finalCol = col;
+                grid[row][col].addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         super.clicked(event, x, y);
-                        //TODO
+                        // TODO
 
                         // Create a new Image to fill the clicked cell
                         Image fillImage = new Image(chosenCharacter);
                         fillImage.setSize(cellSize, cellSize);
 
                         // Replace the clicked cell with the new Image
-                        gridTable.getCell(cellImage).setActor(fillImage);
-                        //hidePanelCells();
-                        /*isGridTableVisible = false;
-                        gridTable.setVisible(isGridTableVisible);*/
-
+                        grid[finalRow][finalCol].setDrawable(fillImage.getDrawable());
                     }
                 });
-
             }
-            // Move to the next row in the grid
+        }
+
+
+// Create a new table for the grid
+        gridTable = new Table();
+        gridTable.setFillParent(true);
+        gridTable.center();
+
+// Add each Image in the grid to the table
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                gridTable.add(grid[row][col]).size(cellSize).padBottom(90).padRight(20);
+            }
             gridTable.row();
         }
 
