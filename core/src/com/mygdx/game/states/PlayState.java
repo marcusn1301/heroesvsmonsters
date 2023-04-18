@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -17,12 +18,17 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.game.MoneySystem;
 import com.mygdx.game.SoundManager;
 import com.mygdx.game.components.PriceComponent;
 import com.mygdx.game.entities.DisplayHero;
@@ -44,9 +50,13 @@ public class PlayState extends State{
 
     private Table gridTable;
 
-    private Texture chosenCharacter;
+    private DisplayHero chosenCharacter;
     private List<DisplayHero> displayHeroes;
     SoundManager soundManager = SoundManager.getInstance();
+
+    private MoneySystem moneySystem;
+
+    private boolean isPlacementAllowed = false;
 
 
     public PlayState() {
@@ -58,6 +68,7 @@ public class PlayState extends State{
         batch = new SpriteBatch();
         setDisplayHeroes();
         buttonTextures = new Texture[5];
+        moneySystem = new MoneySystem(1000);
         /*for (int i = 0; i < 5; i++) {
             buttonTextures[i] = new Texture("characterIcon" + (i + 1) + ".png");
         }*/
@@ -70,6 +81,8 @@ public class PlayState extends State{
         stage = new Stage(new ScreenViewport());
         shapeRenderer = new ShapeRenderer();
         Gdx.input.setInputProcessor(stage);
+
+
 
         Table leftTable = new Table();
         leftTable.setFillParent(true);
@@ -90,12 +103,15 @@ public class PlayState extends State{
             button.addListener(new ClickListener() {
 
 
+                // When player clicks a character icon
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
-                    chosenCharacter = buttonTextures[finalI];
-                    isGridTableVisible = !isGridTableVisible;
-                    gridTable.setVisible(true);
+
+                    chosenCharacter = displayHeroes.get(finalI);
+                        chosenCharacter = displayHeroes.get(finalI);
+                        isGridTableVisible = !isGridTableVisible;
+                        gridTable.setVisible(true);
                 }
             });
 
@@ -126,7 +142,7 @@ public class PlayState extends State{
         counterFont.getData().setScale(4);
 
         // First counter
-        TextButton counterText1 = new TextButton("1000", new TextButton.TextButtonStyle(null, null, null, counterFont));
+        final TextButton counterText1 = new TextButton(String.valueOf(moneySystem.getMoney()), new TextButton.TextButtonStyle(null, null, null, counterFont));
         counterText1.pad(2);
         counterText1.setWidth(iconSize);
         counterText1.setHeight(iconSize / 2);
@@ -153,68 +169,82 @@ public class PlayState extends State{
         stage.addActor(menuButton);
         soundManager.playSequence();
 
-        // Create a new table for the grid
-        gridTable = new Table();
-        gridTable.setFillParent(true);
-        gridTable.center();
-
         // Define the number of rows and columns in the grid
         int numRows = 6;
         int numCols = 9;
 
-        // Define the size of each cell in the grid
+        final Image[][] grid = new Image[numRows][numCols];
+
         final float cellSize = Gdx.graphics.getHeight() / (numRows + 3);
 
-        // Loop through each row and column, adding an Image to represent each cell
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {
-                // Create a new Image for the cell and add it to the table
-                final Image cellImage = new Image(new Texture("invisible.png"));
-                cellImage.setSize(cellSize, cellSize);
-                gridTable.add(cellImage).size(cellSize).padBottom(90).padRight(20);
+                grid[row][col] = new Image(new Texture("invisible.png"));
 
-                cellImage.addListener(new ClickListener() {
+                grid[row][col].setSize(cellSize, cellSize);
+
+                // Add a click listener to the Image
+                final int finalRow = row;
+                final int finalCol = col;
+                grid[row][col].addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         super.clicked(event, x, y);
-                        //TODO
 
                         // Create a new Image to fill the clicked cell
-                        Image fillImage = new Image(chosenCharacter);
-                        fillImage.setSize(cellSize, cellSize);
+                        Image fillImage = new Image(chosenCharacter.getSpriteComponent().getSprite());
 
-                        // Replace the clicked cell with the new Image
-                        gridTable.getCell(cellImage).setActor(fillImage);
-                        //hidePanelCells();
-                        /*isGridTableVisible = false;
-                        gridTable.setVisible(isGridTableVisible);*/
+                        // If the hero cost is more than your money total, display "Insufficient Money" in the
+                        //middle of the screen
+                        if (moneySystem.getMoney() - chosenCharacter.getPriceComponent().getPrice() < 0) {
+                            BitmapFont counterFont = new BitmapFont();
+                            counterFont.getData().setScale(8f);
+                            final Label insufficientMoneyLabel = new Label("Insufficient Money", new Label.LabelStyle(counterFont, Color.RED));
+                            insufficientMoneyLabel.setPosition(Gdx.graphics.getWidth()/2 - insufficientMoneyLabel.getWidth()/2, Gdx.graphics.getHeight()/2 - insufficientMoneyLabel.getHeight()/2);
 
+                            stage.addActor(insufficientMoneyLabel);
+
+                            Timer.schedule(new Timer.Task() {
+                                @Override
+                                public void run() {
+                                    insufficientMoneyLabel.remove();
+                                }
+                            }, 1.5f); // 1 second delay
+
+                        }
+                        // If the player has enough money => purchase the hero and display it on the grid
+                        else {
+                            moneySystem.removeMoney(chosenCharacter.getPriceComponent().getPrice());
+                            counterText1.setText(String.valueOf(moneySystem.getMoney()));
+
+                            fillImage.setSize(cellSize, cellSize);
+
+                            // Replace the clicked cell with the new Image
+                            grid[finalRow][finalCol].setDrawable(fillImage.getDrawable());
+                        }
                     }
                 });
-
             }
-            // Move to the next row in the grid
-            gridTable.row();
+        }
 
+
+// Create a new table for the grid
+        gridTable = new Table();
+        gridTable.setFillParent(true);
+        gridTable.center();
+
+// Add each Image in the grid to the table
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                gridTable.add(grid[row][col]).size(cellSize).padBottom(90).padRight(20);
+            }
+            gridTable.row();
         }
 
         gridTable.setVisible(false);
         // Add the grid table to the stage
         stage.addActor(gridTable);
-    }
 
-    public void hidePanelCells() {
-        System.out.println("HIDDEN");
-        // Loop through each cell in the grid
-        for (Cell cell : gridTable.getCells()) {
-            // Get the actor inside the cell
-            Actor actor = cell.getActor();
-            System.out.println(actor.getName());
-            if (actor != null && actor.getName() != null && actor.getName().equals("panel.png")) {
-                // Hide the actor
-                actor.setVisible(false);
-            }
-        }
     }
 
 

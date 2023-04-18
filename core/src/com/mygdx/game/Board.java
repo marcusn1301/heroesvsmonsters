@@ -1,8 +1,8 @@
 package com.mygdx.game;
 
 public class Board {
-    private int numRows;
-    private int numCols;
+    private int numRows = 6;
+    private int numCols = 9;
     private int[][] board;
 
     public Board(int numRows, int numCols) {
