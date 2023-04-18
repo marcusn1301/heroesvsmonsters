@@ -195,6 +195,7 @@ public class PlayState extends State{
             }
             // Move to the next row in the grid
             gridTable.row();
+
         }
 
         gridTable.setVisible(false);
