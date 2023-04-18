@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.components.AttackComponent;
 import com.mygdx.game.components.HealthComponent;
+import com.mygdx.game.components.HeroComponent;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.PriceComponent;
 import com.mygdx.game.components.SpriteComponent;
@@ -16,8 +17,9 @@ public class HeroFactory {
         Hero hero = new Hero();
         hero.setSpriteComponent(new SpriteComponent(getHeroSprite(heroType)));
         hero.setPositionComponent(new PositionComponent(boardPosition));
-        hero.setAttackComponent(new AttackComponent(getHeroAttackTimer(), getHeroAttackTimeElapsed()));
+        hero.setAttackComponent(new AttackComponent(getHeroAttackDamage(heroType), getHeroAttackTimer(), getHeroAttackTimeElapsed()));
         hero.setHealthComponent(new HealthComponent(getHeroHealth()));
+        hero.setTypeComponent(new HeroComponent(heroType));
         return hero;
     }
 
