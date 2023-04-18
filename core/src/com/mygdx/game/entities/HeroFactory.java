@@ -3,8 +3,8 @@ package com.mygdx.game.entities;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.components.AttackDamageComponent;
-import com.mygdx.game.components.AttackSpeedComponent;
+import com.mygdx.game.components.AttackComponent;
+import com.mygdx.game.components.HealthComponent;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.PriceComponent;
 import com.mygdx.game.components.SpriteComponent;
@@ -16,8 +16,8 @@ public class HeroFactory {
         Hero hero = new Hero();
         hero.setSpriteComponent(new SpriteComponent(getHeroSprite(heroType)));
         hero.setPositionComponent(new PositionComponent(boardPosition));
-        hero.setAttackSpeedComponent(new AttackSpeedComponent(getHeroAttackSpeed(heroType)));
-        hero.setAttackDamageComponent(new AttackDamageComponent(getHeroAttackDamage(heroType)));
+        hero.setAttackComponent(new AttackComponent(getHeroAttackTimer(), getHeroAttackTimeElapsed()));
+        hero.setHealthComponent(new HealthComponent(getHeroHealth()));
         return hero;
     }
 
@@ -107,6 +107,14 @@ public class HeroFactory {
         }
     }
 
+    private static float getHeroAttackTimer() {
+        return 1.0f;
+    }
+
+    private static float getHeroAttackTimeElapsed() {
+        return 0f;
+    }
+
     private static int getHeroPrice(HeroType heroType) {
         switch (heroType) {
             case SUPERMAN:
@@ -124,5 +132,9 @@ public class HeroFactory {
             default:
                 return 0;
         }
+    }
+
+    private static int getHeroHealth() {
+        return 3;
     }
 }
