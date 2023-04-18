@@ -68,7 +68,7 @@ public class PlayState extends State{
         batch = new SpriteBatch();
         setDisplayHeroes();
         buttonTextures = new Texture[5];
-        moneySystem = new MoneySystem(1000);
+        moneySystem = new MoneySystem(5000);
         /*for (int i = 0; i < 5; i++) {
             buttonTextures[i] = new Texture("characterIcon" + (i + 1) + ".png");
         }*/
@@ -81,8 +81,6 @@ public class PlayState extends State{
         stage = new Stage(new ScreenViewport());
         shapeRenderer = new ShapeRenderer();
         Gdx.input.setInputProcessor(stage);
-
-
 
         Table leftTable = new Table();
         leftTable.setFillParent(true);
@@ -179,13 +177,14 @@ public class PlayState extends State{
 
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {
-                grid[row][col] = new Image(new Texture("invisible.png"));
+                grid[row][col] = new Image(new Texture("panel.png"));
 
                 grid[row][col].setSize(cellSize, cellSize);
 
                 // Add a click listener to the Image
                 final int finalRow = row;
                 final int finalCol = col;
+
                 grid[row][col].addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
@@ -221,19 +220,20 @@ public class PlayState extends State{
 
                             // Replace the clicked cell with the new Image
                             grid[finalRow][finalCol].setDrawable(fillImage.getDrawable());
+
+                            //Attempt to set monster on board
+                            //grid[4][4].setDrawable(fillImage.getDrawable());
                         }
                     }
                 });
             }
         }
-
-
-// Create a new table for the grid
+        // Create a new table for the grid
         gridTable = new Table();
         gridTable.setFillParent(true);
         gridTable.center();
 
-// Add each Image in the grid to the table
+        // Add each Image in the grid to the table
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {
                 gridTable.add(grid[row][col]).size(cellSize).padBottom(90).padRight(20);
@@ -244,9 +244,7 @@ public class PlayState extends State{
         gridTable.setVisible(false);
         // Add the grid table to the stage
         stage.addActor(gridTable);
-
     }
-
 
 
     @Override
@@ -262,6 +260,7 @@ public class PlayState extends State{
 
         drawPaneBackgrounds();
         drawLaneDividers();
+
         //drawButtonBackgroundCircles();
 
         stage.act(Gdx.graphics.getDeltaTime());
@@ -291,7 +290,6 @@ public class PlayState extends State{
     }
 
 
-
     private void drawLaneDividers() {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
@@ -317,7 +315,6 @@ public class PlayState extends State{
                 shapeRenderer.rect(dotX, lineY, dotWidth, lineWidth);
             }
         }
-
         shapeRenderer.end();
     }
 

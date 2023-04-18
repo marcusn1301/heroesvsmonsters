@@ -1,5 +1,6 @@
 package com.mygdx.game.states;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -13,7 +14,7 @@ public class DummyState extends State {
 
     @Override
     public void render(SpriteBatch sb) {
-        ScreenUtils.clear(0,0,1,1);
+        ScreenUtils.clear(Color.CORAL);
         sb.begin();
         sb.end();
     }

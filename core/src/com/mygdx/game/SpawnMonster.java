@@ -43,11 +43,10 @@ public class SpawnMonster {
         Vector2 position = new Vector2(2, 3);
         monsterFactory.createMonster(MonsterType.MAGNETO, position);
 
-
         // Get a random monster type from the available types
         MonsterType monsterType = monsterTypes.random();
 
-        // Set the position of the monster on the right edge of the screen
+        // Set the position of the monster on a random place of the right edge of the screen.
         Vector2 monsterPosition = new Vector2(row - 1, MathUtils.random(0, col - 1));
 
         // Create the monster using the MonsterFactory
