@@ -25,16 +25,6 @@ public class Hero extends Entity {
         this.typeComponent = typeComponent;
     }
 
-    public void attack() {
-        AttackComponent attack = getComponent(AttackComponent.class);
-        if (attack.getAttackTimeElapsed() >= attack.getAttackInterval()) {
-            // Create projectile and assign source entity as this
-            Entity projectile = ProjectileFactory.createProjectile(typeComponent.getHeroType(), positionComponent.getPosition(), 5, this);
-            engine.addEntity(projectile);
-            attack.setAttackTimeElapsed(0);
-        }
-    }
-
     public SpriteComponent getSpriteComponent() {
         return spriteComponent;
     }

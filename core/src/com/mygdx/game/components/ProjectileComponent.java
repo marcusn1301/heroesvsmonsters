@@ -8,6 +8,7 @@ public class ProjectileComponent implements Component {
     private float velocity;
     private Entity sourceEntity;
 
+
     public ProjectileComponent(boolean isActive, float velocity, Entity sourceEntity) {
         this.velocity = velocity;
         this.sourceEntity = sourceEntity;
@@ -27,13 +28,5 @@ public class ProjectileComponent implements Component {
 
     public void setVelocity(float velocity) {
         this.velocity = velocity;
-    }
-
-    public Vector2 getPosition() {
-        return position;
-    }
-
-    public void setPosition(Vector2 position) {
-        this.position = position;
     }
 }

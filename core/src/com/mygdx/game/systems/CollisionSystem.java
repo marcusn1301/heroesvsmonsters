@@ -1,6 +1,7 @@
 package com.mygdx.game.systems;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.mygdx.game.components.AttackComponent;
@@ -18,4 +19,8 @@ public class CollisionSystem extends IteratingSystem {
         collisionMapper = ComponentMapper.getFor(CollisionComponent.class);
     }
 
+    @Override
+    protected void processEntity(Entity entity, float deltaTime) {
+
+    }
 }

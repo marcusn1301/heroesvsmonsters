@@ -10,6 +10,7 @@ public class Projectile extends Entity {
     private CollisionComponent collisionComponent;
     private SpriteComponent spriteComponent;
     private ProjectileComponent projectileComponent;
+    private PositionComponent positionComponent;
 
     public PositionComponent getPositionComponent() {
         return positionComponent;
@@ -19,7 +20,6 @@ public class Projectile extends Entity {
         this.positionComponent = positionComponent;
     }
 
-    private PositionComponent positionComponent;
     public ProjectileComponent getProjectileComponent() {
         return projectileComponent;
     }
