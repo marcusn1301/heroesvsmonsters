@@ -1,15 +1,14 @@
 package com.mygdx.game;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.entities.Monster;
 import com.mygdx.game.entities.MonsterFactory;
 import com.mygdx.game.types.MonsterType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class SpawnMonster {
     private MonsterFactory monsterFactory;
@@ -18,7 +17,7 @@ public class SpawnMonster {
     private int level;
     private int row;
     private int col;
-    private List<Monster> monsters;
+    private List<Entity> monsters;
     private final Array<MonsterType> monsterTypes = new Array<>(MonsterType.values());
 
 
@@ -50,6 +49,6 @@ public class SpawnMonster {
         Vector2 monsterPosition = new Vector2(row - 1, MathUtils.random(0, col - 1));
 
         // Create the monster using the MonsterFactory
-        Monster monster = MonsterFactory.createMonster(monsterType, monsterPosition);
+        Entity monster = MonsterFactory.createMonster(monsterType, monsterPosition);
     }
 }
