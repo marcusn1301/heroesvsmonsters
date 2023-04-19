@@ -119,7 +119,7 @@ public class GameMenuState extends State {
                 gsm.push(new IntroCutsceneState());
             }
             if (isLobbyButtonClicked(x, y)) {
-                gsm.push(new DummyState());
+                gsm.push(new SettingsState(SettingsState.SettingsBackground.CITY));
             }
         }
     }
