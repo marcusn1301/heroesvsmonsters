@@ -2,6 +2,7 @@ package com.mygdx.game.states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -23,7 +24,7 @@ public class DummyState extends State {
 
     @Override
     public void render(SpriteBatch sb) {
-        ScreenUtils.clear(bg.get(0),bg.get(1),bg.get(2),bg.get(3));
+        ScreenUtils.clear(Color.CORAL);
         sb.begin();
         sb.end();
     }

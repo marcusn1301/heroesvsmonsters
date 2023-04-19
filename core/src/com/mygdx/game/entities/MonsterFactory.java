@@ -29,11 +29,11 @@ public class MonsterFactory {
             case JUGGERNAUT:
                 return new Texture(Gdx.files.internal("characterIcon1.png"));
             case VENOM:
-                return new Texture(Gdx.files.internal("characterIcon2.png"));
+                return new Texture(Gdx.files.internal("Monster_3.png"));
             case HOBGOBLIN:
-                return new Texture(Gdx.files.internal("characterIcon4.png"));
+                return new Texture(Gdx.files.internal("Monster_2.png"));
             case GOBLIN_GLIDER:
-                return new Texture(Gdx.files.internal("characterIcon5.png"));
+                return new Texture(Gdx.files.internal("Monster_1.png"));
             case MYSTIQUE:
                 return new Texture(Gdx.files.internal("characterIcon6.png"));
             default:
