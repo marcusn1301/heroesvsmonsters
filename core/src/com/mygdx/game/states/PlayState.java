@@ -2,8 +2,6 @@ package com.mygdx.game.states;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.badlogic.gdx.Gdx;
@@ -27,11 +25,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.MoneySystem;
 import com.mygdx.game.SoundManager;
-import com.mygdx.game.components.HeroComponent;
-import com.mygdx.game.components.PositionComponent;
-import com.mygdx.game.components.ProjectileComponent;
 import com.mygdx.game.entities.DisplayHero;
-import com.mygdx.game.entities.Hero;
 import com.mygdx.game.entities.HeroFactory;
 import com.mygdx.game.systems.HeroSystem;
 import com.mygdx.game.systems.ProjectileMovementSystem;
@@ -72,25 +66,23 @@ public class PlayState extends State{
         createRightTable();
         createGrid();
         soundManager.playSequence();
+        //Game engine & systems
+        initializeGameEngine();
+    }
 
-        //game engine
+    private void initializeGameEngine() {
+        //Central game engine
         engine = new Engine();
+
+        //Systems for game logic
         HeroSystem heroSystem = new HeroSystem(engine);
         ProjectileMovementSystem projectileMovementSystem = new ProjectileMovementSystem(engine);
+
         engine.addSystem(heroSystem);
         engine.addSystem(projectileMovementSystem);
 
         Entity spiderman = HeroFactory.createHero(HeroType.SPIDERMAN, new Vector2(50, 50));
         engine.addEntity(spiderman);
-
-
-
-        /*engine.update(0);
-        System.out.println(engine.getEntitiesFor(Family.one(HeroComponent.class).get()));
-        for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class, PositionComponent.class).get())) {
-            System.out.println(e.getComponent(HeroComponent.class).getHeroType());
-            System.out.println(e.getComponent(PositionComponent.class).getPosition().x);
-        }*/
     }
 
     private void initButtonTextures() {
@@ -113,8 +105,6 @@ public class PlayState extends State{
         leftTable.setFillParent(true);
         leftTable.top().left().padLeft(Gdx.graphics.getWidth() / 40).padTop(Gdx.graphics.getHeight() / 40);
         for (int i = 0; i < 5; i++) {
-            System.out.println(i);
-
             //This line changes the size of the characters, based on device
             float circleRadius = Gdx.graphics.getHeight() / 15;
 
