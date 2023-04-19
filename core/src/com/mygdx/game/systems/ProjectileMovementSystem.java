@@ -14,15 +14,16 @@ public class ProjectileMovementSystem extends IteratingSystem {
     private ComponentMapper<ProjectileComponent> projectileMapper;
     private ComponentMapper<CollisionComponent> collisionMapper;
     private ComponentMapper<PositionComponent> positionMapper;
-
     private Engine engine;
 
-
-    public ProjectileMovementSystem() {
-        super(Family.all(ProjectileComponent.class, CollisionComponent.class).get());
+    //The system is only responsible for handling the position of the projectiles.
+    public ProjectileMovementSystem(Engine engine) {
+        //Retrieves all the projectiles and set the components
+        super(Family.one(ProjectileComponent.class).get());
         projectileMapper = ComponentMapper.getFor(ProjectileComponent.class);
         collisionMapper = ComponentMapper.getFor(CollisionComponent.class);
         positionMapper = ComponentMapper.getFor(PositionComponent.class);
+        this.engine = engine;
     }
 
     @Override
@@ -31,7 +32,13 @@ public class ProjectileMovementSystem extends IteratingSystem {
         CollisionComponent collisionComponent = collisionMapper.get(entity);
         PositionComponent positionComponent = positionMapper.get(entity);
 
-        //TODO: Check if projectile is out of bounds
+        //If a projectile is out of bounds, remove it from the engine
+        if (positionComponent.getPosition().x > 500) {
+            engine.removeEntity(entity);
+            System.out.println("Projectile out of bounds");
+        }
+
+        //Increment the horizontal position of the projectile based on its velocity
         float posY = positionComponent.getPosition().y;
         float posX = positionComponent.getPosition().x;
         float speed = projectileComponent.getVelocity();

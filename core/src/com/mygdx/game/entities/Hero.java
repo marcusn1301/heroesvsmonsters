@@ -13,10 +13,7 @@ public class Hero extends Entity {
     private PositionComponent positionComponent;
     private AttackComponent attackComponent;
     private HealthComponent healthComponent;
-
-
     private HeroComponent typeComponent;
-    private Engine engine;
     public HeroComponent getTypeComponent() {
         return typeComponent;
     }

@@ -1,5 +1,9 @@
 package com.mygdx.game.states;
 
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.badlogic.gdx.Gdx;
@@ -9,6 +13,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -22,8 +27,14 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.MoneySystem;
 import com.mygdx.game.SoundManager;
+import com.mygdx.game.components.HeroComponent;
+import com.mygdx.game.components.PositionComponent;
+import com.mygdx.game.components.ProjectileComponent;
 import com.mygdx.game.entities.DisplayHero;
+import com.mygdx.game.entities.Hero;
 import com.mygdx.game.entities.HeroFactory;
+import com.mygdx.game.systems.HeroSystem;
+import com.mygdx.game.systems.ProjectileMovementSystem;
 import com.mygdx.game.types.HeroType;
 
 import java.util.ArrayList;
@@ -44,6 +55,7 @@ public class PlayState extends State{
 
     private MoneySystem moneySystem;
     private boolean isPlacementAllowed = false;
+    private static Engine engine;
 
     public PlayState() {
         //super(gsm);
@@ -61,6 +73,24 @@ public class PlayState extends State{
         createGrid();
         soundManager.playSequence();
 
+        //game engine
+        engine = new Engine();
+        HeroSystem heroSystem = new HeroSystem(engine);
+        ProjectileMovementSystem projectileMovementSystem = new ProjectileMovementSystem(engine);
+        engine.addSystem(heroSystem);
+        engine.addSystem(projectileMovementSystem);
+
+        Entity spiderman = HeroFactory.createHero(HeroType.SPIDERMAN, new Vector2(50, 50));
+        engine.addEntity(spiderman);
+
+
+
+        /*engine.update(0);
+        System.out.println(engine.getEntitiesFor(Family.one(HeroComponent.class).get()));
+        for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class, PositionComponent.class).get())) {
+            System.out.println(e.getComponent(HeroComponent.class).getHeroType());
+            System.out.println(e.getComponent(PositionComponent.class).getPosition().x);
+        }*/
     }
 
     private void initButtonTextures() {
@@ -247,6 +277,7 @@ public class PlayState extends State{
     @Override
     public void update(float dt) {
         stage.draw();
+        engine.update(dt);
     }
 
     @Override

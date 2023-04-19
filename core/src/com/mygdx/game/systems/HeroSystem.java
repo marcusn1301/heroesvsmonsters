@@ -13,6 +13,7 @@ import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.ProjectileComponent;
 import com.mygdx.game.components.SpriteComponent;
 import com.mygdx.game.entities.ProjectileFactory;
+import com.badlogic.gdx.utils.Logger;
 
 public class HeroSystem extends IteratingSystem {
     private ComponentMapper<AttackComponent> attackMapper;
@@ -22,49 +23,64 @@ public class HeroSystem extends IteratingSystem {
     private ComponentMapper<HeroComponent> heroTypeMapper;
     private Engine engine;
 
-
-    public HeroSystem() {
-        super(Family.all(AttackComponent.class, PositionComponent.class, CollisionComponent.class, SpriteComponent.class).get());
+    //This system is only responsible for handling the creation of projectiles for all the heroes
+    //This is done based on an interval that is set in the AttackComponent
+    public HeroSystem(Engine engine) {
+        //Retrieves all the hero-entities with the given components
+        super(Family.all(AttackComponent.class, HeroComponent.class).get());
         attackMapper = ComponentMapper.getFor(AttackComponent.class);
-        collisionMapper = ComponentMapper.getFor(CollisionComponent.class);
         positionMapper = ComponentMapper.getFor(PositionComponent.class);
         spriteMapper = ComponentMapper.getFor(SpriteComponent.class);
         heroTypeMapper = ComponentMapper.getFor(HeroComponent.class);
+        this.engine = engine;
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
+        //Components for the hero that is being processed
         AttackComponent attack = attackMapper.get(entity);
-        CollisionComponent collision = collisionMapper.get(entity);
         PositionComponent position = positionMapper.get(entity);
         SpriteComponent sprite = spriteMapper.get(entity);
         HeroComponent heroComponent = heroTypeMapper.get(entity);
 
-        attack.setAttackTimeElapsed(attack.getAttackTimeElapsed() + deltaTime);
-
-        if (attack.getAttackTimeElapsed() >= attack.getAttackInterval()) {
-            // Attack logic goes here
-            attack.setAttackTimeElapsed(0);
-
-            // Check if there is a projectile already
-            Entity projectile = null;
-            for (Entity e : engine.getEntitiesFor(Family.all(ProjectileComponent.class, PositionComponent.class).get())) {
-                if (e.getComponent(ProjectileComponent.class).getSourceEntity() == entity) {
-                    projectile = e;
-                    break;
-                }
-            }
-            if (projectile == null) {
-                // Create new projectile entity
-                //TODO
-                projectile = ProjectileFactory.createProjectile(heroComponent.getHeroType(), position.getPosition(), 5, entity);
-                engine.addEntity(projectile);
-            } else {
-                // Reset projectile position
-                PositionComponent projectilePosition = projectile.getComponent(PositionComponent.class);
-                //sets projectile position to hero position (resets position)
-                projectilePosition.setPosition(new Vector2(position.getPosition()));
+        //Check if a hero has an active projectile
+        boolean projectileExists = false;
+        for (Entity e : engine.getEntitiesFor(Family.all(ProjectileComponent.class, PositionComponent.class).get())) {
+            if (e.getComponent(ProjectileComponent.class).getSourceEntity() == entity) {
+                System.out.println(e.getComponent(PositionComponent.class).getPosition());
+                projectileExists = true;
+                break;
             }
         }
+
+        //If a hero does not have an active projectile, it is created and added to the engine
+        if (!projectileExists) {
+            float posX = position.getPosition().x;
+            float posY = position.getPosition().y;
+            Entity projectile = ProjectileFactory.createProjectile(heroComponent.getHeroType(), new Vector2(posX, posY), 5, entity);
+            engine.addEntity(projectile);
+        }
+
+        //If the time elapsed is greater than the given interval, create a new projectile
+        if (attack.getAttackTimeElapsed() > attack.getAttackInterval()) {
+            attack.setAttackTimeElapsed(0);
+            float posX = position.getPosition().x;
+            float posY = position.getPosition().y;
+            Entity projectile = ProjectileFactory.createProjectile(heroComponent.getHeroType(), new Vector2(posX, posY), 5, entity);
+            engine.addEntity(projectile);
+            System.out.println("added projectile to hero: ");
+            System.out.println(heroComponent.getHeroType());
+            System.out.println("with position ");
+            System.out.println(projectile.getComponent(PositionComponent.class).getPosition());
+        }
+
+        for (Entity e : engine.getEntitiesFor(Family.all(ProjectileComponent.class, PositionComponent.class).get())) {
+            if (e.getComponent(ProjectileComponent.class).getSourceEntity() == entity) {
+                System.out.println(e.getComponent(PositionComponent.class).getPosition());
+            }
+        }
+
+        //Increase the time elapsed field in the attack component on every update
+        attack.setAttackTimeElapsed(attack.getAttackTimeElapsed() + deltaTime);
     }
 }

@@ -3,7 +3,6 @@ package com.mygdx.game.entities;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.components.AttackDamageComponent;
 import com.mygdx.game.components.MovementSpeedComponent;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.SpriteComponent;
@@ -16,7 +15,6 @@ public class MonsterFactory {
         monster.setSpriteComponent(new SpriteComponent(getMonsterSprite(monsterType)));
         monster.setPositionComponent(new PositionComponent(boardPosition));
         monster.setMovementSpeedComponent(new MovementSpeedComponent(getMonsterMovementSpeed(monsterType)));
-        monster.setAttackDamageComponent(new AttackDamageComponent(getMonsterAttackDamage(monsterType)));
         return monster;
     }
 

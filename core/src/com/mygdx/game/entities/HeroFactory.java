@@ -1,5 +1,6 @@
 package com.mygdx.game.entities;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
@@ -13,13 +14,13 @@ import com.mygdx.game.types.HeroType;
 
 public class HeroFactory {
     //Creates a hero that is placed on the board
-    public static Hero createHero(HeroType heroType, Vector2 boardPosition) {
-        Hero hero = new Hero();
-        hero.setSpriteComponent(new SpriteComponent(getHeroSprite(heroType)));
-        hero.setPositionComponent(new PositionComponent(boardPosition));
-        hero.setAttackComponent(new AttackComponent(getHeroAttackDamage(heroType), getHeroAttackTimer(), getHeroAttackTimeElapsed()));
-        hero.setHealthComponent(new HealthComponent(getHeroHealth()));
-        hero.setTypeComponent(new HeroComponent(heroType));
+    public static Entity createHero(HeroType heroType, Vector2 boardPosition) {
+        Entity hero = new Entity();
+        hero.add(new SpriteComponent(getHeroSprite(heroType)));
+        hero.add(new PositionComponent(boardPosition));
+        hero.add(new AttackComponent(getHeroAttackDamage(heroType), getHeroAttackTimer(), getHeroAttackTimeElapsed()));
+        hero.add(new HealthComponent(getHeroHealth()));
+        hero.add(new HeroComponent(heroType));
         return hero;
     }
 
@@ -110,7 +111,7 @@ public class HeroFactory {
     }
 
     private static float getHeroAttackTimer() {
-        return 1.0f;
+        return 10.0f;
     }
 
     private static float getHeroAttackTimeElapsed() {

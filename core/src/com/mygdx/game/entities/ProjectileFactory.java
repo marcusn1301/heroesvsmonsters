@@ -14,12 +14,12 @@ import com.mygdx.game.components.SpriteComponent;
 import com.mygdx.game.types.HeroType;
 
 public class ProjectileFactory {
-    public static Projectile createProjectile(HeroType heroType, Vector2 startingPosition, float velocity, Entity sourceEntity) {
-        Projectile projectile = new Projectile();
-        projectile.setProjectileComponent(new ProjectileComponent(true, velocity, sourceEntity));
-        projectile.setSpriteComponent(new SpriteComponent(getProjectileSprite(heroType)));
-        projectile.setCollisionComponent(new CollisionComponent(new Rectangle(startingPosition.x, startingPosition.y, 10f, 10f)));
-        projectile.setPositionComponent(new PositionComponent(startingPosition));
+    public static Entity createProjectile(HeroType heroType, Vector2 startingPosition, float velocity, Entity sourceEntity) {
+        Entity projectile = new Entity();
+        projectile.add(new ProjectileComponent(true, velocity, sourceEntity));
+        projectile.add(new SpriteComponent(getProjectileSprite(heroType)));
+        projectile.add(new CollisionComponent(new Rectangle(startingPosition.x, startingPosition.y, 10f, 10f)));
+        projectile.add(new PositionComponent(startingPosition));
         return projectile;
     }
 
