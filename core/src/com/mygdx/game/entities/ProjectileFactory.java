@@ -14,9 +14,9 @@ import com.mygdx.game.components.SpriteComponent;
 import com.mygdx.game.types.HeroType;
 
 public class ProjectileFactory {
-    public static Entity createProjectile(HeroType heroType, Vector2 startingPosition, float velocity, Entity sourceEntity) {
+    public static Entity createProjectile(HeroType heroType, Vector2 startingPosition, Entity sourceEntity) {
         Entity projectile = new Entity();
-        projectile.add(new ProjectileComponent(true, velocity, sourceEntity));
+        projectile.add(new ProjectileComponent(true, getProjectileSpeed(heroType), sourceEntity));
         projectile.add(new SpriteComponent(getProjectileSprite(heroType)));
         projectile.add(new CollisionComponent(new Rectangle(startingPosition.x, startingPosition.y, 10f, 10f)));
         projectile.add(new PositionComponent(startingPosition));
@@ -39,6 +39,23 @@ public class ProjectileFactory {
                 return new Texture(Gdx.files.internal("characterIcon3.png"));
             default:
                 return null;
+        }
+    }
+
+    private static float getProjectileSpeed(HeroType heroType) {
+        switch (heroType) {
+            case IRONMAN:
+                return 5f;
+            case HULK:
+                return 2f;
+            case SPIDERMAN:
+                return 4f;
+            case THOR:
+                return 3f;
+            case CAPTAIN_AMERICA:
+                return 8f;
+            default:
+                return 7f;
         }
     }
 

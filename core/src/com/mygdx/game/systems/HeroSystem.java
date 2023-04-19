@@ -43,6 +43,9 @@ public class HeroSystem extends IteratingSystem {
         SpriteComponent sprite = spriteMapper.get(entity);
         HeroComponent heroComponent = heroTypeMapper.get(entity);
 
+        //Increase the time elapsed field in the attack component on every update
+        attack.setAttackTimeElapsed(attack.getAttackTimeElapsed() + deltaTime);
+
         //Check if a hero has an active projectile
         boolean projectileExists = false;
         for (Entity e : engine.getEntitiesFor(Family.all(ProjectileComponent.class, PositionComponent.class).get())) {
@@ -57,21 +60,13 @@ public class HeroSystem extends IteratingSystem {
         if (!projectileExists) {
             float posX = position.getPosition().x;
             float posY = position.getPosition().y;
-            Entity projectile = ProjectileFactory.createProjectile(heroComponent.getHeroType(), new Vector2(posX, posY), 5, entity);
+            Entity projectile = ProjectileFactory.createProjectile(heroComponent.getHeroType(), new Vector2(posX, posY), entity);
             engine.addEntity(projectile);
         }
 
         //If the time elapsed is greater than the given interval, create a new projectile
         if (attack.getAttackTimeElapsed() > attack.getAttackInterval()) {
             attack.setAttackTimeElapsed(0);
-            float posX = position.getPosition().x;
-            float posY = position.getPosition().y;
-            Entity projectile = ProjectileFactory.createProjectile(heroComponent.getHeroType(), new Vector2(posX, posY), 5, entity);
-            engine.addEntity(projectile);
-            System.out.println("added projectile to hero: ");
-            System.out.println(heroComponent.getHeroType());
-            System.out.println("with position ");
-            System.out.println(projectile.getComponent(PositionComponent.class).getPosition());
         }
 
         for (Entity e : engine.getEntitiesFor(Family.all(ProjectileComponent.class, PositionComponent.class).get())) {
@@ -79,8 +74,5 @@ public class HeroSystem extends IteratingSystem {
                 System.out.println(e.getComponent(PositionComponent.class).getPosition());
             }
         }
-
-        //Increase the time elapsed field in the attack component on every update
-        attack.setAttackTimeElapsed(attack.getAttackTimeElapsed() + deltaTime);
     }
 }

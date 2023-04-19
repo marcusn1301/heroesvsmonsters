@@ -82,7 +82,9 @@ public class PlayState extends State{
         engine.addSystem(projectileMovementSystem);
 
         Entity spiderman = HeroFactory.createHero(HeroType.SPIDERMAN, new Vector2(50, 50));
+        Entity captain = HeroFactory.createHero(HeroType.CAPTAIN_AMERICA, new Vector2(50, 50));
         engine.addEntity(spiderman);
+        engine.addEntity(captain);
     }
 
     private void initButtonTextures() {
