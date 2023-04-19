@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.game.Board;
 import com.mygdx.game.MoneySystem;
 import com.mygdx.game.SoundManager;
 import com.mygdx.game.entities.DisplayHero;
@@ -44,6 +45,7 @@ public class PlayState extends State{
 
     private MoneySystem moneySystem;
     private boolean isPlacementAllowed = false;
+    private Board board;
 
     public PlayState() {
         //super(gsm);
@@ -52,13 +54,14 @@ public class PlayState extends State{
 
     private void init() {
         batch = new SpriteBatch();
+        board = new Board(6,9);
         setDisplayHeroes();
         initButtonTextures();
         moneySystem = new MoneySystem(4000);
         initFontStageAndRenderer();
         createLeftTable();
         createRightTable();
-        createGrid();
+        createBoard();
         soundManager.playSequence();
 
     }
@@ -163,6 +166,11 @@ public class PlayState extends State{
         stage.addActor(rightTable);
     }
 
+    private void createBoard() {
+        board.render(batch);
+
+    }
+
     private void createGrid() {
         // Define the number of rows and columns in the grid
         int numRows = 6;
@@ -250,13 +258,16 @@ public class PlayState extends State{
     }
 
     @Override
-    public void render(SpriteBatch sb) {
+    public void render(SpriteBatch batch) {
 
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         drawPaneBackgrounds();
-        drawLaneDividers();
+        //drawLaneDividers();
+        batch.begin();
+        board.render(batch);
+        batch.end();
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();

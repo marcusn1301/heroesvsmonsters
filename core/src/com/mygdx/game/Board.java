@@ -13,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class Board {
+    private int screenWidth = Gdx.graphics.getWidth();
+    private int screenHeight = Gdx.graphics.getHeight();
     private int rows = 5;
     private int cols = 9;
     private int[][] cells;
@@ -20,13 +22,12 @@ public class Board {
     private ShapeRenderer shapeRenderer;
     private int textureWidth = 55;
     private int textureHeight = 72;
-    private int cellWidth = 58;
-    private int cellHeight = 78;
+    private int cellWidth = screenWidth / cols;
+    private int cellHeight = screenHeight / rows;
     private SpriteBatch batch;
-
-    private int xOffset = 100; // Add xOffset for moving textures right
-    private int yOffset = 0;  // Add yOffset for moving textures up or down
-    private int dashOffset = 100; // Add dashOffset for moving dashed lines right
+    private int xOffset = (screenWidth - (cols * cellWidth)) / 2;
+    private int yOffset = (screenHeight - (rows * cellHeight)) / 2;
+    private int dashOffset = xOffset;
 
     private Texture[] displayTextures;
     private int displayTexturesCount = 5;
@@ -42,7 +43,7 @@ public class Board {
         textures = new Texture[rows][cols];
         shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
-        Gdx.graphics.setWindowedMode(851, 393);
+        Gdx.graphics.setWindowedMode(screenWidth, screenHeight);
         loadDisplayTextures();
         setupInputProcessor();
     }
@@ -82,13 +83,14 @@ public class Board {
 
     public void render(SpriteBatch batch) {
         drawLaneDividers();
-        drawDisplayPanel(batch);
+        //drawDisplayPanel(batch);
 
         this.batch.begin();
 
+        /*
         for (int i = 0; i < displayTexturesCount; i++) {
             batch.draw(displayTextures[i], displayTexturePositions[i].x, displayTexturePositions[i].y, textureWidth, textureHeight);
-        }
+        }*/
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
