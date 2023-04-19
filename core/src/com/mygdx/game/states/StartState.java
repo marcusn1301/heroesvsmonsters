@@ -26,7 +26,7 @@ public class StartState extends State{
         board = new Board(10, 10);
 
         Texture texture = new Texture("characterIcon1.png");
-        Texture texture1 = new Texture("characterIcon1.png");
+        Texture texture1 = new Texture("characterIcon2.png");
 
         board.setTexture(0, 0, texture);
         board.setTexture(0, 1, texture);
@@ -38,7 +38,20 @@ public class StartState extends State{
         board.setTexture(0, 7, texture);
         board.setTexture(0, 8, texture);
 
+        board.setTexture(1, 2, texture);
+        board.setTexture(2, 2, texture);
+        board.setTexture(3, 2, texture);
+        board.setTexture(4, 2, texture);
+        board.setTexture(5, 2, texture);
 
+        board.setTexture(1, 3, texture1);
+        board.setTexture(2, 3, texture1);
+        board.setTexture(3, 3, texture1);
+        board.setTexture(4, 3, texture1);
+        board.setTexture(5, 3, texture1);
+
+
+        board.setTexture(4, 5, texture1);
 
 
 

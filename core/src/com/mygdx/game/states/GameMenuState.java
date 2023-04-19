@@ -36,6 +36,7 @@ public class GameMenuState extends State {
         menuButton = new Texture("Menu-button.png");
         logo = new Texture("HvsMstor.png");
         menuBackground = new Texture("menuBackground.png");
+
     }
 
     public void create() {
