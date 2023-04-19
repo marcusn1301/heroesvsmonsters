@@ -59,6 +59,8 @@ public class PlayState extends State{
         createLeftTable();
         createRightTable();
         createGrid();
+        soundManager.playSequence();
+
     }
 
     private void initButtonTextures() {
