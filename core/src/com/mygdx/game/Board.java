@@ -9,25 +9,25 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-public class Board {
-    private int screenWidth = Gdx.graphics.getWidth();
-    private int screenHeight = Gdx.graphics.getHeight();
-    private int rows = 5;
-    private int cols = 9;
+public class Board extends Actor {
+    private int rows;
+    private int cols;
     private int[][] cells;
     private Texture[][] textures;
     private ShapeRenderer shapeRenderer;
-    private int textureWidth = 55;
-    private int textureHeight = 72;
-    private int cellWidth = screenWidth / cols;
-    private int cellHeight = screenHeight / rows;
+    private int textureWidth;
+    private int textureHeight;
+    private int cellWidth;
+    private int cellHeight;
     private SpriteBatch batch;
-    private int xOffset = (screenWidth - (cols * cellWidth)) / 2;
-    private int yOffset = (screenHeight - (rows * cellHeight)) / 2;
-    private int dashOffset = xOffset;
+
+    private int xOffset = 315; // Add xOffset for moving textures right
+    private int yOffset = 0;  // Add yOffset for moving textures up or down
+    private int dashOffset = 315; // Add dashOffset for moving dashed lines right
 
     private Texture[] displayTextures;
     private int displayTexturesCount = 5;
@@ -39,11 +39,18 @@ public class Board {
     public Board(int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
+
+        cellWidth = Gdx.graphics.getWidth() / (rows + 6);
+        cellHeight = Gdx.graphics.getHeight() / (rows );
+        System.out.print("ScreenHeight: " + Gdx.graphics.getHeight());
+
+        textureWidth = cellHeight;
+        textureHeight = cellHeight;
         cells = new int[rows][cols];
         textures = new Texture[rows][cols];
         shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
-        Gdx.graphics.setWindowedMode(screenWidth, screenHeight);
+        //Gdx.graphics.setWindowedMode(851, 393);
         loadDisplayTextures();
         setupInputProcessor();
     }
@@ -87,8 +94,8 @@ public class Board {
 
         this.batch.begin();
 
-        /*
-        for (int i = 0; i < displayTexturesCount; i++) {
+
+        /*for (int i = 0; i < displayTexturesCount; i++) {
             batch.draw(displayTextures[i], displayTexturePositions[i].x, displayTexturePositions[i].y, textureWidth, textureHeight);
         }*/
 
