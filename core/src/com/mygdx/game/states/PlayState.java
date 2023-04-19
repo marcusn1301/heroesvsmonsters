@@ -68,7 +68,7 @@ public class PlayState extends State{
         batch = new SpriteBatch();
         setDisplayHeroes();
         buttonTextures = new Texture[5];
-        moneySystem = new MoneySystem(5000);
+        moneySystem = new MoneySystem(100000);
         /*for (int i = 0; i < 5; i++) {
             buttonTextures[i] = new Texture("characterIcon" + (i + 1) + ".png");
         }*/

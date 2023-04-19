@@ -1,13 +1,16 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class Board {
     private int rows = 5;
@@ -35,14 +38,13 @@ public class Board {
     public Board(int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
-
         cells = new int[rows][cols];
         textures = new Texture[rows][cols];
         shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
-        //Gdx.graphics.setWindowedMode(851, 393);
-
+        Gdx.graphics.setWindowedMode(851, 393);
         loadDisplayTextures();
+        setupInputProcessor();
     }
 
     public Board() {
@@ -79,29 +81,6 @@ public class Board {
     }
 
     public void render(SpriteBatch batch) {
-
-        /*int borderThickness = 20;
-
-        int boardWidth = cols * textureWidth + borderThickness * 2;
-        int boardHeight = rows * textureHeight + borderThickness * 2;
-
-
-        // Adjust the position of the board to include the border
-        int boardX = (int) ((Gdx.graphics.getWidth() - boardWidth) / 2.0f);
-        int boardY = (int) ((Gdx.graphics.getHeight() - boardHeight) / 2.0f) + borderThickness;
-
-        // Draw the border
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.WHITE);
-        shapeRenderer.rect(boardX - borderThickness, boardY - borderThickness, boardWidth + borderThickness * 2, boardHeight + borderThickness * 2);
-
-        // Draw a grey rectangle inside the border
-        shapeRenderer.setColor(Color.GRAY);
-        shapeRenderer.rect(boardX, boardY, boardWidth - borderThickness * 2, boardHeight - borderThickness * 2);
-
-        shapeRenderer.end();
-        */
-
         drawLaneDividers();
         drawDisplayPanel(batch);
 
@@ -121,6 +100,32 @@ public class Board {
         }
         this.batch.end();
     }
+
+    private void setupInputProcessor() {
+        Gdx.input.setInputProcessor(new InputAdapter() {
+            @Override
+            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+                int row, col;
+                for (row = 0; row < rows; row++) {
+                    for (col = 0; col < cols; col++) {
+                        Rectangle rect = new Rectangle(col * cellWidth + xOffset, row * cellHeight + yOffset, textureWidth, textureHeight);
+                        if (rect.contains(screenX, Gdx.graphics.getHeight() - screenY)) {
+                            onCellClicked(row, col);
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        });
+    }
+    protected void onCellClicked(int row, int col) {
+        // Add your logic here for when a cell is clicked
+        Texture texture = new Texture("characterIcon5.png");
+        setTexture(row, col, texture);
+        System.out.println("Cell clicked: row " + row + ", col " + col);
+    }
+
 
     public void drawLaneDividers() {
         int dashLength = 10;
