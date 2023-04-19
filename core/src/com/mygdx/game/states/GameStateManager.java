@@ -6,7 +6,7 @@ import java.util.Stack;
 
 public class GameStateManager {
     private final Stack<State> states;
-    private static GameStateManager gsm = new GameStateManager();
+    private static final GameStateManager gsm = new GameStateManager();
 
     private GameStateManager() {
         states = new Stack<>();
