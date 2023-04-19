@@ -1,22 +1,16 @@
 package com.mygdx.game.states;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -24,21 +18,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.MoneySystem;
 import com.mygdx.game.SoundManager;
-import com.mygdx.game.components.PriceComponent;
 import com.mygdx.game.entities.DisplayHero;
-import com.mygdx.game.entities.Hero;
 import com.mygdx.game.entities.HeroFactory;
 import com.mygdx.game.types.HeroType;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class PlayState extends State{
     private SpriteBatch batch;
@@ -47,17 +36,12 @@ public class PlayState extends State{
     private Stage stage;
     private ShapeRenderer shapeRenderer;
     private boolean isGridTableVisible = true;
-
     private Table gridTable;
-
     private DisplayHero chosenCharacter;
     private List<DisplayHero> displayHeroes;
     SoundManager soundManager = SoundManager.getInstance();
-
     private MoneySystem moneySystem;
-
     private boolean isPlacementAllowed = false;
-
 
     public PlayState() {
         //super(gsm);
@@ -67,21 +51,30 @@ public class PlayState extends State{
     private void init() {
         batch = new SpriteBatch();
         setDisplayHeroes();
-        buttonTextures = new Texture[5];
+        initButtonTextures();
         moneySystem = new MoneySystem(5000);
-        /*for (int i = 0; i < 5; i++) {
-            buttonTextures[i] = new Texture("characterIcon" + (i + 1) + ".png");
-        }*/
+        initFontStageAndRenderer();
+        createLeftTable();
+        createRightTable();
+        createGrid();
+    }
+
+    private void initButtonTextures() {
+        buttonTextures = new Texture[5];
 
         for (int i = 0; i < displayHeroes.size(); i++) {
             buttonTextures[i] = displayHeroes.get(i).getSpriteComponent().getSprite();
         }
+    }
 
+    private void initFontStageAndRenderer() {
         font = new BitmapFont();
         stage = new Stage(new ScreenViewport());
         shapeRenderer = new ShapeRenderer();
         Gdx.input.setInputProcessor(stage);
+    }
 
+    private void createLeftTable() {
         Table leftTable = new Table();
         leftTable.setFillParent(true);
         leftTable.top().left().padLeft(Gdx.graphics.getWidth() / 40).padTop(Gdx.graphics.getHeight() / 40);
@@ -100,16 +93,15 @@ public class PlayState extends State{
             final int finalI = i;
             button.addListener(new ClickListener() {
 
-
                 // When player clicks a character icon
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
 
                     chosenCharacter = displayHeroes.get(finalI);
-                        chosenCharacter = displayHeroes.get(finalI);
-                        isGridTableVisible = !isGridTableVisible;
-                        gridTable.setVisible(true);
+                    chosenCharacter = displayHeroes.get(finalI);
+                    isGridTableVisible = !isGridTableVisible;
+                    gridTable.setVisible(true);
                 }
             });
 
@@ -121,7 +113,9 @@ public class PlayState extends State{
             leftTable.row();
         }
         stage.addActor(leftTable);
+    }
 
+    private void createRightTable() {
         Table rightTable = new Table();
         rightTable.setFillParent(true);
         rightTable.top().right().padRight(Gdx.graphics.getWidth() / 60);
@@ -164,9 +158,9 @@ public class PlayState extends State{
         rightTable.row();
 
         stage.addActor(rightTable);
-        stage.addActor(menuButton);
-        soundManager.playSequence();
+    }
 
+    private void createGrid() {
         // Define the number of rows and columns in the grid
         int numRows = 6;
         int numCols = 9;
@@ -214,15 +208,16 @@ public class PlayState extends State{
                         // If the player has enough money => purchase the hero and display it on the grid
                         else {
                             moneySystem.removeMoney(chosenCharacter.getPriceComponent().getPrice());
+                            BitmapFont counterFont = new BitmapFont();
+                            counterFont.getData().setScale(4);
+                            final TextButton counterText1 = new TextButton(String.valueOf(moneySystem.getMoney()), new TextButton.TextButtonStyle(null, null, null, counterFont));
+
                             counterText1.setText(String.valueOf(moneySystem.getMoney()));
 
                             fillImage.setSize(cellSize, cellSize);
 
                             // Replace the clicked cell with the new Image
                             grid[finalRow][finalCol].setDrawable(fillImage.getDrawable());
-
-                            //Attempt to set monster on board
-                            //grid[4][4].setDrawable(fillImage.getDrawable());
                         }
                     }
                 });
@@ -246,7 +241,6 @@ public class PlayState extends State{
         stage.addActor(gridTable);
     }
 
-
     @Override
     public void update(float dt) {
         stage.draw();
@@ -261,18 +255,12 @@ public class PlayState extends State{
         drawPaneBackgrounds();
         drawLaneDividers();
 
-        //drawButtonBackgroundCircles();
-
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }
 
     @Override
-    public void handleInput() {
-        if (Gdx.input.isTouched()) {
-            //HeroFactory.createHero()
-        }
-    }
+    public void handleInput() {}
 
     private void drawPaneBackgrounds() {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -288,7 +276,6 @@ public class PlayState extends State{
 
         shapeRenderer.end();
     }
-
 
     private void drawLaneDividers() {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -318,7 +305,6 @@ public class PlayState extends State{
         shapeRenderer.end();
     }
 
-
     private Texture createWhiteCircle(float circleRadius) {
         int diameter = (int) (circleRadius * 2);
         Pixmap pixmap = new Pixmap(diameter, diameter, Pixmap.Format.RGBA8888);
@@ -329,7 +315,6 @@ public class PlayState extends State{
 
         return circleTexture;
     }
-
 
     public void dispose() {
         batch.dispose();
@@ -342,7 +327,7 @@ public class PlayState extends State{
         //TODO dispose displayHeroes
     }
     public void setDisplayHeroes() {
-        displayHeroes = new ArrayList<DisplayHero>();
+        displayHeroes = new ArrayList<>();
         DisplayHero hulk = HeroFactory.createDisplayHero(HeroType.HULK);
         DisplayHero spiderman = HeroFactory.createDisplayHero(HeroType.SPIDERMAN);
         DisplayHero cpt_america = HeroFactory.createDisplayHero(HeroType.CAPTAIN_AMERICA);
