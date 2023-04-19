@@ -40,6 +40,8 @@ public class PlayState extends State{
     private DisplayHero chosenCharacter;
     private List<DisplayHero> displayHeroes;
     SoundManager soundManager = SoundManager.getInstance();
+    private TextButton counterText1;
+
     private MoneySystem moneySystem;
     private boolean isPlacementAllowed = false;
 
@@ -52,7 +54,7 @@ public class PlayState extends State{
         batch = new SpriteBatch();
         setDisplayHeroes();
         initButtonTextures();
-        moneySystem = new MoneySystem(5000);
+        moneySystem = new MoneySystem(4000);
         initFontStageAndRenderer();
         createLeftTable();
         createRightTable();
@@ -99,7 +101,6 @@ public class PlayState extends State{
                     super.clicked(event, x, y);
 
                     chosenCharacter = displayHeroes.get(finalI);
-                    chosenCharacter = displayHeroes.get(finalI);
                     isGridTableVisible = !isGridTableVisible;
                     gridTable.setVisible(true);
                 }
@@ -134,7 +135,7 @@ public class PlayState extends State{
         counterFont.getData().setScale(4);
 
         // First counter
-        final TextButton counterText1 = new TextButton(String.valueOf(moneySystem.getMoney()), new TextButton.TextButtonStyle(null, null, null, counterFont));
+        counterText1 = new TextButton(String.valueOf(moneySystem.getMoney()), new TextButton.TextButtonStyle(null, null, null, counterFont));
         counterText1.pad(2);
         counterText1.setWidth(iconSize);
         counterText1.setHeight(iconSize / 2);
@@ -210,7 +211,7 @@ public class PlayState extends State{
                             moneySystem.removeMoney(chosenCharacter.getPriceComponent().getPrice());
                             BitmapFont counterFont = new BitmapFont();
                             counterFont.getData().setScale(4);
-                            final TextButton counterText1 = new TextButton(String.valueOf(moneySystem.getMoney()), new TextButton.TextButtonStyle(null, null, null, counterFont));
+                            counterText1.setText(String.valueOf(moneySystem.getMoney()));
 
                             counterText1.setText(String.valueOf(moneySystem.getMoney()));
 
