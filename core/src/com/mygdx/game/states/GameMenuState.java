@@ -15,6 +15,7 @@ public class GameMenuState extends State {
     SpriteBatch sb;
     Texture startButton;
     Texture lobbyButton;
+    Texture menuButton;
     private Texture menuBackground;
 
     Texture logo;
@@ -32,8 +33,10 @@ public class GameMenuState extends State {
         height = Gdx.graphics.getHeight();
         startButton = new Texture("Start-button.png");
         lobbyButton = new Texture("Lobby-button.png");
+        menuButton = new Texture("Menu-button.png");
         logo = new Texture("HvsMstor.png");
         menuBackground = new Texture("menuBackground.png");
+
     }
 
     public void create() {
@@ -64,15 +67,18 @@ public class GameMenuState extends State {
         float logoY = ((height - logoHeight) / 2f) + height / 5f;
 
 
-
         // Calculate the button positions and sizes
         float buttonWidth = width / 7f;
         float startButtonHeight = buttonWidth * ((float) startButton.getHeight() / startButton.getWidth());
         float lobbyButtonHeight = buttonWidth * ((float) lobbyButton.getHeight() / lobbyButton.getWidth());
+        float menuButtonHeight = buttonWidth * ((float) menuButton.getHeight() / menuButton.getWidth());
+
 
         float buttonX = (width - buttonWidth) / 2f;
         float startButtonY = height * 0.3f - startButtonHeight / 2f;
         float lobbyButtonY = height * 0.12f - lobbyButtonHeight / 2f;
+        float menuButtonY = height * 0.21f - menuButtonHeight / 2f;
+
 
 
         batch.begin();
@@ -81,6 +87,8 @@ public class GameMenuState extends State {
         batch.draw(logo, logoX, logoY, logoWidth, logoHeight);
         batch.draw(startButton, buttonX, startButtonY, buttonWidth, startButtonHeight);
         batch.draw(lobbyButton, buttonX, lobbyButtonY, buttonWidth, lobbyButtonHeight);
+        batch.draw(menuButton, buttonX, menuButtonY, buttonWidth, menuButtonHeight);
+
 
         batch.end();
 
@@ -109,6 +117,16 @@ public class GameMenuState extends State {
                 lobbyButtonY <= Gdx.graphics.getHeight() - y && Gdx.graphics.getHeight() - y <= lobbyButtonY + lobbyButtonHeight;
     }
 
+    private boolean isMenuButtonClicked(int x, int y) {
+        float buttonWidth = width / 7f;
+        float menuButtonHeight = buttonWidth * ((float) menuButton.getHeight() / menuButton.getWidth());
+        float buttonX = (width - buttonWidth) / 2f;
+        float menuButtonY = height * 0.21f - menuButtonHeight / 2f;
+
+        return Gdx.input.justTouched() && buttonX <= x && x <= buttonX + buttonWidth &&
+                menuButtonY <= Gdx.graphics.getHeight() - y && Gdx.graphics.getHeight() - y <= menuButtonY + menuButtonHeight;
+    }
+
     @Override
     public void handleInput() {
         if (Gdx.input.isTouched()) {
@@ -116,10 +134,13 @@ public class GameMenuState extends State {
             int y = Gdx.input.getY();
             if (isStartButtonClicked(x, y)) {
                 soundManager.playSound("menuNavigate");
-                gsm.push(new PlayState());
+                gsm.push(new IntroCutsceneState());
             }
             if (isLobbyButtonClicked(x, y)) {
                 gsm.push(new DummyState());
+            }
+            if (isMenuButtonClicked(x, y)) {
+                gsm.push(new StartState());
             }
         }
     }
@@ -130,6 +151,7 @@ public class GameMenuState extends State {
     public void dispose() {
         startButton.dispose();
         lobbyButton.dispose();
+        menuButton.dispose();
         System.out.print("Menu State Disposed");
     }
 }
