@@ -25,10 +25,10 @@ public class HeroFactory {
     }
 
     //Create a display version of the hero on the left-hand side of the screen
-    public static DisplayHero createDisplayHero(HeroType heroType) {
+    public static DisplayHero createDisplayHero(HeroType heroType, Vector2 position) {
         DisplayHero displayHero = new DisplayHero();
         displayHero.setSpriteComponent(new SpriteComponent(getHeroSprite(heroType)));
-        displayHero.setPositionComponent(new PositionComponent(getHeroStartingPosition(heroType)));
+        displayHero.setPositionComponent(new PositionComponent(position));
         displayHero.setPriceComponent(new PriceComponent(getHeroPrice(heroType)));
         displayHero.setHeroComponent(new HeroComponent(heroType));
         return displayHero;
