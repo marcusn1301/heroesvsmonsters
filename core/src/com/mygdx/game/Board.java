@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputProcessor;
@@ -63,12 +64,13 @@ public class Board extends Actor {
     private Table leftTable;
     private Table rightTable;
     private Table boardTable;
-    private DisplayHero chosenCharacter;
     private List<DisplayHero> displayHeroes;
     private TextButton counterText1;
     private boolean isGridTableVisible = true;
     private boolean isPlacementAllowed = false;
     private List<DisplayHeroButton> displayHeroButtons;
+    private boolean placeHero = false;
+    private HeroType chosenHeroType;
 
 
     public Board(int rows, int cols) {
@@ -193,11 +195,21 @@ public class Board extends Actor {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     System.out.println("Button position: (" + button.getHeroType() + ", at " + buttonClickable.getX() + ", " + buttonClickable.getY() + ")");
+                    setChosenHeroType(button.getHeroType());
                 }
             });
             buttonGroup.addActor(buttonClickable);
             stage.addActor(buttonGroup);
         }
+    }
+
+    private void setChosenHeroType(HeroType heroType) {
+        this.chosenHeroType = heroType;
+        this.placeHero = !this.placeHero;
+    }
+
+    private void placeHero() {
+        
     }
 
     private Texture createWhiteCircle(float circleRadius) {
