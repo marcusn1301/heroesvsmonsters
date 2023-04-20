@@ -1,9 +1,10 @@
 package com.mygdx.game.entities;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.components.AttackDamageComponent;
+import com.mygdx.game.components.MonsterComponent;
 import com.mygdx.game.components.MovementSpeedComponent;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.SpriteComponent;
@@ -11,12 +12,12 @@ import com.mygdx.game.types.HeroType;
 import com.mygdx.game.types.MonsterType;
 
 public class MonsterFactory {
-    public static Monster createMonster(MonsterType monsterType, Vector2 boardPosition) {
-        Monster monster = new Monster();
-        monster.setSpriteComponent(new SpriteComponent(getMonsterSprite(monsterType)));
-        monster.setPositionComponent(new PositionComponent(boardPosition));
-        monster.setMovementSpeedComponent(new MovementSpeedComponent(getMonsterMovementSpeed(monsterType)));
-        monster.setAttackDamageComponent(new AttackDamageComponent(getMonsterAttackDamage(monsterType)));
+    public static Entity createMonster(MonsterType monsterType, Vector2 boardPosition) {
+        Entity monster = new Entity();
+        monster.add(new SpriteComponent(getMonsterSprite(monsterType)));
+        monster.add(new PositionComponent(boardPosition));
+        monster.add(new MovementSpeedComponent(getMonsterMovementSpeed(monsterType)));
+        monster.add(new MonsterComponent(monsterType));
         return monster;
     }
 
