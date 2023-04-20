@@ -2,7 +2,6 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -65,20 +64,12 @@ public class Board extends Actor {
     private List<DisplayHeroButton> displayHeroButtons;
     private boolean placeHero = false;
     private HeroType chosenHeroType;
-    private InputMultiplexer multiplexer;
-    private int gridWidth, gridHeight, startX, startY;
-    private boolean gridDrawn;
 
 
     public Board(int rows, int cols) {
 
         this.rows = rows;
         this.cols = cols;
-        gridWidth = cols * cellWidth;
-        gridHeight = rows * cellHeight;
-        startX = (screenWidth - gridWidth) / 2;
-        startY = (screenHeight - gridHeight) / 2;
-        gridDrawn = false;
 
         cellWidth = Gdx.graphics.getWidth() / (rows + 6);
         cellHeight = Gdx.graphics.getHeight() / (rows );
@@ -96,10 +87,8 @@ public class Board extends Actor {
         //setupInputProcessor();
         displayHeroButtons = new ArrayList<>();
         createDisplayHeroButtons(displayHeroes);
-        multiplexer = new InputMultiplexer();
         stage = new Stage();
-        multiplexer.addProcessor(stage);
-        Gdx.input.setInputProcessor(multiplexer);
+        Gdx.input.setInputProcessor(stage);
 
         for (DisplayHero hero : displayHeroes) {
             System.out.println(hero.getHeroComponent().getHeroType());
@@ -129,8 +118,8 @@ public class Board extends Actor {
 
 
 
-        setCell(row, col, 1);
-        textures[row][col] = texture;
+        setCell(col, row, 1);
+        textures[col][row] = texture;
 
     }
 
@@ -144,8 +133,6 @@ public class Board extends Actor {
 
     public void render(SpriteBatch batch) {
         //createLeftTable();
-        drawHeroes();
-
         drawGrid();
         drawLaneDividers();
         drawPaneBackgrounds();
@@ -155,6 +142,7 @@ public class Board extends Actor {
 
         if (displayHeroes.size() > 0) {
         this.batch.begin();
+        drawHeroes();
         this.batch.end();
 
         drawDisplayHeroButtons();
@@ -175,6 +163,11 @@ public class Board extends Actor {
     }
 
     public void drawGrid() {
+        int gridWidth = cols * cellWidth;
+        int gridHeight = rows * cellHeight;
+        final int startX = (screenWidth - gridWidth) / 2;
+        final int startY = (screenHeight - gridHeight) / 2;
+
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
         // draw horizontal lines
@@ -190,15 +183,9 @@ public class Board extends Actor {
         }
 
         shapeRenderer.end();
-        if (!gridDrawn) {
-            gridDrawn = true;
-            setGridInputAdapter();
-        }
-    }
 
-    private void setGridInputAdapter() {
         // add click listener to each cell
-        multiplexer.addProcessor(new InputAdapter() {
+        Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 int col = (screenX - startX) / cellWidth;
@@ -208,8 +195,8 @@ public class Board extends Actor {
 
                 if (screenX >= x && screenX < x + cellWidth && screenY >= y && screenY < y + cellHeight) {
                     System.out.println("Cell clicked: (" + row + ", " + col + ")");
-                    /*onCellClicked(row , col);
-                    Texture texture = new Texture("characterIcon5.png");
+                    //onCellClicked(row , col);
+                   /* Texture texture = new Texture("characterIcon5.png");
                     setTexture(row, col, texture);*/
                 }
 
