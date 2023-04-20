@@ -8,25 +8,42 @@ import com.mygdx.game.types.HeroType;
 
 public class DisplayHeroButton {
     Vector2 position;
+    float width;
+    float height;
     Texture texture;
     HeroType heroType;
-    Button button;
+
+    public float getWidth() {
+        return width;
+    }
+
+    public void setWidth(float width) {
+        this.width = width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
+    }
+
+    public HeroType getHeroType() {
+        return heroType;
+    }
+
+    public void setHeroType(HeroType heroType) {
+        this.heroType = heroType;
+    }
 
     public DisplayHeroButton(DisplayHero displayHero) {
         this.position = displayHero.getPositionComponent().getPosition();
         this.texture = displayHero.getSpriteComponent().getSprite();
-        this.heroType = displayHero.get
-        this.button = new Button();
-
+        this.heroType = displayHero.getHeroComponent().getHeroType();
+        this.height = displayHero.getSpriteComponent().getSprite().getHeight();
+        this.width = displayHero.getSpriteComponent().getSprite().getWidth();
     }
-
-    public void setButton(Button button) {
-        this.button = button;
-    }
-    public Button getButton() {
-        return button;
-    }
-
 
     public Vector2 getPosition() {
         return position;

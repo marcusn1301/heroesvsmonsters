@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -21,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.entities.DisplayHero;
 import com.mygdx.game.entities.HeroFactory;
 import com.mygdx.game.types.HeroType;
@@ -30,6 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Board extends Actor {
+    private int screenHeight = Gdx.graphics.getHeight();
+    private int screenWidth = Gdx.graphics.getWidth();
     private int rows;
     private int cols;
     private int[][] cells;
@@ -79,10 +83,15 @@ public class Board extends Actor {
         textures = new Texture[rows][cols];
         shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
+        loadDisplayTextures();
         setDisplayHeroes();
         initButtonTextures();
-        loadDisplayTextures();
         setupInputProcessor();
+        displayHeroButtons = new ArrayList<>();
+
+        for (DisplayHero hero : displayHeroes) {
+            System.out.println(hero.getHeroComponent().getHeroType());
+        }
 
     }
 
@@ -124,13 +133,15 @@ public class Board extends Actor {
         drawLaneDividers();
         drawPaneBackgrounds();
         //createRightTable();
-        drawDisplayPanel(batch);
+        //drawDisplayPanel(batch);
 
+        if (displayHeroes.size() > 0) {
         this.batch.begin();
-
-        createDisplayHeroButtons();
+        createDisplayHeroButtons(displayHeroes);
+        drawDisplayHeroButtons();
         drawHeroes();
         this.batch.end();
+        }
     }
 
     public void drawHeroes() {
@@ -145,25 +156,23 @@ public class Board extends Actor {
     }
 
     public void createDisplayHeroButtons(List<DisplayHero> displayHeroes) {
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
-
         for (DisplayHero displayHero : displayHeroes) {
             DisplayHeroButton button = new DisplayHeroButton(displayHero);
             displayHeroButtons.add(button);
         }
+    }
+
+    public void drawDisplayHeroButtons() {
+        float circleRadius = Gdx.graphics.getHeight() / 15;
+        int diameter = (int) (circleRadius * 2);
+        Texture circle = createWhiteCircle(circleRadius);
 
         for (DisplayHeroButton button : displayHeroButtons) {
-
+            //draw display hero
+            batch.draw(button.getTexture(), button.getPosition().x, button.getPosition().y, button.getWidth(), button.getHeight());
+            //draw circles
+            batch.draw(circle, button.getPosition().x, button.getPosition().y, diameter, diameter);
         }
-
-        for (int i = 0; i < displayTexturesCount; i++) {
-            stage = new Stage();
-            Gdx.input.setInputProcessor(stage);
-
-            batch.draw(displayTextures[i], displayTexturePositions[i].x, displayTexturePositions[i].y, textureWidth, textureHeight);
-        }
-
     }
 
     private Texture createWhiteCircle(float circleRadius) {
@@ -345,12 +354,13 @@ public class Board extends Actor {
 
     public void setDisplayHeroes() {
         displayHeroes = new ArrayList<>();
-        DisplayHero hulk = HeroFactory.createDisplayHero(HeroType.HULK);
-        DisplayHero spiderman = HeroFactory.createDisplayHero(HeroType.SPIDERMAN);
-        DisplayHero cpt_america = HeroFactory.createDisplayHero(HeroType.CAPTAIN_AMERICA);
-        DisplayHero ironman = HeroFactory.createDisplayHero(HeroType.IRONMAN);
-        DisplayHero thor = HeroFactory.createDisplayHero(HeroType.THOR);
-        this.displayHeroes.add(hulk);
+        DisplayHero hero = HeroFactory.createDisplayHero(HeroType.HULK, new Vector2(displayTexturePositions[0].x + textureWidth / 2, displayTexturePositions[0].y + textureHeight / 2));
+        DisplayHero spiderman = HeroFactory.createDisplayHero(HeroType.SPIDERMAN, new Vector2(displayTexturePositions[1].x + textureWidth / 2, displayTexturePositions[1].y + textureHeight / 2));
+        DisplayHero cpt_america = HeroFactory.createDisplayHero(HeroType.CAPTAIN_AMERICA, new Vector2(displayTexturePositions[2].x + textureWidth / 2, displayTexturePositions[2].y + textureHeight / 2));
+        DisplayHero ironman = HeroFactory.createDisplayHero(HeroType.IRONMAN, new Vector2(displayTexturePositions[3].x + textureWidth / 2, displayTexturePositions[3].y + textureHeight / 2));
+        DisplayHero thor = HeroFactory.createDisplayHero(HeroType.THOR, new Vector2(displayTexturePositions[4].x + textureWidth / 2, displayTexturePositions[4].y + textureHeight / 2));
+
+        this.displayHeroes.add(hero);
         this.displayHeroes.add(spiderman);
         this.displayHeroes.add(cpt_america);
         this.displayHeroes.add(ironman);

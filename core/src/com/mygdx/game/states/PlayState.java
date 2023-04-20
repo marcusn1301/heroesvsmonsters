@@ -58,7 +58,7 @@ public class PlayState extends State{
         createBoard();
         soundManager.playSequence();
         //Game engine & systems
-        initializeGameEngine();
+        //initializeGameEngine();
     }
 
     private void initializeGameEngine() {
@@ -93,7 +93,7 @@ public class PlayState extends State{
     @Override
     public void update(float dt) {
         stage.draw();
-        engine.update();
+        //engine.update(dt);
     }
 
     public void calculateMoney() {
@@ -130,7 +130,7 @@ public class PlayState extends State{
 
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        calculateMoney();
+        //calculateMoney();
 
         batch.begin();
         board.render(batch);
