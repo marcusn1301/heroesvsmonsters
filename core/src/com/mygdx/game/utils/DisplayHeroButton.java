@@ -41,8 +41,8 @@ public class DisplayHeroButton {
         this.position = displayHero.getPositionComponent().getPosition();
         this.texture = displayHero.getSpriteComponent().getSprite();
         this.heroType = displayHero.getHeroComponent().getHeroType();
-        this.height = displayHero.getSpriteComponent().getSprite().getHeight();
-        this.width = displayHero.getSpriteComponent().getSprite().getWidth();
+        this.height = displayHero.getSpriteComponent().getSprite().getHeight() * 4;
+        this.width = displayHero.getSpriteComponent().getSprite().getWidth() * 4;
     }
 
     public Vector2 getPosition() {
