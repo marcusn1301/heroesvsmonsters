@@ -105,6 +105,8 @@ public class Board extends Actor {
             System.out.println(hero.getHeroComponent().getHeroType());
         }
 
+
+
     }
 
     public int getRows() {
@@ -124,8 +126,12 @@ public class Board extends Actor {
     }
 
     public void setTexture(int row, int col, Texture texture) {
+
+
+
         setCell(row, col, 1);
         textures[row][col] = texture;
+
     }
 
     public int getCell(int row, int col) {
@@ -138,6 +144,8 @@ public class Board extends Actor {
 
     public void render(SpriteBatch batch) {
         //createLeftTable();
+        drawHeroes();
+
         drawGrid();
         drawLaneDividers();
         drawPaneBackgrounds();
@@ -147,7 +155,6 @@ public class Board extends Actor {
 
         if (displayHeroes.size() > 0) {
         this.batch.begin();
-        drawHeroes();
         this.batch.end();
 
         drawDisplayHeroButtons();
@@ -196,11 +203,14 @@ public class Board extends Actor {
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 int col = (screenX - startX) / cellWidth;
                 int row = (screenY - startY) / cellHeight;
-                int x = startX + col * cellWidth;
-                int y = startY + row * cellHeight;
+                int x = startX + col * cellWidth + 1;
+                int y = startY + row * cellHeight + 1;
 
                 if (screenX >= x && screenX < x + cellWidth && screenY >= y && screenY < y + cellHeight) {
-                    System.out.println("Cell clicked: (" + col + ", " + row + ")");
+                    System.out.println("Cell clicked: (" + row + ", " + col + ")");
+                    /*onCellClicked(row , col);
+                    Texture texture = new Texture("characterIcon5.png");
+                    setTexture(row, col, texture);*/
                 }
 
                 return super.touchDown(screenX, screenY, pointer, button);
@@ -296,7 +306,7 @@ public class Board extends Actor {
         }
     }
 
-    private void setupInputProcessor() {
+    /*private void setupInputProcessor() {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
@@ -313,13 +323,14 @@ public class Board extends Actor {
                 return false;
             }
         });
-    }
+    }*/
 
     protected void onCellClicked(int row, int col) {
         // Add your logic here for when a cell is clicked
-        Texture texture = new Texture("characterIcon5.png");
-        setTexture(row, col, texture);
         System.out.println("Cell clicked: row " + row + ", col " + col);
+
+        /*Texture texture = new Texture("characterIcon5.png");
+        setTexture(row, col, texture);*/
     }
 
 
@@ -354,7 +365,7 @@ public class Board extends Actor {
         displayTexturePositions = new Vector2[displayTexturesCount];
 
         for (int i = 0; i < displayTexturesCount; i++) {
-            displayTextures[i] = new Texture("characterIcon" + (i + 1) + ".png");
+            displayTextures[i] = new Texture("characterIcon1" + ".png");
             displayTexturePositions[i] = new Vector2(20, 20 + (i * (textureHeight + 20)));
         }
     }
