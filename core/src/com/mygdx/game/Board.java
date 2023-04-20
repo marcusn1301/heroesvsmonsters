@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.entities.DisplayHero;
 import com.mygdx.game.entities.HeroFactory;
 import com.mygdx.game.types.HeroType;
+import com.mygdx.game.utils.DisplayHeroButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +61,7 @@ public class Board extends Actor {
     private TextButton counterText1;
     private boolean isGridTableVisible = true;
     private boolean isPlacementAllowed = false;
+    private List<DisplayHeroButton> displayHeroButtons;
 
 
     public Board(int rows, int cols) {
@@ -76,7 +79,6 @@ public class Board extends Actor {
         textures = new Texture[rows][cols];
         shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
-        stage = new Stage();
         setDisplayHeroes();
         initButtonTextures();
         loadDisplayTextures();
@@ -118,13 +120,20 @@ public class Board extends Actor {
     }
 
     public void render(SpriteBatch batch) {
-        createLeftTable();
+        //createLeftTable();
         drawLaneDividers();
         drawPaneBackgrounds();
-        createRightTable();
+        //createRightTable();
+        drawDisplayPanel(batch);
 
         this.batch.begin();
 
+        createDisplayHeroButtons();
+        drawHeroes();
+        this.batch.end();
+    }
+
+    public void drawHeroes() {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
                 if (getCell(row, col) == 1) {
@@ -133,7 +142,28 @@ public class Board extends Actor {
                 }
             }
         }
-        this.batch.end();
+    }
+
+    public void createDisplayHeroButtons(List<DisplayHero> displayHeroes) {
+        stage = new Stage();
+        Gdx.input.setInputProcessor(stage);
+
+        for (DisplayHero displayHero : displayHeroes) {
+            DisplayHeroButton button = new DisplayHeroButton(displayHero);
+            displayHeroButtons.add(button);
+        }
+
+        for (DisplayHeroButton button : displayHeroButtons) {
+
+        }
+
+        for (int i = 0; i < displayTexturesCount; i++) {
+            stage = new Stage();
+            Gdx.input.setInputProcessor(stage);
+
+            batch.draw(displayTextures[i], displayTexturePositions[i].x, displayTexturePositions[i].y, textureWidth, textureHeight);
+        }
+
     }
 
     private Texture createWhiteCircle(float circleRadius) {
