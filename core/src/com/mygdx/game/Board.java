@@ -192,7 +192,7 @@ public class Board extends Actor {
             buttonClickable.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    System.out.println("Button position: (" + button.getHeroType() + ", at " + buttonClickable.getX() + ", " + buttonClickable.getX() + ")");
+                    System.out.println("Button position: (" + button.getHeroType() + ", at " + buttonClickable.getX() + ", " + buttonClickable.getY() + ")");
                 }
             });
             buttonGroup.addActor(buttonClickable);
