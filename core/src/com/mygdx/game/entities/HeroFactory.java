@@ -1,10 +1,12 @@
 package com.mygdx.game.entities;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.components.AttackDamageComponent;
-import com.mygdx.game.components.AttackSpeedComponent;
+import com.mygdx.game.components.AttackComponent;
+import com.mygdx.game.components.HealthComponent;
+import com.mygdx.game.components.HeroComponent;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.PriceComponent;
 import com.mygdx.game.components.SpriteComponent;
@@ -12,12 +14,13 @@ import com.mygdx.game.types.HeroType;
 
 public class HeroFactory {
     //Creates a hero that is placed on the board
-    public static Hero createHero(HeroType heroType, Vector2 boardPosition) {
-        Hero hero = new Hero();
-        hero.setSpriteComponent(new SpriteComponent(getHeroSprite(heroType)));
-        hero.setPositionComponent(new PositionComponent(boardPosition));
-        hero.setAttackSpeedComponent(new AttackSpeedComponent(getHeroAttackSpeed(heroType)));
-        hero.setAttackDamageComponent(new AttackDamageComponent(getHeroAttackDamage(heroType)));
+    public static Entity createHero(HeroType heroType, Vector2 boardPosition) {
+        Entity hero = new Entity();
+        hero.add(new SpriteComponent(getHeroSprite(heroType)));
+        hero.add(new PositionComponent(boardPosition));
+        hero.add(new AttackComponent(getHeroAttackDamage(heroType), getHeroAttackTimer(), getHeroAttackTimeElapsed()));
+        hero.add(new HealthComponent(getHeroHealth()));
+        hero.add(new HeroComponent(heroType));
         return hero;
     }
 
@@ -27,6 +30,7 @@ public class HeroFactory {
         displayHero.setSpriteComponent(new SpriteComponent(getHeroSprite(heroType)));
         displayHero.setPositionComponent(new PositionComponent(getHeroStartingPosition(heroType)));
         displayHero.setPriceComponent(new PriceComponent(getHeroPrice(heroType)));
+        displayHero.setHeroComponent(new HeroComponent(heroType));
         return displayHero;
     }
     
@@ -107,6 +111,14 @@ public class HeroFactory {
         }
     }
 
+    private static float getHeroAttackTimer() {
+        return 10.0f;
+    }
+
+    private static float getHeroAttackTimeElapsed() {
+        return 0f;
+    }
+
     private static int getHeroPrice(HeroType heroType) {
         switch (heroType) {
             case SUPERMAN:
@@ -124,5 +136,9 @@ public class HeroFactory {
             default:
                 return 0;
         }
+    }
+
+    private static int getHeroHealth() {
+        return 3;
     }
 }

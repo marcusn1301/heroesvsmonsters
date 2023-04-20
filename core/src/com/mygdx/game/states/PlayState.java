@@ -1,5 +1,7 @@
 package com.mygdx.game.states;
 
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.badlogic.gdx.Gdx;
@@ -9,6 +11,8 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -19,6 +23,10 @@ import com.mygdx.game.Board;
 import com.mygdx.game.MoneySystem;
 import com.mygdx.game.SoundManager;
 import com.mygdx.game.entities.DisplayHero;
+import com.mygdx.game.entities.HeroFactory;
+import com.mygdx.game.systems.HeroSystem;
+import com.mygdx.game.systems.ProjectileMovementSystem;
+import com.mygdx.game.types.HeroType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +39,8 @@ public class PlayState extends State{
     SoundManager soundManager = SoundManager.getInstance();
 
     private MoneySystem moneySystem;
+    private boolean isPlacementAllowed = false;
+    private static Engine engine;
     private Board board;
     private TextButton counterText1;
 
@@ -47,7 +57,25 @@ public class PlayState extends State{
         initFontStageAndRenderer();
         createBoard();
         soundManager.playSequence();
+        //Game engine & systems
+        initializeGameEngine();
+    }
 
+    private void initializeGameEngine() {
+        //Central game engine
+        engine = new Engine();
+
+        //Systems for game logic
+        HeroSystem heroSystem = new HeroSystem(engine);
+        ProjectileMovementSystem projectileMovementSystem = new ProjectileMovementSystem(engine);
+
+        engine.addSystem(heroSystem);
+        engine.addSystem(projectileMovementSystem);
+
+        Entity spiderman = HeroFactory.createHero(HeroType.SPIDERMAN, new Vector2(50, 50));
+        Entity captain = HeroFactory.createHero(HeroType.CAPTAIN_AMERICA, new Vector2(50, 50));
+        engine.addEntity(spiderman);
+        engine.addEntity(captain);
     }
 
     private void initFontStageAndRenderer() {
@@ -65,6 +93,7 @@ public class PlayState extends State{
     @Override
     public void update(float dt) {
         stage.draw();
+        engine.update();
     }
 
     public void calculateMoney() {
