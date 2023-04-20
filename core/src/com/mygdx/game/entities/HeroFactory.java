@@ -30,6 +30,7 @@ public class HeroFactory {
         displayHero.setSpriteComponent(new SpriteComponent(getHeroSprite(heroType)));
         displayHero.setPositionComponent(new PositionComponent(getHeroStartingPosition(heroType)));
         displayHero.setPriceComponent(new PriceComponent(getHeroPrice(heroType)));
+        displayHero.setHeroComponent(new HeroComponent(heroType));
         return displayHero;
     }
     
