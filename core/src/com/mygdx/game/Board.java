@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -64,12 +65,20 @@ public class Board extends Actor {
     private List<DisplayHeroButton> displayHeroButtons;
     private boolean placeHero = false;
     private HeroType chosenHeroType;
+    private InputMultiplexer multiplexer;
+    private int gridWidth, gridHeight, startX, startY;
+    private boolean gridDrawn;
 
 
     public Board(int rows, int cols) {
 
         this.rows = rows;
         this.cols = cols;
+        gridWidth = cols * cellWidth;
+        gridHeight = rows * cellHeight;
+        startX = (screenWidth - gridWidth) / 2;
+        startY = (screenHeight - gridHeight) / 2;
+        gridDrawn = false;
 
         cellWidth = Gdx.graphics.getWidth() / (rows + 6);
         cellHeight = Gdx.graphics.getHeight() / (rows );
@@ -87,8 +96,10 @@ public class Board extends Actor {
         //setupInputProcessor();
         displayHeroButtons = new ArrayList<>();
         createDisplayHeroButtons(displayHeroes);
+        multiplexer = new InputMultiplexer();
         stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
+        multiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(multiplexer);
 
         for (DisplayHero hero : displayHeroes) {
             System.out.println(hero.getHeroComponent().getHeroType());
@@ -157,11 +168,6 @@ public class Board extends Actor {
     }
 
     public void drawGrid() {
-        int gridWidth = cols * cellWidth;
-        int gridHeight = rows * cellHeight;
-        final int startX = (screenWidth - gridWidth) / 2;
-        final int startY = (screenHeight - gridHeight) / 2;
-
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
         // draw horizontal lines
@@ -177,9 +183,15 @@ public class Board extends Actor {
         }
 
         shapeRenderer.end();
+        if (!gridDrawn) {
+            gridDrawn = true;
+            setGridInputAdapter();
+        }
+    }
 
+    private void setGridInputAdapter() {
         // add click listener to each cell
-        Gdx.input.setInputProcessor(new InputAdapter() {
+        multiplexer.addProcessor(new InputAdapter() {
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 int col = (screenX - startX) / cellWidth;
