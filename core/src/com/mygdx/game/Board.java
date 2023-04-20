@@ -1,34 +1,58 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-public class Board {
-    private int rows = 5;
-    private int cols = 9;
+public class Board extends Actor {
+    private int rows;
+    private int cols;
     private int[][] cells;
     private Texture[][] textures;
     private ShapeRenderer shapeRenderer;
-    private int textureWidth = 55;
-    private int textureHeight = 72;
-    private int cellWidth = 58;
-    private int cellHeight = 78;
+    private int textureWidth;
+    private int textureHeight;
+    private int cellWidth;
+    private int cellHeight;
     private SpriteBatch batch;
+
+    private int xOffset = 315; // Add xOffset for moving textures right
+    private int yOffset = 0;  // Add yOffset for moving textures up or down
+    private int dashOffset = 315; // Add dashOffset for moving dashed lines right
+
+    private Texture[] displayTextures;
+    private int displayTexturesCount = 5;
+    private Vector2[] displayTexturePositions;
+    private int draggingTextureIndex = -1;
+    private Vector2 draggingTextureOffset = new Vector2();
+
 
     public Board(int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
 
+        cellWidth = Gdx.graphics.getWidth() / (rows + 6);
+        cellHeight = Gdx.graphics.getHeight() / (rows );
+        System.out.print("ScreenHeight: " + Gdx.graphics.getHeight());
+
+        textureWidth = cellHeight;
+        textureHeight = cellHeight;
         cells = new int[rows][cols];
         textures = new Texture[rows][cols];
         shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
         //Gdx.graphics.setWindowedMode(851, 393);
-
+        loadDisplayTextures();
+        setupInputProcessor();
     }
 
     public Board() {
@@ -65,77 +89,97 @@ public class Board {
     }
 
     public void render(SpriteBatch batch) {
-
-        /*int borderThickness = 20;
-
-        int boardWidth = cols * textureWidth + borderThickness * 2;
-        int boardHeight = rows * textureHeight + borderThickness * 2;
-
-
-        // Adjust the position of the board to include the border
-        int boardX = (int) ((Gdx.graphics.getWidth() - boardWidth) / 2.0f);
-        int boardY = (int) ((Gdx.graphics.getHeight() - boardHeight) / 2.0f) + borderThickness;
-
-        // Draw the border
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.WHITE);
-        shapeRenderer.rect(boardX - borderThickness, boardY - borderThickness, boardWidth + borderThickness * 2, boardHeight + borderThickness * 2);
-
-        // Draw a grey rectangle inside the border
-        shapeRenderer.setColor(Color.GRAY);
-        shapeRenderer.rect(boardX, boardY, boardWidth - borderThickness * 2, boardHeight - borderThickness * 2);
-
-        shapeRenderer.end();
-        */
-
-        shapeRenderer.setAutoShapeType(true);
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.WHITE);
-
-        // Draw dashed lines on top of cells
-        int lines = rows - 6;
-        for (int row = 0; row <= lines; row++) {
-            for (int col = 0; col < cols - 1; col++) {
-                float x1 = col * cellWidth;
-                float y1 = row * cellHeight + textureHeight; // adjust y-coordinate
-                float x2 = x1 + cellWidth;
-                float y2 = y1;
-
-                float dashLen = 8f; // length of each dash segment
-                float gapLen = 8f; // length of each gap between dashes
-                float segmentLen = dashLen + gapLen;
-
-                float dist2 = Vector2.dst(x1, y1, x2, y2);
-                float dist = cols * cellWidth;
-                float segments = dist / segmentLen;
-                float deltaX = (x2 - x1) / segments;
-                float deltaY = (y2 - y1) / segments;
-
-                float dashX = x1;
-                float dashY = y1;
-
-                for (int i = 0; i < segments; i++) {
-                    shapeRenderer.rectLine(dashX, dashY, dashX + deltaX * dashLen, dashY + deltaY * dashLen, 3f);
-                    dashX += deltaX * segmentLen;
-                    dashY += deltaY * segmentLen;
-                }
-            }
-        }
-
-        shapeRenderer.end();
-
+        drawLaneDividers();
+        //drawDisplayPanel(batch);
 
         this.batch.begin();
+
+
+        /*for (int i = 0; i < displayTexturesCount; i++) {
+            batch.draw(displayTextures[i], displayTexturePositions[i].x, displayTexturePositions[i].y, textureWidth, textureHeight);
+        }*/
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
                 if (getCell(row, col) == 1) {
                     Texture texture = textures[row][col];
-                    batch.draw(texture, col * cellWidth, row * cellHeight, textureWidth, textureHeight);
+                    batch.draw(texture, col * cellWidth + xOffset, row * cellHeight + yOffset, textureWidth, textureHeight);
                 }
             }
         }
         this.batch.end();
+    }
+
+    private void setupInputProcessor() {
+        Gdx.input.setInputProcessor(new InputAdapter() {
+            @Override
+            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+                int row, col;
+                for (row = 0; row < rows; row++) {
+                    for (col = 0; col < cols; col++) {
+                        Rectangle rect = new Rectangle(col * cellWidth + xOffset, row * cellHeight + yOffset, textureWidth, textureHeight);
+                        if (rect.contains(screenX, Gdx.graphics.getHeight() - screenY)) {
+                            onCellClicked(row, col);
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        });
+    }
+    protected void onCellClicked(int row, int col) {
+        // Add your logic here for when a cell is clicked
+        Texture texture = new Texture("characterIcon5.png");
+        setTexture(row, col, texture);
+        System.out.println("Cell clicked: row " + row + ", col " + col);
+    }
+
+
+    public void drawLaneDividers() {
+        int dashLength = 10;
+        int spaceLength = 5;
+        boolean drawDash = true;
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.WHITE);
+
+        for (int row = 0; row < 5; row++) {
+            for (int col = 0; col < cols; col++) {
+                int xStart = col * cellWidth + dashOffset;
+                int yStart = row * cellHeight + cellHeight;
+                int xEnd = xStart + cellWidth;
+                int yEnd = yStart;
+
+                for (int x = xStart; x < xEnd; x += dashLength + spaceLength) {
+                    if (drawDash) {
+                        shapeRenderer.rectLine(x, yStart, Math.min(x + dashLength, xEnd), yEnd, 4);
+                    }
+                    drawDash = !drawDash;
+                }
+            }
+        }
+        shapeRenderer.end();
+    }
+
+    private void loadDisplayTextures() {
+        displayTextures = new Texture[displayTexturesCount];
+        displayTexturePositions = new Vector2[displayTexturesCount];
+
+        for (int i = 0; i < displayTexturesCount; i++) {
+            displayTextures[i] = new Texture("characterIcon" + (i + 1) + ".png");
+            displayTexturePositions[i] = new Vector2(20, 20 + (i * (textureHeight + 20)));
+        }
+    }
+
+    public void drawDisplayPanel(SpriteBatch batch) {
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.LIGHT_GRAY);
+
+        for (Vector2 position : displayTexturePositions) {
+            shapeRenderer.circle(position.x + textureWidth / 2, position.y + textureHeight / 2, textureWidth / 2 + 5);
+        }
+
+        shapeRenderer.end();
     }
 }
