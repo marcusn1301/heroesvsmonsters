@@ -1,5 +1,8 @@
 package com.mygdx.game;
 
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
@@ -22,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.components.HeroComponent;
 import com.mygdx.game.entities.DisplayHero;
 import com.mygdx.game.entities.HeroFactory;
 import com.mygdx.game.types.HeroType;
@@ -66,14 +70,17 @@ public class Board extends Actor {
     private Array<DisplayHeroButton> displayHeroButtons;
 
     private boolean placeHero = false;
+
     private HeroType chosenHeroType;
     private InputMultiplexer multiplexer;
     private int gridWidth, gridHeight, startX, startY;
     private boolean gridDrawn;
+    private boolean isInputProcessorAdded;
+    private Engine engine;
 
 
-    public Board(int rows, int cols) {
-
+    public Board(int rows, int cols, Engine engine) {
+        this.engine = engine;
         this.rows = rows;
         this.cols = cols;
         gridWidth = cols * cellWidth;
@@ -81,6 +88,7 @@ public class Board extends Actor {
         startX = (screenWidth - gridWidth) / 2;
         startY = (screenHeight - gridHeight) / 2;
         gridDrawn = false;
+        isInputProcessorAdded = false;
 
         cellWidth = Gdx.graphics.getWidth() / (rows + 6);
         cellHeight = Gdx.graphics.getHeight() / (rows );
@@ -138,7 +146,10 @@ public class Board extends Actor {
         drawLaneDividers();
         drawPaneBackgrounds();
         loadDisplayTextures();
-        setupInputProcessor();
+        if (!isInputProcessorAdded) {
+            setupInputProcessor();
+            isInputProcessorAdded = true;
+        }
 
         //createRightTable();
         //drawDisplayPanel(batch);
@@ -173,9 +184,16 @@ public class Board extends Actor {
     }
     protected void onCellClicked(int row, int col) {
         // Add your logic here for when a cell is clicked
-        Texture texture = new Texture("characterIcon5.png");
-        setTexture(row, col, texture);
         System.out.println("Cell clicked: row " + row + ", col " + col);
+        int displayPanelWidth = Gdx.graphics.getWidth() / 8;
+        int middleOfCellX = (int) (((col + 0.5) * cellWidth)) + displayPanelWidth ;
+        int middleOfCellY = (int) ((row + 0.5) * cellHeight);
+
+        System.out.print(" x: " + middleOfCellX + " y: " + middleOfCellY);
+        Vector2 heroPlacement = new Vector2(middleOfCellX, middleOfCellY);
+        //Creates new hero entity and sets its position to the middle of the clicked cell
+        getChosenHeroType();
+        placeHero(heroPlacement);
     }
 
 
@@ -208,9 +226,10 @@ public class Board extends Actor {
         shapeRenderer.end();
         if (!gridDrawn) {
             gridDrawn = true;
-            setGridInputAdapter();
+            //setGridInputAdapter();
         }
     }
+
 
     private void setGridInputAdapter() {
         // add click listener to each cell
@@ -286,8 +305,20 @@ public class Board extends Actor {
         this.placeHero = !this.placeHero;
     }
 
-    private void placeHero() {
+    public HeroType getChosenHeroType() {
+        return chosenHeroType;
+    }
 
+    private void placeHero(Vector2 placementPosition) {
+        if (chosenHeroType != null) {
+            Entity hero = HeroFactory.createHero(getChosenHeroType(), placementPosition);
+            engine.addEntity(hero);
+            System.out.println("Created new hero entity and added to game engine");
+            System.out.println("all heroes: :)");
+            for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class).get())) {
+                System.out.println(e.getComponent(HeroComponent.class).getHeroType());
+            }
+        }
     }
 
     private Texture createWhiteCircle(float circleRadius) {

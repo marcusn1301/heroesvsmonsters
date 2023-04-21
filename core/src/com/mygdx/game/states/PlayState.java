@@ -44,21 +44,19 @@ public class PlayState extends State{
     private Board board;
     private TextButton counterText1;
 
-
-
     public PlayState() {
         //super(gsm);
         initialize();
     }
 
     private void initialize() {
+        initializeGameEngine();
         batch = new SpriteBatch();
         moneySystem = new MoneySystem(4000);
         initFontStageAndRenderer();
         createBoard();
         soundManager.playSequence();
         //Game engine & systems
-        //initializeGameEngine();
     }
 
     private void initializeGameEngine() {
@@ -72,10 +70,10 @@ public class PlayState extends State{
         engine.addSystem(heroSystem);
         engine.addSystem(projectileMovementSystem);
 
-        Entity spiderman = HeroFactory.createHero(HeroType.SPIDERMAN, new Vector2(50, 50));
+        /*Entity spiderman = HeroFactory.createHero(HeroType.SPIDERMAN, new Vector2(50, 50));
         Entity captain = HeroFactory.createHero(HeroType.CAPTAIN_AMERICA, new Vector2(50, 50));
         engine.addEntity(spiderman);
-        engine.addEntity(captain);
+        engine.addEntity(captain);*/
     }
 
     private void initFontStageAndRenderer() {
@@ -86,14 +84,14 @@ public class PlayState extends State{
     }
 
     private void createBoard() {
-        board = new Board(6,9);
+        board = new Board(6,9, engine);
         board.render(batch);
     }
 
     @Override
     public void update(float dt) {
         stage.draw();
-        //engine.update(dt);
+        engine.update(dt);
     }
 
     public void calculateMoney() {

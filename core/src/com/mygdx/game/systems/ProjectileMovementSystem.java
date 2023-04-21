@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.components.CollisionComponent;
 import com.mygdx.game.components.PositionComponent;
@@ -33,7 +34,7 @@ public class ProjectileMovementSystem extends IteratingSystem {
         PositionComponent positionComponent = positionMapper.get(entity);
 
         //If a projectile is out of bounds, remove it from the engine
-        if (positionComponent.getPosition().x > 500) {
+        if (positionComponent.getPosition().x > Gdx.graphics.getWidth()) {
             engine.removeEntity(entity);
             System.out.println("Projectile out of bounds. Removed projectile.");
         }

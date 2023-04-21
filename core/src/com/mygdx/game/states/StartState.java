@@ -18,7 +18,7 @@ public class StartState extends State implements InputProcessor {
 
     public void initialize() {
         batch = new SpriteBatch();
-        board = new Board(6, 9);
+        //board = new Board(6, 9, engine);
 
         Texture texture = new Texture("characterIcon1.png");
         Texture texture1 = new Texture("characterIcon2.png");
