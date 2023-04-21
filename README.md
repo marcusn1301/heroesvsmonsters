@@ -12,21 +12,21 @@ Heroes vs Monsters is a 2D game inspired by Plants vs Zombies, built with LibGDX
 
 ## Installation
 
-1. Clone this repository or download the source code.
-2. Import the project into your preferred IDE that supports LibGDX (such as Android Studio or IntelliJ IDEA).
-3. Set up the required dependencies and configurations for LibGDX, if not already done.
+1. Download the latest version of Android Studio from https://developer.android.com/studio
+2. In Android Studio, create a new project from version control, by pressing New -> Project from Version Control.
+3. When prompted, clone the project from this repository via HTTPS or SSH at your own discretion.
+4. After opening, Android Studio should automatically detect the project as a Gradle project and sync it.
 4. Run the game on your desktop, Android device, or emulator.
 
 ## Controls
-
 - Tap on a character icon in the left pane to select it.
 - Tap on an empty lane in the middle pane to place the selected character.
 - Monitor your resources in the right pane.
 - Access the menu by tapping the menu button in the right pane.
 
 ## Dependencies
-
 - [LibGDX](https://libgdx.badlogicgames.com/) - Game development framework
 - [FireBase Interface](https://firebase.google.com/) - Backend for data storage and real-time updates
+- Ashely ECS
 
 

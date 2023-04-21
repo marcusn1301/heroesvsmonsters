@@ -6,12 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.Board;
-import com.mygdx.game.entities.DisplayHero;
-import com.mygdx.game.entities.HeroFactory;
-import com.mygdx.game.types.HeroType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class StartState extends State implements InputProcessor {
     SpriteBatch batch;
@@ -24,7 +18,7 @@ public class StartState extends State implements InputProcessor {
 
     public void initialize() {
         batch = new SpriteBatch();
-        board = new Board(10, 10);
+        //board = new Board(6, 9, engine);
 
         Texture texture = new Texture("characterIcon1.png");
         Texture texture1 = new Texture("characterIcon2.png");

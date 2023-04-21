@@ -1,53 +1,137 @@
 package com.mygdx.game;
 
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.components.HeroComponent;
+import com.mygdx.game.entities.DisplayHero;
+import com.mygdx.game.entities.HeroFactory;
+import com.mygdx.game.types.HeroType;
+import com.mygdx.game.utils.DisplayHeroButton;
 
-public class Board {
-    private int rows = 5;
-    private int cols = 9;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Board extends Actor {
+    private int screenHeight = Gdx.graphics.getHeight();
+    private int screenWidth = Gdx.graphics.getWidth();
+    private int rows;
+    private int cols;
     private int[][] cells;
     private Texture[][] textures;
     private ShapeRenderer shapeRenderer;
-    private int textureWidth = 55;
-    private int textureHeight = 72;
-    private int cellWidth = 58;
-    private int cellHeight = 78;
+    private int textureWidth;
+    private int textureHeight;
+    private int cellWidth;
+    private int cellHeight;
     private SpriteBatch batch;
 
-    private int xOffset = 100; // Add xOffset for moving textures right
     private int yOffset = 0;  // Add yOffset for moving textures up or down
-    private int dashOffset = 100; // Add dashOffset for moving dashed lines right
+    private int xOffset = 225; // Add xOffset for moving textures right (previously 315)
+    private int dashOffset = 225; // Add dashOffset for moving dashed lines right (previously 315)
 
+    private Texture[] buttonTextures;
     private Texture[] displayTextures;
     private int displayTexturesCount = 5;
     private Vector2[] displayTexturePositions;
     private int draggingTextureIndex = -1;
     private Vector2 draggingTextureOffset = new Vector2();
+    private Stage stage;
+
+    private Table leftTable;
+    private Table rightTable;
+    private Table boardTable;
+    private TextButton counterText1;
+    private boolean isGridTableVisible = true;
+    private boolean isPlacementAllowed = false;
+    private Array<DisplayHero> displayHeroes;
+    private Array<DisplayHeroButton> displayHeroButtons;
+
+    private boolean placeHero = false;
+
+    private HeroType chosenHeroType;
+    private InputMultiplexer multiplexer;
+    private int gridWidth, gridHeight, startX, startY;
+    private boolean gridDrawn;
+    private boolean isInputProcessorAdded;
+    private Engine engine;
+    private MoneySystem moneySystem = new MoneySystem(8000);
 
 
-    public Board(int rows, int cols) {
+
+    public Board(int rows, int cols, Engine engine) {
+        this.engine = engine;
         this.rows = rows;
         this.cols = cols;
+        gridWidth = cols * cellWidth;
+        gridHeight = rows * cellHeight;
+        startX = (screenWidth - gridWidth) / 2;
+        startY = (screenHeight - gridHeight) / 2;
+        gridDrawn = false;
+        isInputProcessorAdded = false;
 
+        cellWidth = Gdx.graphics.getWidth() / (rows + 6);
+        cellHeight = Gdx.graphics.getHeight() / (rows );
+
+        textureWidth = cellHeight - 70;
+        textureHeight = cellHeight;
         cells = new int[rows][cols];
         textures = new Texture[rows][cols];
         shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
-        //Gdx.graphics.setWindowedMode(851, 393);
-
         loadDisplayTextures();
+        setDisplayHeroes();
+        initButtonTextures();
+        //setupInputProcessor();
+        displayHeroButtons = new Array<>();
+        createDisplayHeroButtons(displayHeroes);
+        multiplexer = new InputMultiplexer();
+        stage = new Stage();
+        multiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(multiplexer);
     }
 
-    public Board() {
+    private void drawCounter() {
+        float iconSize = Gdx.graphics.getHeight() / 15;
+        float iconX = screenWidth - iconSize * 2 - 160; // Move 200 pixels to the left
+        float iconY = screenHeight - iconSize - 50;
 
+        BitmapFont font = new BitmapFont();
+        font.getData().setScale(3.5f);
+        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        Texture counterIcon = new Texture("coin.png");
+
+        this.batch.begin();
+        font.draw(batch, String.valueOf(moneySystem.getMoney()), iconX + iconSize * 1.5f, iconY + iconSize * 0.75f);
+
+        batch.draw(counterIcon, iconX, iconY, iconSize, iconSize);
+        this.batch.end();
     }
+
 
     public int getRows() {
         return rows;
@@ -79,38 +163,70 @@ public class Board {
     }
 
     public void render(SpriteBatch batch) {
-
-        /*int borderThickness = 20;
-
-        int boardWidth = cols * textureWidth + borderThickness * 2;
-        int boardHeight = rows * textureHeight + borderThickness * 2;
-
-
-        // Adjust the position of the board to include the border
-        int boardX = (int) ((Gdx.graphics.getWidth() - boardWidth) / 2.0f);
-        int boardY = (int) ((Gdx.graphics.getHeight() - boardHeight) / 2.0f) + borderThickness;
-
-        // Draw the border
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.WHITE);
-        shapeRenderer.rect(boardX - borderThickness, boardY - borderThickness, boardWidth + borderThickness * 2, boardHeight + borderThickness * 2);
-
-        // Draw a grey rectangle inside the border
-        shapeRenderer.setColor(Color.GRAY);
-        shapeRenderer.rect(boardX, boardY, boardWidth - borderThickness * 2, boardHeight - borderThickness * 2);
-
-        shapeRenderer.end();
-        */
-
+        //createLeftTable();
+        drawGrid();
         drawLaneDividers();
-        drawDisplayPanel(batch);
-
-        this.batch.begin();
-
-        for (int i = 0; i < displayTexturesCount; i++) {
-            batch.draw(displayTextures[i], displayTexturePositions[i].x, displayTexturePositions[i].y, textureWidth, textureHeight);
+        drawPaneBackgrounds();
+        loadDisplayTextures();
+        if (!isInputProcessorAdded) {
+            setupInputProcessor();
+            isInputProcessorAdded = true;
         }
 
+        //createRightTable();
+        //drawDisplayPanel(batch);
+
+        this.batch.begin();
+        drawHeroes();
+        this.batch.end();
+
+        drawDisplayHeroButtons();
+        this.stage.act();
+        this.stage.draw();
+        drawCounter();
+
+
+
+    }
+
+    private void setupInputProcessor() {
+        multiplexer.addProcessor(new InputAdapter() {
+            @Override
+            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+                int row, col;
+                for (row = 0; row < rows; row++) {
+                    for (col = 0; col < cols; col++) {
+                        Rectangle rect = new Rectangle(col * cellWidth + xOffset, row * cellHeight + yOffset, textureWidth, textureHeight);
+                        if (rect.contains(screenX, Gdx.graphics.getHeight() - screenY)) {
+                            onCellClicked(row, col);
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        });
+    }
+    protected void onCellClicked(int row, int col) {
+        // Add your logic here for when a cell is clicked
+        System.out.println("Cell clicked: row " + row + ", col " + col);
+        int displayPanelWidth = Gdx.graphics.getWidth() / 8;
+        int middleOfCellX = (int) (((col + 0.5) * cellWidth)) + displayPanelWidth ;
+        int middleOfCellY = (int) ((row + 0.5) * cellHeight);
+
+        System.out.print(" x: " + middleOfCellX + " y: " + middleOfCellY);
+        Vector2 heroPlacement = new Vector2(middleOfCellX, middleOfCellY);
+        //Creates new hero entity and sets its position to the middle of the clicked cell
+        getChosenHeroType();
+        placeHero(heroPlacement);
+
+        System.out.println("Cell clicked: row " + row + ", col " + col);
+        moneySystem.removeMoney(450);
+
+    }
+
+
+    public void drawHeroes() {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
                 if (getCell(row, col) == 1) {
@@ -119,8 +235,181 @@ public class Board {
                 }
             }
         }
-        this.batch.end();
     }
+
+    public void drawGrid() {
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+
+        // draw horizontal lines
+        for (int i = 0; i <= rows; i++) {
+            int y = startY + i * cellHeight;
+            shapeRenderer.line(startX, y, startX + gridWidth, y);
+        }
+
+        // draw vertical lines
+        for (int i = 0; i <= cols; i++) {
+            int x = startX + i * cellWidth;
+            shapeRenderer.line(x, startY, x, startY + gridHeight);
+        }
+
+        shapeRenderer.end();
+        if (!gridDrawn) {
+            gridDrawn = true;
+            //setGridInputAdapter();
+        }
+    }
+
+
+    private void setGridInputAdapter() {
+        // add click listener to each cell
+        multiplexer.addProcessor(new InputAdapter() {
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                int col = (screenX - startX) / cellWidth;
+                int row = (screenY - startY) / cellHeight;
+                int x = startX + col * cellWidth;
+                int y = startY + row * cellHeight;
+
+                if (screenX >= x && screenX < x + cellWidth && screenY >= y && screenY < y + cellHeight) {
+                    System.out.println("Cell clicked: (" + row + ", " + col + ")");
+                }
+
+                return super.touchDown(screenX, screenY, pointer, button);
+            }
+        });
+    }
+
+    public void createDisplayHeroButtons(Array<DisplayHero> displayHeroes) {
+        displayHeroButtons = new Array<>();
+        for (DisplayHero displayHero : displayHeroes) {
+            DisplayHeroButton button = new DisplayHeroButton(displayHero);
+            displayHeroButtons.add(button);
+        }
+    }
+
+
+    public void drawDisplayHeroButtons() {
+        float circleRadius = Gdx.graphics.getHeight() / 15;
+        int diameter = (int) ((circleRadius * 2) + 5);
+        Texture circleTexture = createWhiteCircle(circleRadius);
+
+        BitmapFont font = new BitmapFont(); // Create a BitmapFont instance
+        font.getData().setScale(2); // Increase the font size
+        Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE); // Set the font and color (white) for the label style
+
+
+        for (final DisplayHeroButton button : displayHeroButtons) {
+            Group buttonGroup = new Group();
+            // Group for the DisplayHero-button
+
+            // Button background
+            Image circle = new Image(circleTexture);
+            circle.setPosition(button.getPosition().x - button.getPosition().x / 2, button.getPosition().y);
+            circle.setSize(diameter, diameter);
+            buttonGroup.addActor(circle);
+
+            // Button with hero-texture
+            final Button buttonClickable = new Button(new TextureRegionDrawable(new TextureRegion(button.getTexture())));
+            buttonClickable.setPosition(button.getPosition().x, button.getPosition().y);
+            buttonClickable.setSize(button.getWidth() - 30, button.getHeight() - 40);
+
+            // Event listener
+            buttonClickable.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    System.out.println("Button position: (" + button.getHeroType() + ", at " + buttonClickable.getX() + ", " + buttonClickable.getY() + ")");
+                    setChosenHeroType(button.getHeroType());
+                }
+            });
+
+            buttonGroup.addActor(buttonClickable);
+
+            // Create the label for the button number
+            Label buttonNumber = new Label(Integer.toString(button.getPrice()), labelStyle);
+
+            // Adjust the label's position to be centered horizontally and vertically below the button
+            float labelX = button.getPosition().x + (button.getWidth() / 2) - (buttonNumber.getWidth() / 2);
+            float labelY = button.getPosition().y - (buttonNumber.getHeight() * 1.5f);
+            buttonNumber.setPosition(labelX, labelY);
+
+            buttonGroup.addActor(buttonNumber); // Add the label to the buttonGroup
+            stage.addActor(buttonGroup); // Add the buttonGroup to the stage
+
+        }
+    }
+
+
+    /* Tegner heroesene og den hvite sirkelen bak.
+        for (DisplayHeroButton button : displayHeroButtons) {
+            //draw circles
+            batch.draw(circle, button.getPosition().x, button.getPosition().y, diameter, diameter);
+            //draw display hero
+            batch.draw(button.getTexture(), button.getPosition().x, button.getPosition().y, button.getWidth(), button.getHeight());
+        }
+     */
+
+    private void setChosenHeroType(HeroType heroType) {
+        this.chosenHeroType = heroType;
+        this.placeHero = !this.placeHero;
+    }
+
+    public HeroType getChosenHeroType() {
+        return chosenHeroType;
+    }
+
+    private void placeHero(Vector2 placementPosition) {
+        if (chosenHeroType != null) {
+            Entity hero = HeroFactory.createHero(getChosenHeroType(), placementPosition);
+            engine.addEntity(hero);
+            System.out.println("Created new hero entity and added to game engine");
+            System.out.println("all heroes: :)");
+            for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class).get())) {
+                System.out.println(e.getComponent(HeroComponent.class).getHeroType());
+            }
+        }
+    }
+
+    private Texture createWhiteCircle(float circleRadius) {
+        int diameter = (int) (circleRadius * 2);
+        Pixmap pixmap = new Pixmap(diameter, diameter, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.fillCircle(diameter / 2, diameter / 2, (int) circleRadius);
+        Texture circleTexture = new Texture(pixmap);
+        pixmap.dispose();
+
+        return circleTexture;
+    }
+
+    private void drawPaneBackgrounds() {
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        Color leftRightPaneColor = new Color(0.3f, 0.3f, 0.3f, 1);
+        // Draw left pane background
+        shapeRenderer.setColor(leftRightPaneColor);
+        shapeRenderer.rect(0, 0, Gdx.graphics.getWidth() / 8, Gdx.graphics.getHeight());
+
+        // Draw right pane background with increased padding
+        float padding = 80;
+        float rightPaneWidth = Gdx.graphics.getWidth() / 8;
+        shapeRenderer.setColor(leftRightPaneColor);
+        shapeRenderer.rect(Gdx.graphics.getWidth() - rightPaneWidth - padding, 0, rightPaneWidth + padding, Gdx.graphics.getHeight());
+
+        shapeRenderer.end();
+    }
+
+
+    public Table getRightTable() {
+        return rightTable;
+    }
+
+    private void initButtonTextures() {
+        buttonTextures = new Texture[5];
+
+        for (int i = 0; i < displayHeroes.size; i++) {
+            buttonTextures[i] = displayHeroes.get(i).getSpriteComponent().getSprite();
+        }
+    }
+
 
     public void drawLaneDividers() {
         int dashLength = 10;
@@ -158,14 +447,25 @@ public class Board {
         }
     }
 
-    public void drawDisplayPanel(SpriteBatch batch) {
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.LIGHT_GRAY);
+    public void setDisplayHeroes() {
+        displayHeroes = new Array<>();
+        DisplayHero hero = HeroFactory.createDisplayHero(HeroType.HULK, new Vector2(displayTexturePositions[0].x + textureWidth/3, displayTexturePositions[0].y + textureHeight / 2));
+        DisplayHero spiderman = HeroFactory.createDisplayHero(HeroType.SPIDERMAN, new Vector2(displayTexturePositions[1].x + textureWidth/3, displayTexturePositions[1].y + textureHeight / 2));
+        DisplayHero cpt_america = HeroFactory.createDisplayHero(HeroType.CAPTAIN_AMERICA, new Vector2(displayTexturePositions[2].x + textureWidth/3, displayTexturePositions[2].y + textureHeight / 2));
+        DisplayHero ironman = HeroFactory.createDisplayHero(HeroType.IRONMAN, new Vector2(displayTexturePositions[3].x + textureWidth/3, displayTexturePositions[3].y + textureHeight / 2));
+        DisplayHero thor = HeroFactory.createDisplayHero(HeroType.THOR, new Vector2(displayTexturePositions[4].x + textureWidth/3, displayTexturePositions[4].y + textureHeight / 2));
 
-        for (Vector2 position : displayTexturePositions) {
-            shapeRenderer.circle(position.x + textureWidth / 2, position.y + textureHeight / 2, textureWidth / 2 + 5);
+        this.displayHeroes.add(hero);
+        this.displayHeroes.add(spiderman);
+        this.displayHeroes.add(cpt_america);
+        this.displayHeroes.add(ironman);
+        this.displayHeroes.add(thor);
+    }
+
+    private void dispose() {
+        for (Texture buttonTexture : buttonTextures) {
+            buttonTexture.dispose();
         }
 
-        shapeRenderer.end();
     }
 }

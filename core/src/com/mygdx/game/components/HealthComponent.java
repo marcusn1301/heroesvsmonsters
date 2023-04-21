@@ -3,8 +3,8 @@ package com.mygdx.game.components;
 import com.badlogic.ashley.core.Component;
 
 public class HealthComponent implements Component {
-    private float health;
-    public HealthComponent(float health) {
+    private int health;
+    public HealthComponent(int health) {
         this.health = health;
     }
 
@@ -12,7 +12,7 @@ public class HealthComponent implements Component {
         return health;
     }
 
-    public void setHealth(float health) {
+    public void setHealth(int health) {
         this.health = health;
     }
 }
