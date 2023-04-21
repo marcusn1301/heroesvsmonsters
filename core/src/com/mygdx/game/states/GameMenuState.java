@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.FireBaseInterface;
 import com.mygdx.game.SoundManager;
+import com.mygdx.game.utils.Enums;
 
 public class GameMenuState extends State {
     private GameStateManager gsm;
@@ -139,7 +140,7 @@ public class GameMenuState extends State {
                 gsm.push(new IntroCutsceneState());
             }
             if (isLobbyButtonClicked(x, y)) {
-                gsm.push(new SettingsState(SettingsState.SettingsBackground.CITY));
+                gsm.push(new SettingsState(Enums.SettingsBackground.CITY, Enums.GameType.MENU));
             }
             if (isMenuButtonClicked(x, y)) {
                 gsm.push(new StartState());
