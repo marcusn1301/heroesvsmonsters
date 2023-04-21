@@ -32,7 +32,7 @@ public class GameMenuState extends State {
         sb = new SpriteBatch();
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
-        startButton = new Texture("Start-button.png");
+        startButton = new Texture("playButton.png");
         lobbyButton = new Texture("Lobby-button.png");
         menuButton = new Texture("Menu-button.png");
         logo = new Texture("HvsMstor.png");
@@ -70,12 +70,14 @@ public class GameMenuState extends State {
 
         // Calculate the button positions and sizes
         float buttonWidth = width / 7f;
-        float startButtonHeight = buttonWidth * ((float) startButton.getHeight() / startButton.getWidth());
+        float playButtonWidth = width / 5f;
+        float startButtonHeight = playButtonWidth * ((float) startButton.getHeight() / startButton.getWidth());
         float lobbyButtonHeight = buttonWidth * ((float) lobbyButton.getHeight() / lobbyButton.getWidth());
         float menuButtonHeight = buttonWidth * ((float) menuButton.getHeight() / menuButton.getWidth());
 
 
         float buttonX = (width - buttonWidth) / 2f;
+        float playButtonX = (width - playButtonWidth) /2f;
         float startButtonY = height * 0.3f - startButtonHeight / 2f;
         float lobbyButtonY = height * 0.12f - lobbyButtonHeight / 2f;
         float menuButtonY = height * 0.21f - menuButtonHeight / 2f;
@@ -86,7 +88,7 @@ public class GameMenuState extends State {
         batch.draw(menuBackground, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         batch.draw(logo, logoX, logoY, logoWidth, logoHeight);
-        batch.draw(startButton, buttonX, startButtonY, buttonWidth, startButtonHeight);
+        batch.draw(startButton, playButtonX, startButtonY, playButtonWidth, startButtonHeight);
         batch.draw(lobbyButton, buttonX, lobbyButtonY, buttonWidth, lobbyButtonHeight);
         batch.draw(menuButton, buttonX, menuButtonY, buttonWidth, menuButtonHeight);
 
@@ -99,7 +101,7 @@ public class GameMenuState extends State {
     }
 
     private boolean isStartButtonClicked(int x, int y) {
-        float buttonWidth = width / 7f;
+        float buttonWidth = width / 5f;
         float startButtonHeight = buttonWidth * ((float) startButton.getHeight() / startButton.getWidth());
         float buttonX = (width - buttonWidth) / 2f;
         float startButtonY = height * 0.3f - startButtonHeight / 2f;
