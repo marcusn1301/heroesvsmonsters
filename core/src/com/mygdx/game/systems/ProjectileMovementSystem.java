@@ -36,7 +36,6 @@ public class ProjectileMovementSystem extends IteratingSystem {
         //If a projectile is out of bounds, remove it from the engine
         if (positionComponent.getPosition().x > Gdx.graphics.getWidth() - Gdx.graphics.getWidth()/8f) {
             engine.removeEntity(entity);
-            System.out.println("Projectile out of bounds. Removed projectile.");
         }
 
         //Increment the horizontal position of the projectile based on its velocity
