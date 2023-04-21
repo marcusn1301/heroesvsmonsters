@@ -48,9 +48,9 @@ public class Board extends Actor {
     private int cellHeight;
     private SpriteBatch batch;
 
-    private int xOffset = 315; // Add xOffset for moving textures right
+    private int xOffset = Gdx.graphics.getWidth()/8; // Add xOffset for moving textures right
     private int yOffset = 0;  // Add yOffset for moving textures up or down
-    private int dashOffset = 315; // Add dashOffset for moving dashed lines right
+    private int dashOffset = Gdx.graphics.getWidth()/8; // Add dashOffset for moving dashed lines right
 
     private Texture[] buttonTextures;
     private Texture[] displayTextures;
@@ -186,8 +186,8 @@ public class Board extends Actor {
         // Add your logic here for when a cell is clicked
         System.out.println("Cell clicked: row " + row + ", col " + col);
         int displayPanelWidth = Gdx.graphics.getWidth() / 8;
-        int middleOfCellX = (int) (((col + 0.5) * cellWidth)) + displayPanelWidth ;
-        int middleOfCellY = (int) ((row + 0.5) * cellHeight);
+        int middleOfCellX = (int) (((col) * cellWidth)) + displayPanelWidth ;
+        int middleOfCellY = (int) ((row) * cellHeight);
 
         System.out.print(" x: " + middleOfCellX + " y: " + middleOfCellY);
         Vector2 heroPlacement = new Vector2(middleOfCellX, middleOfCellY);
@@ -355,6 +355,13 @@ public class Board extends Actor {
         }
     }
 
+    public int getTextureWidth() {
+        return textureWidth;
+    }
+
+    public int getTextureHeight() {
+        return textureHeight;
+    }
 
     public void drawLaneDividers() {
         int dashLength = 10;

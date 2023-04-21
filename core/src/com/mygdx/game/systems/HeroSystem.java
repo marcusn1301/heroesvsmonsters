@@ -50,7 +50,7 @@ public class HeroSystem extends IteratingSystem {
         boolean projectileExists = false;
         for (Entity e : engine.getEntitiesFor(Family.all(ProjectileComponent.class, PositionComponent.class).get())) {
             if (e.getComponent(ProjectileComponent.class).getSourceEntity() == entity) {
-                System.out.println(e.getComponent(PositionComponent.class).getPosition());
+                //System.out.println(e.getComponent(PositionComponent.class).getPosition());
                 projectileExists = true;
                 break;
             }
@@ -71,7 +71,7 @@ public class HeroSystem extends IteratingSystem {
 
         for (Entity e : engine.getEntitiesFor(Family.all(ProjectileComponent.class, PositionComponent.class).get())) {
             if (e.getComponent(ProjectileComponent.class).getSourceEntity() == entity) {
-                System.out.println(e.getComponent(PositionComponent.class).getPosition());
+                //System.out.println(e.getComponent(PositionComponent.class).getPosition());
             }
         }
     }

@@ -27,6 +27,7 @@ import com.mygdx.game.SoundManager;
 import com.mygdx.game.components.AttackComponent;
 import com.mygdx.game.components.HeroComponent;
 import com.mygdx.game.components.PositionComponent;
+import com.mygdx.game.components.ProjectileComponent;
 import com.mygdx.game.components.SpriteComponent;
 import com.mygdx.game.entities.DisplayHero;
 import com.mygdx.game.entities.HeroFactory;
@@ -49,9 +50,6 @@ public class PlayState extends State{
     private static Engine engine;
     private Board board;
     private TextButton counterText1;
-    private List<Image> heroImages = new ArrayList<>();
-    private List<Image> heroProjectiles = new ArrayList<>();
-    private List<Image> monsterImages = new ArrayList<>();
 
     public PlayState() {
         //super(gsm);
@@ -132,15 +130,21 @@ public class PlayState extends State{
         board.getRightTable().row();
     }
 
-    public void renderHeroes() {
+    public void renderHeroes(SpriteBatch batch) {
         for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class, AttackComponent.class).get())) {
             Texture sprite = e.getComponent(SpriteComponent.class).getSprite();
             Vector2 position = e.getComponent(PositionComponent.class).getPosition();
 
-            Image heroImage = new Image(sprite);
-            batch.begin();
-            batch.draw(heroImage, e);
-            heroImages.add(heroImage);
+            batch.draw(sprite, position.x, position.y, (float) board.getTextureWidth(), (float) board.getTextureHeight());
+        }
+    }
+
+    public void renderProjectiles(SpriteBatch batch) {
+        for (Entity e : engine.getEntitiesFor(Family.all(ProjectileComponent.class, PositionComponent.class).get())) {
+            Texture sprite = e.getComponent(SpriteComponent.class).getSprite();
+            Vector2 position = e.getComponent(PositionComponent.class).getPosition();
+
+            batch.draw(sprite, position.x, position.y, (float) board.getTextureWidth(), (float) board.getTextureHeight());
         }
     }
 
@@ -153,7 +157,10 @@ public class PlayState extends State{
 
         batch.begin();
         board.render(batch);
+        renderHeroes(batch);
+        renderProjectiles(batch);
         batch.end();
+
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
