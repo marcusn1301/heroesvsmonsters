@@ -314,10 +314,6 @@ public class Board extends Actor {
             Entity hero = HeroFactory.createHero(getChosenHeroType(), placementPosition);
             engine.addEntity(hero);
             System.out.println("Created new hero entity and added to game engine");
-            System.out.println("all heroes: :)");
-            for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class).get())) {
-                System.out.println(e.getComponent(HeroComponent.class).getHeroType());
-            }
         }
     }
 

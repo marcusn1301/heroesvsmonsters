@@ -1,7 +1,9 @@
 package com.mygdx.game.states;
 
+import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.badlogic.gdx.Gdx;
@@ -22,6 +24,10 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Board;
 import com.mygdx.game.MoneySystem;
 import com.mygdx.game.SoundManager;
+import com.mygdx.game.components.AttackComponent;
+import com.mygdx.game.components.HeroComponent;
+import com.mygdx.game.components.PositionComponent;
+import com.mygdx.game.components.SpriteComponent;
 import com.mygdx.game.entities.DisplayHero;
 import com.mygdx.game.entities.HeroFactory;
 import com.mygdx.game.systems.HeroSystem;
@@ -43,6 +49,9 @@ public class PlayState extends State{
     private static Engine engine;
     private Board board;
     private TextButton counterText1;
+    private List<Image> heroImages = new ArrayList<>();
+    private List<Image> heroProjectiles = new ArrayList<>();
+    private List<Image> monsterImages = new ArrayList<>();
 
     public PlayState() {
         //super(gsm);
@@ -121,6 +130,18 @@ public class PlayState extends State{
         Image counterIcon2 = new Image(counterIconTexture2);
         board.getRightTable().add(counterIcon2).size(iconSize, iconSize).pad(5);
         board.getRightTable().row();
+    }
+
+    public void renderHeroes() {
+        for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class, AttackComponent.class).get())) {
+            Texture sprite = e.getComponent(SpriteComponent.class).getSprite();
+            Vector2 position = e.getComponent(PositionComponent.class).getPosition();
+
+            Image heroImage = new Image(sprite);
+            batch.begin();
+            batch.draw(heroImage, e);
+            heroImages.add(heroImage);
+        }
     }
 
     @Override
