@@ -12,6 +12,17 @@ public class DisplayHeroButton {
     float height;
     Texture texture;
     HeroType heroType;
+    int price;
+
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
 
     public float getWidth() {
         return width;
@@ -43,6 +54,7 @@ public class DisplayHeroButton {
         this.heroType = displayHero.getHeroComponent().getHeroType();
         this.height = displayHero.getSpriteComponent().getSprite().getHeight() * 4;
         this.width = displayHero.getSpriteComponent().getSprite().getWidth() * 4;
+        this.price = displayHero.getPriceComponent().getPrice();
     }
 
     public Vector2 getPosition() {
@@ -61,3 +73,4 @@ public class DisplayHeroButton {
         this.texture = texture;
     }
 }
+

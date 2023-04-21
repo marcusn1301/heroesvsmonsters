@@ -9,6 +9,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -20,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -48,9 +50,9 @@ public class Board extends Actor {
     private int cellHeight;
     private SpriteBatch batch;
 
-    private int xOffset = 315; // Add xOffset for moving textures right
     private int yOffset = 0;  // Add yOffset for moving textures up or down
-    private int dashOffset = 315; // Add dashOffset for moving dashed lines right
+    private int xOffset = 225; // Add xOffset for moving textures right (previously 315)
+    private int dashOffset = 225; // Add dashOffset for moving dashed lines right (previously 315)
 
     private Texture[] buttonTextures;
     private Texture[] displayTextures;
@@ -77,6 +79,8 @@ public class Board extends Actor {
     private boolean gridDrawn;
     private boolean isInputProcessorAdded;
     private Engine engine;
+    private MoneySystem moneySystem = new MoneySystem(8000);
+
 
 
     public Board(int rows, int cols, Engine engine) {
@@ -110,6 +114,24 @@ public class Board extends Actor {
         multiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(multiplexer);
     }
+
+    private void drawCounter() {
+        float iconSize = Gdx.graphics.getHeight() / 15;
+        float iconX = screenWidth - iconSize * 2 - 160; // Move 200 pixels to the left
+        float iconY = screenHeight - iconSize - 50;
+
+        BitmapFont font = new BitmapFont();
+        font.getData().setScale(3.5f);
+        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        Texture counterIcon = new Texture("coin.png");
+
+        this.batch.begin();
+        font.draw(batch, String.valueOf(moneySystem.getMoney()), iconX + iconSize * 1.5f, iconY + iconSize * 0.75f);
+
+        batch.draw(counterIcon, iconX, iconY, iconSize, iconSize);
+        this.batch.end();
+    }
+
 
     public int getRows() {
         return rows;
@@ -161,6 +183,9 @@ public class Board extends Actor {
         drawDisplayHeroButtons();
         this.stage.act();
         this.stage.draw();
+        drawCounter();
+
+
 
     }
 
@@ -194,6 +219,10 @@ public class Board extends Actor {
         //Creates new hero entity and sets its position to the middle of the clicked cell
         getChosenHeroType();
         placeHero(heroPlacement);
+
+        System.out.println("Cell clicked: row " + row + ", col " + col);
+        moneySystem.removeMoney(450);
+
     }
 
 
@@ -261,24 +290,30 @@ public class Board extends Actor {
 
     public void drawDisplayHeroButtons() {
         float circleRadius = Gdx.graphics.getHeight() / 15;
-        int diameter = (int) (circleRadius * 2);
+        int diameter = (int) ((circleRadius * 2) + 5);
         Texture circleTexture = createWhiteCircle(circleRadius);
 
+        BitmapFont font = new BitmapFont(); // Create a BitmapFont instance
+        font.getData().setScale(2); // Increase the font size
+        Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE); // Set the font and color (white) for the label style
+
+
         for (final DisplayHeroButton button : displayHeroButtons) {
-            //Group for the DisplayHero-button
             Group buttonGroup = new Group();
-            //Button background
+            // Group for the DisplayHero-button
+
+            // Button background
             Image circle = new Image(circleTexture);
             circle.setPosition(button.getPosition().x - button.getPosition().x / 2, button.getPosition().y);
             circle.setSize(diameter, diameter);
             buttonGroup.addActor(circle);
 
-            //Button with hero-texture
+            // Button with hero-texture
             final Button buttonClickable = new Button(new TextureRegionDrawable(new TextureRegion(button.getTexture())));
             buttonClickable.setPosition(button.getPosition().x, button.getPosition().y);
-            buttonClickable.setSize(button.getWidth(), button.getHeight());
+            buttonClickable.setSize(button.getWidth() - 30, button.getHeight() - 40);
 
-            //Event listener
+            // Event listener
             buttonClickable.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -286,10 +321,23 @@ public class Board extends Actor {
                     setChosenHeroType(button.getHeroType());
                 }
             });
+
             buttonGroup.addActor(buttonClickable);
-            stage.addActor(buttonGroup);
+
+            // Create the label for the button number
+            Label buttonNumber = new Label(Integer.toString(button.getPrice()), labelStyle);
+
+            // Adjust the label's position to be centered horizontally and vertically below the button
+            float labelX = button.getPosition().x + (button.getWidth() / 2) - (buttonNumber.getWidth() / 2);
+            float labelY = button.getPosition().y - (buttonNumber.getHeight() * 1.5f);
+            buttonNumber.setPosition(labelX, labelY);
+
+            buttonGroup.addActor(buttonNumber); // Add the label to the buttonGroup
+            stage.addActor(buttonGroup); // Add the buttonGroup to the stage
+
         }
     }
+
 
     /* Tegner heroesene og den hvite sirkelen bak.
         for (DisplayHeroButton button : displayHeroButtons) {
@@ -340,12 +388,15 @@ public class Board extends Actor {
         shapeRenderer.setColor(leftRightPaneColor);
         shapeRenderer.rect(0, 0, Gdx.graphics.getWidth() / 8, Gdx.graphics.getHeight());
 
-        // Draw right pane background
+        // Draw right pane background with increased padding
+        float padding = 80;
+        float rightPaneWidth = Gdx.graphics.getWidth() / 8;
         shapeRenderer.setColor(leftRightPaneColor);
-        shapeRenderer.rect(Gdx.graphics.getWidth() * 7 / 8, 0, Gdx.graphics.getWidth() / 8, Gdx.graphics.getHeight());
+        shapeRenderer.rect(Gdx.graphics.getWidth() - rightPaneWidth - padding, 0, rightPaneWidth + padding, Gdx.graphics.getHeight());
 
         shapeRenderer.end();
     }
+
 
     public Table getRightTable() {
         return rightTable;
