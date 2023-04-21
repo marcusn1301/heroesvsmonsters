@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.mygdx.game.utils.Enums;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +35,7 @@ public class DummyState extends State {
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
             bg.set(2, 0f);
             bg.set(1, 1f);
-            gsm.push(new SettingsState(SettingsState.SettingsBackground.CITY));
+            gsm.push(new SettingsState(Enums.SettingsBackground.CITY, Enums.GameType.MENU));
         }
     }
 

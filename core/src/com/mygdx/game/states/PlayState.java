@@ -31,9 +31,11 @@ import com.mygdx.game.components.ProjectileComponent;
 import com.mygdx.game.components.SpriteComponent;
 import com.mygdx.game.entities.DisplayHero;
 import com.mygdx.game.entities.HeroFactory;
+import com.mygdx.game.ds.buttons.RectangleButton;
 import com.mygdx.game.systems.HeroSystem;
 import com.mygdx.game.systems.ProjectileMovementSystem;
 import com.mygdx.game.types.HeroType;
+import com.mygdx.game.utils.Enums;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,16 +45,19 @@ public class PlayState extends State{
     private BitmapFont font;
     private Stage stage;
     private ShapeRenderer shapeRenderer;
-    SoundManager soundManager = SoundManager.getInstance();
-
+    private SoundManager soundManager = SoundManager.getInstance();
     private MoneySystem moneySystem;
     private boolean isPlacementAllowed = false;
     private static Engine engine;
     private Board board;
     private TextButton counterText1;
+    private final RectangleButton menuButton;
+    private final GameStateManager gsm;
 
     public PlayState() {
         //super(gsm);
+        menuButton = new RectangleButton(0.5f, Gdx.graphics.getWidth() - 137, Gdx.graphics.getHeight() - 100, "Lobby-button.png");
+        gsm = GameStateManager.getGsm();
         initialize();
     }
 
@@ -112,7 +117,7 @@ public class PlayState extends State{
         counterText1.setHeight(iconSize / 2);
         board.getRightTable().add(counterText1);
 
-        Texture counterIconTexture1 = new Texture("coin.png");
+        Texture counterIconTexture1 = new Texture("coin2.png");
         Image counterIcon1 = new Image(counterIconTexture1);
         board.getRightTable().add(counterIcon1).size(iconSize, iconSize).pad(5);
         board.getRightTable().row();
@@ -124,7 +129,7 @@ public class PlayState extends State{
         counterText2.setHeight(iconSize / 2);
         board.getRightTable().add(counterText2);
 
-        Texture counterIconTexture2 = new Texture("coin.png");
+        Texture counterIconTexture2 = new Texture("coin2.png");
         Image counterIcon2 = new Image(counterIconTexture2);
         board.getRightTable().add(counterIcon2).size(iconSize, iconSize).pad(5);
         board.getRightTable().row();
@@ -150,7 +155,6 @@ public class PlayState extends State{
 
     @Override
     public void render(SpriteBatch batch) {
-
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         //calculateMoney();
@@ -159,6 +163,7 @@ public class PlayState extends State{
         board.render(batch);
         renderHeroes(batch);
         renderProjectiles(batch);
+        batch.draw(menuButton.getImg(), menuButton.getPosition().x - menuButton.getWidth() / 2f, menuButton.getPosition().y, menuButton.getWidth(), menuButton.getHeight());
         batch.end();
 
 
@@ -167,7 +172,16 @@ public class PlayState extends State{
     }
 
     @Override
-    public void handleInput() {}
+    public void handleInput() {
+        if (Gdx.input.isTouched()) {
+            float touchX = Gdx.input.getX();
+            float touchY = Gdx.graphics.getHeight() - Gdx.input.getY();
+            if (menuButton.getBounds().contains(touchX, touchY)) {
+                //Implement Game.pause();
+                gsm.push(new SettingsState(Enums.SettingsBackground.CITY, Enums.GameType.SINGLEPLAYER));
+            }
+        }
+    }
 
 
     public void dispose() {

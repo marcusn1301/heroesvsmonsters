@@ -19,6 +19,9 @@ public class GameStateManager {
     public void push(State state) {
         states.push(state);
     }
+    public Stack<State> getStates() {
+        return states;
+    }
 
     public void pop() {
         states.pop();
