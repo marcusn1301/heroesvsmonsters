@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -25,7 +26,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.components.AttackComponent;
 import com.mygdx.game.components.HeroComponent;
+import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.entities.DisplayHero;
 import com.mygdx.game.entities.HeroFactory;
 import com.mygdx.game.types.HeroType;
@@ -311,9 +314,26 @@ public class Board extends Actor {
 
     private void placeHero(Vector2 placementPosition) {
         if (chosenHeroType != null) {
-            Entity hero = HeroFactory.createHero(getChosenHeroType(), placementPosition);
-            engine.addEntity(hero);
-            System.out.println("Created new hero entity and added to game engine");
+            //Check if hero is already placed in the cell
+            boolean cellHasHero = false;
+            float epsilon = 0.0001f;
+            ComponentMapper<PositionComponent> positionMapper;
+            positionMapper = ComponentMapper.getFor(PositionComponent.class);
+            for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class, AttackComponent.class).get())) {
+                PositionComponent position = positionMapper.get(e);
+                Vector2 heroPos = position.getPosition();
+                if (heroPos.epsilonEquals(placementPosition, epsilon)) {
+                    System.out.println("There is already a hero in this cell");
+                    cellHasHero = true;
+                    break;
+                }
+            }
+            //Place a new hero entity at the given position if the cell is empty
+            if (!cellHasHero) {
+                Entity hero = HeroFactory.createHero(getChosenHeroType(), placementPosition);
+                engine.addEntity(hero);
+                System.out.println("Created new hero entity and added to game engine");
+            }
         }
     }
 
