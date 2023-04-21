@@ -1,29 +1,15 @@
 package com.mygdx.game.utils;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
 import com.mygdx.game.HeroesVsMonsters;
 
-import java.awt.SystemTray;
-import java.io.File;
-
 public class Slider {
-    public enum SliderType {
-        AUDIO,
-        SFX
-    }
     private final ShapeRenderer shapeRenderer;
     private final SpriteBatch sb;
-    private final float SCREEN_WIDTH;
-    private final float SCREEN_HEIGHT;
-
-    private final SliderType type;
+    private final Enums.SliderType sliderType;
     private final float width;
     private final float height;
     private float sliderValue;
@@ -35,12 +21,12 @@ public class Slider {
     private float isTouched;
     private final SettingsData settingsData;
 
-    public Slider(SliderType type, float barWidth, float barHeight, float yPos) {
+    public Slider(Enums.SliderType type, float barWidth, float barHeight, float yPos) {
         //General variables
         sb = HeroesVsMonsters.getSb();
         shapeRenderer = new ShapeRenderer();
-        SCREEN_WIDTH = Gdx.graphics.getWidth();
-        SCREEN_HEIGHT = Gdx.graphics.getHeight();
+        float SCREEN_WIDTH = Gdx.graphics.getWidth();
+        float SCREEN_HEIGHT = Gdx.graphics.getHeight();
 
         settingsData = SettingsData.loadSettings();
 
@@ -56,7 +42,7 @@ public class Slider {
         }
 
         //Local variables
-        this.type = type;
+        this.sliderType = type;
         this.width = barWidth;
         this.height = barHeight;
         this.yPos = yPos;
@@ -116,7 +102,7 @@ public class Slider {
         if (isTouched < 0.1f && isTouched >= 0) {
             isTouched += Gdx.graphics.getDeltaTime();
         } else if (isTouched >= 0){
-            switch (type) {
+            switch (sliderType) {
                 case AUDIO:
                     settingsData.AUDIO = ((int) (sliderValue * 100));
                     break;

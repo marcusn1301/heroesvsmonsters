@@ -1,40 +1,37 @@
 package com.mygdx.game.states;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.mygdx.game.sprites.CircleButton;
+import com.mygdx.game.ds.buttons.CircleButton;
+import com.mygdx.game.ds.buttons.RectangleButton;
+import com.mygdx.game.utils.Enums;
 import com.mygdx.game.utils.SettingsData;
 import com.mygdx.game.utils.Slider;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SettingsState extends State {
-    private GameStateManager gsm;
-    private BitmapFont font;
-    public enum SettingsBackground {
-        MENU,
-        CITY,
-    }
+    private final GameStateManager gsm;
+    private final BitmapFont font;
     private ArrayList<Float> bgColor;
     private Boolean isBlack;
     private final CircleButton exitButton;
+    private final RectangleButton leaveGameButton;
     private final Slider audioBar;
     private final Slider sfxBar;
     private Texture bgImage;
+    private final Enums.GameType gameType;
 
-    public SettingsState(SettingsBackground bg) {
+    public SettingsState(Enums.SettingsBackground bg, Enums.GameType type) {
         gsm = GameStateManager.getGsm();
         font = new BitmapFont();
+        gameType = type;
 
         switch (bg) {
             case MENU:
@@ -49,13 +46,56 @@ public class SettingsState extends State {
                 break;
         }
 
+        switch (type) {
+            //Replace with leave game button when implemented
+            case SINGLEPLAYER:
+                leaveGameButton = new RectangleButton(0.7f, Gdx.graphics.getWidth() / 2, 30, "Lobby-button.png");
+                break;
+            case MULTIPLAYER:
+                leaveGameButton = new RectangleButton(0.7f, Gdx.graphics.getWidth() / 2, 30, "Lobby-button.png");
+                break;
+            default:
+                //For testing
+                leaveGameButton = new RectangleButton(0.7f, Gdx.graphics.getWidth() / 2, 30, "Lobby-button.png");
+        }
+
         exitButton = new CircleButton(70, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 140, "redExitCross.png");
-        audioBar = new Slider(Slider.SliderType.AUDIO, 800, 30, 100);
-        sfxBar = new Slider(Slider.SliderType.SFX, 800, 30, -100);
+        audioBar = new Slider(Enums.SliderType.AUDIO, 800, 30, 100);
+        sfxBar = new Slider(Enums.SliderType.SFX, 800, 30, -100);
         if (isBlack) {
             font.setColor(Color.BLACK);
         } else {
             font.setColor(Color.WHITE);
+        }
+    }
+
+    private void renderText(SpriteBatch sb) {
+        font.getData().setScale(8f);
+        GlyphLayout glyphLayout = new GlyphLayout();
+        glyphLayout.setText(font, "Settings");
+        font.draw(sb, "Settings", Gdx.graphics.getWidth() / 2f - glyphLayout.width / 2, Gdx.graphics.getHeight() - 80);
+        font.getData().setScale(3f);
+        font.draw(sb, "Audio", Gdx.graphics.getWidth() / 2f - 400, Gdx.graphics.getHeight() / 2f + 170);
+        font.draw(sb, "SFX", Gdx.graphics.getWidth() / 2f - 400, Gdx.graphics.getHeight() / 2f -30);
+    }
+
+    private void renderExitButton(SpriteBatch sb) {
+        sb.draw(exitButton.getImg(), exitButton.getPosition().x - 40, exitButton.getPosition().y - 40, 80, 80);
+    }
+    private void renderAudioBar() {
+        audioBar.render();
+    }
+    private void renderSfxBar() {
+        sfxBar.render();
+    }
+    private void renderLeaveGame(SpriteBatch sb) {
+        switch (gameType) {
+            case SINGLEPLAYER:
+            case MULTIPLAYER:
+                sb.draw(leaveGameButton.getImg(), leaveGameButton.getPosition().x - leaveGameButton.getWidth() / 2f, leaveGameButton.getPosition().y, leaveGameButton.getWidth(), leaveGameButton.getHeight());
+                break;
+            default:
+                break;
         }
     }
 
@@ -69,8 +109,9 @@ public class SettingsState extends State {
         ScreenUtils.clear(bgColor.get(0), bgColor.get(1), bgColor.get(2), bgColor.get(3));
         sb.begin();
         sb.draw(bgImage, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        renderHeader(sb);
+        renderText(sb);
         renderExitButton(sb);
+        renderLeaveGame(sb);
         sb.end();
         renderAudioBar();
         renderSfxBar();
@@ -84,6 +125,8 @@ public class SettingsState extends State {
             if (exitButton.getBounds().contains(touchX, touchY)) {
                 //dispose();
                 gsm.pop();
+            } else if(leaveGameButton.getBounds().contains(touchX, touchY)) {
+                gsm.set(new GameMenuState());
             } else {
                 SettingsData settingsData = SettingsData.loadSettings();
                 settingsData.saveSettings();
@@ -98,23 +141,5 @@ public class SettingsState extends State {
         font.dispose();
     }
 
-    private void renderHeader(SpriteBatch sb) {
-        font.getData().setScale(8f);
-        GlyphLayout glyphLayout = new GlyphLayout();
-        glyphLayout.setText(font, "Settings");
-        font.draw(sb, "Settings", Gdx.graphics.getWidth() / 2 - glyphLayout.width / 2, Gdx.graphics.getHeight() - 80);
-    }
-
-    private void renderExitButton(SpriteBatch sb) {
-        sb.draw(exitButton.getImg(), exitButton.getPosition().x - 40, exitButton.getPosition().y - 40, 80, 80);
-    }
-
-    private void renderAudioBar() {
-        audioBar.render();
-    }
-
-    private void renderSfxBar() {
-        sfxBar.render();
-    }
 
 }

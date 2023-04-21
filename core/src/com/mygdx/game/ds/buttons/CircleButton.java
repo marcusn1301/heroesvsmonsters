@@ -1,4 +1,4 @@
-package com.mygdx.game.sprites;
+package com.mygdx.game.ds.buttons;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -12,7 +12,6 @@ public class CircleButton {
     private ShapeRenderer shape;
     private int radius;
     private Texture img;
-
 
     public CircleButton(int radius, int xStart, int yStart, String internalPath) {
         this.radius = radius;
