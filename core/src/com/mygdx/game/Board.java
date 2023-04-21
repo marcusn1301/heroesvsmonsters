@@ -30,6 +30,9 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.components.HeroComponent;
 import com.mygdx.game.entities.DisplayHero;
 import com.mygdx.game.entities.HeroFactory;
+import com.mygdx.game.states.GameMenuState;
+import com.mygdx.game.states.GameStateManager;
+import com.mygdx.game.states.PlayState;
 import com.mygdx.game.types.HeroType;
 import com.mygdx.game.utils.DisplayHeroButton;
 
@@ -48,6 +51,7 @@ public class Board extends Actor {
     private int textureHeight;
     private int cellWidth;
     private int cellHeight;
+    private GameStateManager gsm;
     private SpriteBatch batch;
 
     private int yOffset = 0;  // Add yOffset for moving textures up or down
@@ -84,6 +88,7 @@ public class Board extends Actor {
 
 
     public Board(int rows, int cols, Engine engine) {
+        gsm = GameStateManager.getGsm();
         this.engine = engine;
         this.rows = rows;
         this.cols = cols;
@@ -177,6 +182,7 @@ public class Board extends Actor {
         //drawDisplayPanel(batch);
 
         this.batch.begin();
+        drawBackButton();
         drawHeroes();
         this.batch.end();
 
@@ -186,6 +192,25 @@ public class Board extends Actor {
         drawCounter();
 
 
+
+    }
+
+    private void drawBackButton() {
+        Texture backButton = new Texture("backButton.png");
+        float buttonWidth = screenWidth / 10;
+        float buttonHeight = buttonWidth * ((float) backButton.getHeight() / backButton.getWidth());
+        float buttonX = 10;
+        float buttonY = 10;
+        batch.draw(backButton, buttonX, buttonY, buttonWidth, buttonHeight);
+
+        if (Gdx.input.isTouched()) {
+            int x = Gdx.input.getX();
+            int y = Gdx.input.getY();
+            if (Gdx.input.justTouched() && buttonX <= x && x <= buttonX + buttonWidth &&
+                    buttonY <= Gdx.graphics.getHeight() - y && Gdx.graphics.getHeight() - y <= buttonY + buttonHeight) {
+                gsm.push(new GameMenuState());
+            }
+        }
 
     }
 
