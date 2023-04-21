@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -64,12 +65,20 @@ public class Board extends Actor {
     private List<DisplayHeroButton> displayHeroButtons;
     private boolean placeHero = false;
     private HeroType chosenHeroType;
+    private InputMultiplexer multiplexer;
+    private int gridWidth, gridHeight, startX, startY;
+    private boolean gridDrawn;
 
 
     public Board(int rows, int cols) {
 
         this.rows = rows;
         this.cols = cols;
+        gridWidth = cols * cellWidth;
+        gridHeight = rows * cellHeight;
+        startX = (screenWidth - gridWidth) / 2;
+        startY = (screenHeight - gridHeight) / 2;
+        gridDrawn = false;
 
         cellWidth = Gdx.graphics.getWidth() / (rows + 6);
         cellHeight = Gdx.graphics.getHeight() / (rows );
@@ -87,14 +96,14 @@ public class Board extends Actor {
         //setupInputProcessor();
         displayHeroButtons = new ArrayList<>();
         createDisplayHeroButtons(displayHeroes);
+        multiplexer = new InputMultiplexer();
         stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
+        multiplexer.addProcessor(stage);
+        Gdx.input.setInputProcessor(multiplexer);
 
         for (DisplayHero hero : displayHeroes) {
             System.out.println(hero.getHeroComponent().getHeroType());
         }
-
-
 
     }
 
@@ -115,12 +124,8 @@ public class Board extends Actor {
     }
 
     public void setTexture(int row, int col, Texture texture) {
-
-
-
-        setCell(col, row, 1);
-        textures[col][row] = texture;
-
+        setCell(row, col, 1);
+        textures[row][col] = texture;
     }
 
     public int getCell(int row, int col) {
@@ -163,11 +168,6 @@ public class Board extends Actor {
     }
 
     public void drawGrid() {
-        int gridWidth = cols * cellWidth;
-        int gridHeight = rows * cellHeight;
-        final int startX = (screenWidth - gridWidth) / 2;
-        final int startY = (screenHeight - gridHeight) / 2;
-
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
         // draw horizontal lines
@@ -183,21 +183,24 @@ public class Board extends Actor {
         }
 
         shapeRenderer.end();
+        if (!gridDrawn) {
+            gridDrawn = true;
+            setGridInputAdapter();
+        }
+    }
 
+    private void setGridInputAdapter() {
         // add click listener to each cell
-        Gdx.input.setInputProcessor(new InputAdapter() {
+        multiplexer.addProcessor(new InputAdapter() {
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 int col = (screenX - startX) / cellWidth;
                 int row = (screenY - startY) / cellHeight;
-                int x = startX + col * cellWidth + 1;
-                int y = startY + row * cellHeight + 1;
+                int x = startX + col * cellWidth;
+                int y = startY + row * cellHeight;
 
                 if (screenX >= x && screenX < x + cellWidth && screenY >= y && screenY < y + cellHeight) {
-                    System.out.println("Cell clicked: (" + row + ", " + col + ")");
-                    //onCellClicked(row , col);
-                   /* Texture texture = new Texture("characterIcon5.png");
-                    setTexture(row, col, texture);*/
+                    System.out.println("Cell clicked: (" + col + ", " + row + ")");
                 }
 
                 return super.touchDown(screenX, screenY, pointer, button);
@@ -252,7 +255,7 @@ public class Board extends Actor {
     }
 
     private void placeHero() {
-        
+
     }
 
     private Texture createWhiteCircle(float circleRadius) {
@@ -293,33 +296,6 @@ public class Board extends Actor {
         }
     }
 
-    /*private void setupInputProcessor() {
-        Gdx.input.setInputProcessor(new InputAdapter() {
-            @Override
-            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                int row, col;
-                for (row = 0; row < rows; row++) {
-                    for (col = 0; col < cols; col++) {
-                        Rectangle rect = new Rectangle(col * cellWidth + xOffset, row * cellHeight + yOffset, textureWidth, textureHeight);
-                        if (rect.contains(screenX, Gdx.graphics.getHeight() - screenY)) {
-                            onCellClicked(row, col);
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-        });
-    }*/
-
-    protected void onCellClicked(int row, int col) {
-        // Add your logic here for when a cell is clicked
-        System.out.println("Cell clicked: row " + row + ", col " + col);
-
-        /*Texture texture = new Texture("characterIcon5.png");
-        setTexture(row, col, texture);*/
-    }
-
 
     public void drawLaneDividers() {
         int dashLength = 10;
@@ -352,7 +328,7 @@ public class Board extends Actor {
         displayTexturePositions = new Vector2[displayTexturesCount];
 
         for (int i = 0; i < displayTexturesCount; i++) {
-            displayTextures[i] = new Texture("characterIcon1" + ".png");
+            displayTextures[i] = new Texture("characterIcon" + (i + 1) + ".png");
             displayTexturePositions[i] = new Vector2(20, 20 + (i * (textureHeight + 20)));
         }
     }
