@@ -51,12 +51,9 @@ public class StartState extends State implements InputProcessor {
         board.setTexture(4, 3, texture1);
         board.setTexture(5, 3, texture1);
 
-
         board.setTexture(4, 5, texture1);
-
-
-
     }
+
     @Override
     public void update(float dt) {
 

@@ -24,7 +24,9 @@ import com.mygdx.game.MoneySystem;
 import com.mygdx.game.SoundManager;
 import com.mygdx.game.entities.DisplayHero;
 import com.mygdx.game.entities.HeroFactory;
+import com.mygdx.game.ds.buttons.RectangleButton;
 import com.mygdx.game.types.HeroType;
+import com.mygdx.game.utils.Enums;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +46,13 @@ public class PlayState extends State{
 
     private MoneySystem moneySystem;
     private boolean isPlacementAllowed = false;
+    private final RectangleButton menuButton;
+    private final GameStateManager gsm;
 
     public PlayState() {
         //super(gsm);
+        menuButton = new RectangleButton(0.5f, Gdx.graphics.getWidth() - 137, Gdx.graphics.getHeight() - 100, "Lobby-button.png");
+        gsm = GameStateManager.getGsm();
         init();
     }
 
@@ -247,6 +253,7 @@ public class PlayState extends State{
     @Override
     public void update(float dt) {
         stage.draw();
+        handleInput();
     }
 
     @Override
@@ -257,13 +264,25 @@ public class PlayState extends State{
 
         drawPaneBackgrounds();
         drawLaneDividers();
+        sb.begin();
+        sb.draw(menuButton.getImg(), menuButton.getPosition().x - menuButton.getWidth() / 2f, menuButton.getPosition().y, menuButton.getWidth(), menuButton.getHeight());
+        sb.end();
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }
 
     @Override
-    public void handleInput() {}
+    public void handleInput() {
+        if (Gdx.input.isTouched()) {
+            float touchX = Gdx.input.getX();
+            float touchY = Gdx.graphics.getHeight() - Gdx.input.getY();
+            if (menuButton.getBounds().contains(touchX, touchY)) {
+                //Implement Game.pause();
+                gsm.push(new SettingsState(Enums.SettingsBackground.CITY, Enums.GameType.SINGLEPLAYER));
+            }
+        }
+    }
 
     private void drawPaneBackgrounds() {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
