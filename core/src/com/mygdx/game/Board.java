@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.entities.DisplayHero;
 import com.mygdx.game.entities.HeroFactory;
 import com.mygdx.game.types.HeroType;
@@ -58,11 +59,12 @@ public class Board extends Actor {
     private Table leftTable;
     private Table rightTable;
     private Table boardTable;
-    private List<DisplayHero> displayHeroes;
     private TextButton counterText1;
     private boolean isGridTableVisible = true;
     private boolean isPlacementAllowed = false;
-    private List<DisplayHeroButton> displayHeroButtons;
+    private Array<DisplayHero> displayHeroes;
+    private Array<DisplayHeroButton> displayHeroButtons;
+
     private boolean placeHero = false;
     private HeroType chosenHeroType;
     private InputMultiplexer multiplexer;
@@ -82,7 +84,6 @@ public class Board extends Actor {
 
         cellWidth = Gdx.graphics.getWidth() / (rows + 6);
         cellHeight = Gdx.graphics.getHeight() / (rows );
-        System.out.print("ScreenHeight: " + Gdx.graphics.getHeight());
 
         textureWidth = cellHeight - 70;
         textureHeight = cellHeight;
@@ -94,17 +95,12 @@ public class Board extends Actor {
         setDisplayHeroes();
         initButtonTextures();
         //setupInputProcessor();
-        displayHeroButtons = new ArrayList<>();
+        displayHeroButtons = new Array<>();
         createDisplayHeroButtons(displayHeroes);
         multiplexer = new InputMultiplexer();
         stage = new Stage();
         multiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(multiplexer);
-
-        for (DisplayHero hero : displayHeroes) {
-            System.out.println(hero.getHeroComponent().getHeroType());
-        }
-
     }
 
     public int getRows() {
@@ -141,11 +137,12 @@ public class Board extends Actor {
         drawGrid();
         drawLaneDividers();
         drawPaneBackgrounds();
+        loadDisplayTextures();
+        setupInputProcessor();
 
         //createRightTable();
         //drawDisplayPanel(batch);
 
-        if (displayHeroes.size() > 0) {
         this.batch.begin();
         drawHeroes();
         this.batch.end();
@@ -153,8 +150,34 @@ public class Board extends Actor {
         drawDisplayHeroButtons();
         this.stage.act();
         this.stage.draw();
-        }
+
     }
+
+    private void setupInputProcessor() {
+        multiplexer.addProcessor(new InputAdapter() {
+            @Override
+            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+                int row, col;
+                for (row = 0; row < rows; row++) {
+                    for (col = 0; col < cols; col++) {
+                        Rectangle rect = new Rectangle(col * cellWidth + xOffset, row * cellHeight + yOffset, textureWidth, textureHeight);
+                        if (rect.contains(screenX, Gdx.graphics.getHeight() - screenY)) {
+                            onCellClicked(row, col);
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        });
+    }
+    protected void onCellClicked(int row, int col) {
+        // Add your logic here for when a cell is clicked
+        Texture texture = new Texture("characterIcon5.png");
+        setTexture(row, col, texture);
+        System.out.println("Cell clicked: row " + row + ", col " + col);
+    }
+
 
     public void drawHeroes() {
         for (int row = 0; row < rows; row++) {
@@ -200,7 +223,7 @@ public class Board extends Actor {
                 int y = startY + row * cellHeight;
 
                 if (screenX >= x && screenX < x + cellWidth && screenY >= y && screenY < y + cellHeight) {
-                    System.out.println("Cell clicked: (" + col + ", " + row + ")");
+                    System.out.println("Cell clicked: (" + row + ", " + col + ")");
                 }
 
                 return super.touchDown(screenX, screenY, pointer, button);
@@ -208,15 +231,15 @@ public class Board extends Actor {
         });
     }
 
-
-
-
-    public void createDisplayHeroButtons(List<DisplayHero> displayHeroes) {
+    public void createDisplayHeroButtons(Array<DisplayHero> displayHeroes) {
+        displayHeroButtons = new Array<>();
         for (DisplayHero displayHero : displayHeroes) {
             DisplayHeroButton button = new DisplayHeroButton(displayHero);
             displayHeroButtons.add(button);
         }
     }
+
+
     public void drawDisplayHeroButtons() {
         float circleRadius = Gdx.graphics.getHeight() / 15;
         int diameter = (int) (circleRadius * 2);
@@ -249,12 +272,14 @@ public class Board extends Actor {
         }
     }
 
+    /* Tegner heroesene og den hvite sirkelen bak.
         for (DisplayHeroButton button : displayHeroButtons) {
             //draw circles
             batch.draw(circle, button.getPosition().x, button.getPosition().y, diameter, diameter);
             //draw display hero
             batch.draw(button.getTexture(), button.getPosition().x, button.getPosition().y, button.getWidth(), button.getHeight());
         }
+     */
 
     private void setChosenHeroType(HeroType heroType) {
         this.chosenHeroType = heroType;
@@ -298,7 +323,7 @@ public class Board extends Actor {
     private void initButtonTextures() {
         buttonTextures = new Texture[5];
 
-        for (int i = 0; i < displayHeroes.size(); i++) {
+        for (int i = 0; i < displayHeroes.size; i++) {
             buttonTextures[i] = displayHeroes.get(i).getSpriteComponent().getSprite();
         }
     }
@@ -341,7 +366,7 @@ public class Board extends Actor {
     }
 
     public void setDisplayHeroes() {
-        displayHeroes = new ArrayList<>();
+        displayHeroes = new Array<>();
         DisplayHero hero = HeroFactory.createDisplayHero(HeroType.HULK, new Vector2(displayTexturePositions[0].x + textureWidth/3, displayTexturePositions[0].y + textureHeight / 2));
         DisplayHero spiderman = HeroFactory.createDisplayHero(HeroType.SPIDERMAN, new Vector2(displayTexturePositions[1].x + textureWidth/3, displayTexturePositions[1].y + textureHeight / 2));
         DisplayHero cpt_america = HeroFactory.createDisplayHero(HeroType.CAPTAIN_AMERICA, new Vector2(displayTexturePositions[2].x + textureWidth/3, displayTexturePositions[2].y + textureHeight / 2));
@@ -359,5 +384,6 @@ public class Board extends Actor {
         for (Texture buttonTexture : buttonTextures) {
             buttonTexture.dispose();
         }
+
     }
 }
