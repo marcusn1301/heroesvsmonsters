@@ -168,10 +168,10 @@ public class Board extends Actor {
         Texture circle = createWhiteCircle(circleRadius);
 
         for (DisplayHeroButton button : displayHeroButtons) {
-            //draw display hero
-            batch.draw(button.getTexture(), button.getPosition().x, button.getPosition().y, button.getWidth(), button.getHeight());
             //draw circles
             batch.draw(circle, button.getPosition().x, button.getPosition().y, diameter, diameter);
+            //draw display hero
+            batch.draw(button.getTexture(), button.getPosition().x, button.getPosition().y, button.getWidth(), button.getHeight());
         }
     }
 
