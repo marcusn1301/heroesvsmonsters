@@ -28,15 +28,15 @@ public class ProjectileFactory {
         Texture texture = null;
         switch (heroType) {
             case IRONMAN:
-                return new Texture(Gdx.files.internal("characterIcon3.png"));
+                return new Texture(Gdx.files.internal("ironManShoots.png"));
             case HULK:
-                return new Texture(Gdx.files.internal("characterIcon3.png"));
+                return new Texture(Gdx.files.internal("rock.png"));
             case SPIDERMAN:
-                return new Texture(Gdx.files.internal("characterIcon3.png"));
+                return new Texture(Gdx.files.internal("web.png"));
             case THOR:
-                return new Texture(Gdx.files.internal("characterIcon3.png"));
+                return new Texture(Gdx.files.internal("lightning.png"));
             case CAPTAIN_AMERICA:
-                return new Texture(Gdx.files.internal("characterIcon3.png"));
+                return new Texture(Gdx.files.internal("shield.png"));
             default:
                 return null;
         }
@@ -45,19 +45,17 @@ public class ProjectileFactory {
     private static float getProjectileSpeed(HeroType heroType) {
         switch (heroType) {
             case IRONMAN:
-                return 5f;
+                return 30f;
             case HULK:
-                return 2f;
+                return 15f;
             case SPIDERMAN:
-                return 4f;
+                return 40f;
             case THOR:
-                return 3f;
+                return 20;
             case CAPTAIN_AMERICA:
-                return 8f;
+                return 25f;
             default:
                 return 7f;
         }
     }
-
-
 }

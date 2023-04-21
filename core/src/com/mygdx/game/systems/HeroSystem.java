@@ -21,6 +21,7 @@ public class HeroSystem extends IteratingSystem {
     private ComponentMapper<PositionComponent> positionMapper;
     private ComponentMapper<SpriteComponent> spriteMapper;
     private ComponentMapper<HeroComponent> heroTypeMapper;
+    private ComponentMapper<ProjectileComponent> projectileMapper;
     private Engine engine;
 
     //This system is only responsible for handling the creation of projectiles for all the heroes
@@ -32,6 +33,7 @@ public class HeroSystem extends IteratingSystem {
         positionMapper = ComponentMapper.getFor(PositionComponent.class);
         spriteMapper = ComponentMapper.getFor(SpriteComponent.class);
         heroTypeMapper = ComponentMapper.getFor(HeroComponent.class);
+        projectileMapper = ComponentMapper.getFor(ProjectileComponent.class);
         this.engine = engine;
     }
 
@@ -43,36 +45,36 @@ public class HeroSystem extends IteratingSystem {
         SpriteComponent sprite = spriteMapper.get(entity);
         HeroComponent heroComponent = heroTypeMapper.get(entity);
 
-        //Increase the time elapsed field in the attack component on every update
-        attack.setAttackTimeElapsed(attack.getAttackTimeElapsed() + deltaTime);
-
-        //Check if a hero has an active projectile
-        boolean projectileExists = false;
-        for (Entity e : engine.getEntitiesFor(Family.all(ProjectileComponent.class, PositionComponent.class).get())) {
-            if (e.getComponent(ProjectileComponent.class).getSourceEntity() == entity) {
-                System.out.println(e.getComponent(PositionComponent.class).getPosition());
-                projectileExists = true;
-                break;
-            }
-        }
-
-        //If a hero does not have an active projectile, it is created and added to the engine
-        if (!projectileExists) {
+        //If the time elapsed is greater than the given interval, create a new projectile
+        if (attack.getAttackTimeElapsed() >= attack.getAttackInterval() || !heroComponent.isProjectileActive()) {
+            attack.setAttackTimeElapsed(0);
             float posX = position.getPosition().x;
             float posY = position.getPosition().y;
             Entity projectile = ProjectileFactory.createProjectile(heroComponent.getHeroType(), new Vector2(posX, posY), entity);
             engine.addEntity(projectile);
+            heroComponent.setProjectileActive(true);
         }
 
-        //If the time elapsed is greater than the given interval, create a new projectile
-        if (attack.getAttackTimeElapsed() > attack.getAttackInterval()) {
-            attack.setAttackTimeElapsed(0);
-        }
-
-        for (Entity e : engine.getEntitiesFor(Family.all(ProjectileComponent.class, PositionComponent.class).get())) {
-            if (e.getComponent(ProjectileComponent.class).getSourceEntity() == entity) {
-                System.out.println(e.getComponent(PositionComponent.class).getPosition());
+        //Increase the time elapsed field in the attack component on every update
+        attack.setAttackTimeElapsed(attack.getAttackTimeElapsed() + deltaTime*10);
+        //Check if a hero has an active projectile
+        /*boolean projectileExists = false;
+        for (Entity projectile : engine.getEntitiesFor(Family.all(ProjectileComponent.class, PositionComponent.class).get())) {
+            ProjectileComponent projectileComponent = projectileMapper.get(projectile);
+            if (projectileComponent.getSourceEntity() == entity) {
+                //System.out.println(e.getComponent(PositionComponent.class).getPosition());
+                projectileExists = true;
+                break;
             }
-        }
+        }*/
+
+        //If a hero does not have an active projectile, it is created and added to the engine
+        /*if (!projectileExists) {
+            float posX = position.getPosition().x;
+            float posY = position.getPosition().y;
+            Entity projectile = ProjectileFactory.createProjectile(heroComponent.getHeroType(), new Vector2(posX, posY), entity);
+            engine.addEntity(projectile);
+        }*/
+
     }
 }

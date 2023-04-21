@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -27,7 +28,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.components.AttackComponent;
 import com.mygdx.game.components.HeroComponent;
+import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.entities.DisplayHero;
 import com.mygdx.game.entities.HeroFactory;
 import com.mygdx.game.states.GameMenuState;
@@ -54,9 +57,9 @@ public class Board extends Actor {
     private GameStateManager gsm;
     private SpriteBatch batch;
 
+    private int xOffset = Gdx.graphics.getWidth()/8; // Add xOffset for moving textures right
     private int yOffset = 0;  // Add yOffset for moving textures up or down
-    private int xOffset = 225; // Add xOffset for moving textures right (previously 315)
-    private int dashOffset = 225; // Add dashOffset for moving dashed lines right (previously 315)
+    private int dashOffset = Gdx.graphics.getWidth()/8; // Add dashOffset for moving dashed lines right
 
     private Texture[] buttonTextures;
     private Texture[] displayTextures;
@@ -236,8 +239,8 @@ public class Board extends Actor {
         // Add your logic here for when a cell is clicked
         System.out.println("Cell clicked: row " + row + ", col " + col);
         int displayPanelWidth = Gdx.graphics.getWidth() / 8;
-        int middleOfCellX = (int) (((col + 0.5) * cellWidth)) + displayPanelWidth ;
-        int middleOfCellY = (int) ((row + 0.5) * cellHeight);
+        int middleOfCellX = (int) (((col) * cellWidth)) + displayPanelWidth ;
+        int middleOfCellY = (int) ((row) * cellHeight);
 
         System.out.print(" x: " + middleOfCellX + " y: " + middleOfCellY);
         Vector2 heroPlacement = new Vector2(middleOfCellX, middleOfCellY);
@@ -384,12 +387,25 @@ public class Board extends Actor {
 
     private void placeHero(Vector2 placementPosition) {
         if (chosenHeroType != null) {
-            Entity hero = HeroFactory.createHero(getChosenHeroType(), placementPosition);
-            engine.addEntity(hero);
-            System.out.println("Created new hero entity and added to game engine");
-            System.out.println("all heroes: :)");
-            for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class).get())) {
-                System.out.println(e.getComponent(HeroComponent.class).getHeroType());
+            //Check if hero is already placed in the cell
+            boolean cellHasHero = false;
+            float epsilon = 0.0001f;
+            ComponentMapper<PositionComponent> positionMapper;
+            positionMapper = ComponentMapper.getFor(PositionComponent.class);
+            for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class, AttackComponent.class).get())) {
+                PositionComponent position = positionMapper.get(e);
+                Vector2 heroPos = position.getPosition();
+                if (heroPos.epsilonEquals(placementPosition, epsilon)) {
+                    System.out.println("There is already a hero in this cell");
+                    cellHasHero = true;
+                    break;
+                }
+            }
+            //Place a new hero entity at the given position if the cell is empty
+            if (!cellHasHero) {
+                Entity hero = HeroFactory.createHero(getChosenHeroType(), placementPosition);
+                engine.addEntity(hero);
+                System.out.println("Created new hero entity and added to game engine");
             }
         }
     }
@@ -435,6 +451,13 @@ public class Board extends Actor {
         }
     }
 
+    public int getTextureWidth() {
+        return textureWidth;
+    }
+
+    public int getTextureHeight() {
+        return textureHeight;
+    }
 
     public void drawLaneDividers() {
         int dashLength = 10;
