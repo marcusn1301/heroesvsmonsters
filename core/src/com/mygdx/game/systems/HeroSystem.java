@@ -21,6 +21,7 @@ public class HeroSystem extends IteratingSystem {
     private ComponentMapper<PositionComponent> positionMapper;
     private ComponentMapper<SpriteComponent> spriteMapper;
     private ComponentMapper<HeroComponent> heroTypeMapper;
+    private ComponentMapper<ProjectileComponent> projectileMapper;
     private Engine engine;
 
     //This system is only responsible for handling the creation of projectiles for all the heroes
@@ -32,6 +33,7 @@ public class HeroSystem extends IteratingSystem {
         positionMapper = ComponentMapper.getFor(PositionComponent.class);
         spriteMapper = ComponentMapper.getFor(SpriteComponent.class);
         heroTypeMapper = ComponentMapper.getFor(HeroComponent.class);
+        projectileMapper = ComponentMapper.getFor(ProjectileComponent.class);
         this.engine = engine;
     }
 
@@ -48,8 +50,9 @@ public class HeroSystem extends IteratingSystem {
 
         //Check if a hero has an active projectile
         boolean projectileExists = false;
-        for (Entity e : engine.getEntitiesFor(Family.all(ProjectileComponent.class, PositionComponent.class).get())) {
-            if (e.getComponent(ProjectileComponent.class).getSourceEntity() == entity) {
+        for (Entity projectile : engine.getEntitiesFor(Family.all(ProjectileComponent.class, PositionComponent.class).get())) {
+            ProjectileComponent projectileComponent = projectileMapper.get(projectile);
+            if (projectileComponent.getSourceEntity() == entity) {
                 //System.out.println(e.getComponent(PositionComponent.class).getPosition());
                 projectileExists = true;
                 break;
