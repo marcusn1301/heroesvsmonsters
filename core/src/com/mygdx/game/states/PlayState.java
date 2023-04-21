@@ -110,7 +110,7 @@ public class PlayState extends State{
         counterText1.setHeight(iconSize / 2);
         board.getRightTable().add(counterText1);
 
-        Texture counterIconTexture1 = new Texture("coin.png");
+        Texture counterIconTexture1 = new Texture("coin2.png");
         Image counterIcon1 = new Image(counterIconTexture1);
         board.getRightTable().add(counterIcon1).size(iconSize, iconSize).pad(5);
         board.getRightTable().row();
@@ -122,7 +122,7 @@ public class PlayState extends State{
         counterText2.setHeight(iconSize / 2);
         board.getRightTable().add(counterText2);
 
-        Texture counterIconTexture2 = new Texture("coin.png");
+        Texture counterIconTexture2 = new Texture("coin2.png");
         Image counterIcon2 = new Image(counterIconTexture2);
         board.getRightTable().add(counterIcon2).size(iconSize, iconSize).pad(5);
         board.getRightTable().row();

@@ -128,7 +128,7 @@ public class Board extends Actor {
         BitmapFont font = new BitmapFont();
         font.getData().setScale(3.5f);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        Texture counterIcon = new Texture("coin.png");
+        Texture counterIcon = new Texture("coin2.png");
 
         this.batch.begin();
         font.draw(batch, String.valueOf(moneySystem.getMoney()), iconX + iconSize * 1.5f, iconY + iconSize * 0.75f);
@@ -491,6 +491,7 @@ public class Board extends Actor {
         for (Texture buttonTexture : buttonTextures) {
             buttonTexture.dispose();
         }
+        batch.dispose();
 
     }
 }
