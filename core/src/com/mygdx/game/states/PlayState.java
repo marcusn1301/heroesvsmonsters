@@ -137,7 +137,7 @@ public class PlayState extends State{
 
         batch.begin();
         board.render(batch);
-        batch.draw(menuButton.getImg(), menuButton.getPosition().x - menuButton.getWidth() / 2f, menuButton.getPosition().y, menuButton.getWidth(), menuButton.getHeight());
+        //batch.draw(menuButton.getImg(), menuButton.getPosition().x - menuButton.getWidth() / 2f, menuButton.getPosition().y, menuButton.getWidth(), menuButton.getHeight());
         batch.end();
 
         stage.act(Gdx.graphics.getDeltaTime());

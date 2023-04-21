@@ -30,10 +30,12 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.components.HeroComponent;
 import com.mygdx.game.entities.DisplayHero;
 import com.mygdx.game.entities.HeroFactory;
+import com.mygdx.game.entities.MonsterFactory;
 import com.mygdx.game.states.GameMenuState;
 import com.mygdx.game.states.GameStateManager;
 import com.mygdx.game.states.PlayState;
 import com.mygdx.game.types.HeroType;
+import com.mygdx.game.types.MonsterType;
 import com.mygdx.game.utils.DisplayHeroButton;
 
 import java.util.ArrayList;
@@ -74,6 +76,8 @@ public class Board extends Actor {
     private boolean isPlacementAllowed = false;
     private Array<DisplayHero> displayHeroes;
     private Array<DisplayHeroButton> displayHeroButtons;
+    private Array<Entity> displayMonsters;
+
 
     private boolean placeHero = false;
 
@@ -84,8 +88,6 @@ public class Board extends Actor {
     private boolean isInputProcessorAdded;
     private Engine engine;
     private MoneySystem moneySystem = new MoneySystem(8000);
-
-
 
     public Board(int rows, int cols, Engine engine) {
         gsm = GameStateManager.getGsm();
@@ -110,6 +112,7 @@ public class Board extends Actor {
         batch = new SpriteBatch();
         loadDisplayTextures();
         setDisplayHeroes();
+        setDisplayMonsters();
         initButtonTextures();
         //setupInputProcessor();
         displayHeroButtons = new Array<>();
@@ -136,7 +139,6 @@ public class Board extends Actor {
         batch.draw(counterIcon, iconX, iconY, iconSize, iconSize);
         this.batch.end();
     }
-
 
     public int getRows() {
         return rows;
@@ -485,6 +487,20 @@ public class Board extends Actor {
         this.displayHeroes.add(cpt_america);
         this.displayHeroes.add(ironman);
         this.displayHeroes.add(thor);
+    }
+
+    public void setDisplayMonsters() {
+        Entity magneto = MonsterFactory.createDisplayMonster(MonsterType.MAGNETO, new Vector2(displayTexturePositions[0].x + textureWidth/3, displayTexturePositions[0].y + textureHeight / 2));
+        Entity juggernaut = MonsterFactory.createDisplayMonster(MonsterType.JUGGERNAUT, new Vector2(displayTexturePositions[1].x + textureWidth/3, displayTexturePositions[1].y + textureHeight / 2));
+        Entity venom = MonsterFactory.createDisplayMonster(MonsterType.VENOM, new Vector2(displayTexturePositions[2].x + textureWidth/3, displayTexturePositions[2].y + textureHeight / 2));
+        Entity hoboblin = MonsterFactory.createDisplayMonster(MonsterType.HOBGOBLIN, new Vector2(displayTexturePositions[3].x + textureWidth/3, displayTexturePositions[3].y + textureHeight / 2));
+        Entity goblin_glider = MonsterFactory.createDisplayMonster(MonsterType.GOBLIN_GLIDER, new Vector2(displayTexturePositions[4].x + textureWidth/3, displayTexturePositions[4].y + textureHeight / 2));
+
+        this.displayMonsters.add(magneto);
+        this.displayMonsters.add(juggernaut);
+        this.displayMonsters.add(venom);
+        this.displayMonsters.add(hoboblin);
+        this.displayMonsters.add(goblin_glider);
     }
 
     private void dispose() {

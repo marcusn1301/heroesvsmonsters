@@ -21,6 +21,15 @@ public class MonsterFactory {
         return monster;
     }
 
+    public static Entity createDisplayMonster(MonsterType monsterType, Vector2 boardPosition) {
+        Entity monster = new Entity();
+        monster.add(new SpriteComponent(getMonsterSprite(monsterType)));
+        monster.add(new PositionComponent(boardPosition));
+        monster.add(new MonsterComponent(monsterType));
+        return monster;
+    }
+
+
     private static Texture getMonsterSprite(MonsterType monsterType) {
         //TODO endre path her
         Texture texture = null;
