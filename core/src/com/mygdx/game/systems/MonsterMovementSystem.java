@@ -5,17 +5,19 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.mygdx.game.components.AttackComponent;
+import com.badlogic.gdx.Gdx;
 import com.mygdx.game.components.MonsterComponent;
+import com.mygdx.game.components.PositionComponent;
 
-public class MonsterSystem extends IteratingSystem {
+public class MonsterMovementSystem extends IteratingSystem {
     private ComponentMapper<MonsterComponent> monsterMapper;
-    private ComponentMapper<AttackComponent> attackMapper;
+    private ComponentMapper<PositionComponent> positionMapper;
     private Engine engine;
-    public MonsterSystem(Engine engine) {
-        super(Family.all(MonsterComponent.class, AttackComponent.class).get());
+
+    public MonsterMovementSystem(Engine engine) {
+        super(Family.all(MonsterComponent.class, PositionComponent.class).get());
         monsterMapper = ComponentMapper.getFor(MonsterComponent.class);
-        attackMapper = ComponentMapper.getFor(AttackComponent.class);
+        positionMapper = ComponentMapper.getFor(PositionComponent.class);
         this.engine = engine;
 
     }
@@ -23,6 +25,17 @@ public class MonsterSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         MonsterComponent monster = monsterMapper.get(entity);
-        AttackComponent attack = attackMapper.get
+        PositionComponent monsterPos = positionMapper.get(entity);
+
+        //Make the monster move to the left
+        monsterPos.setPosition(monsterPos.getPosition().add(monster.getMovementSpeed() * -1, 0));
+
+        //Remove monsters that are out of bounds
+        if (monsterPos.getPosition().x <= 0 + Gdx.graphics.getWidth() / 8) {
+            entity.removeAll();
+            engine.removeEntity(entity);
+        }
+
+
     }
 }

@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.components.AttackComponent;
 import com.mygdx.game.components.MonsterComponent;
 import com.mygdx.game.components.MovementSpeedComponent;
 import com.mygdx.game.components.PositionComponent;
@@ -16,8 +17,7 @@ public class MonsterFactory {
         Entity monster = new Entity();
         monster.add(new SpriteComponent(getMonsterSprite(monsterType)));
         monster.add(new PositionComponent(boardPosition));
-        monster.add(new MovementSpeedComponent(getMonsterMovementSpeed(monsterType)));
-        monster.add(new MonsterComponent(monsterType));
+        monster.add(new MonsterComponent(monsterType, getMonsterMovementSpeed(monsterType)));
         return monster;
     }
 

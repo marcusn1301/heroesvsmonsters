@@ -39,12 +39,12 @@ public class WaveSystem extends IteratingSystem {
         //Activate the current wave
         if (wave.getWaveTimeElapsed() >= 5f && !wave.isActive()) {
             wave.setActive(true);
-            System.out.println("Beginning wave " + wave.getWaveNumber());
+            //System.out.println("Beginning wave " + wave.getWaveNumber());
         }
 
         //Begin a new wave after the given time
         if (wave.getWaveTimeElapsed() >= 10f) {
-            System.out.println("Ending wave " + wave.getWaveNumber());
+            //System.out.println("Ending wave " + wave.getWaveNumber());
             wave.setActive(false);
             wave.setWaveNumber(wave.getWaveNumber() + 1);
             wave.setWaveTimeElapsed(0f);

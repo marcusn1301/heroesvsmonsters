@@ -4,7 +4,9 @@ import com.badlogic.ashley.core.Component;
 import com.mygdx.game.types.MonsterType;
 
 public class MonsterComponent implements Component {
-    public MonsterComponent(MonsterType monsterType) {
+    private MonsterType monsterType;
+    private float movementSpeed;
+    public MonsterComponent(MonsterType monsterType, float movementSpeed) {
         this.monsterType = monsterType;
     }
 
@@ -16,5 +18,11 @@ public class MonsterComponent implements Component {
         this.monsterType = monsterType;
     }
 
-    private MonsterType monsterType;
+    public float getMovementSpeed() {
+        return movementSpeed;
+    }
+
+    public void setMovementSpeed(float movementSpeed) {
+        this.movementSpeed = movementSpeed;
+    }
 }
