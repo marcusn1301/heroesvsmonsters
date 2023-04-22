@@ -7,19 +7,19 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.SoundManager;
 
 public class IntroCutsceneState extends State {
-    private GameStateManager gsm;
-    private Texture cityBackground;
-    private Texture explosionsBackground;
-    private Texture nick;
-    private Texture speech_1;
-    private Texture speech_2;
-    private Texture speech_3;
-    private SoundManager soundmanager = SoundManager.getInstance();
+    private final GameStateManager gsm;
+    private final Texture cityBackground;
+    private final Texture explosionsBackground;
+    private final Texture nick;
+    private final Texture speech_1;
+    private final Texture speech_2;
+    private final Texture speech_3;
+    private final SoundManager soundmanager = SoundManager.getInstance();
 
     private float nickPositionX;
-    private float nickWidth;
-    private float nickHeight;
-    private float slidingSpeed;
+    private final float nickWidth;
+    private final float nickHeight;
+    private final float slidingSpeed;
     private float elapsedTime;
     private int phase;
 
@@ -45,21 +45,15 @@ public class IntroCutsceneState extends State {
     @Override
     public void update(float dt) {
         elapsedTime += dt;
-        Boolean musicOn = false;
         handleInput();
         switch (phase) {
             case 0:
                 nickPositionX -= slidingSpeed * dt;
                 if (nickPositionX <= Gdx.graphics.getWidth() - nickWidth) {
                     nickPositionX = Gdx.graphics.getWidth() - nickWidth;
-
                     soundmanager.playMusic("avengersHype", false);
-
-
                     phase = 1;
                     elapsedTime = 0;
-
-
                 }
                 break;
             case 1:
@@ -86,9 +80,8 @@ public class IntroCutsceneState extends State {
                 break;
             case 4:
                 if (elapsedTime >= 3.0f) {
-                    //System.out.println("Cutscene finished!");
-                    goNext();
-
+                    soundmanager.stopMusic("avengersHype");
+                    gsm.push(new PlayState());
                 }
                 break;
         }
@@ -120,15 +113,15 @@ public class IntroCutsceneState extends State {
     @Override
     public void handleInput() {
         if (Gdx.input.isTouched()) {
-            goNext();
+            if (phase < 4) {
+                phase += 1;
+            } else {
+                soundmanager.stopMusic("avengersHype");
+                gsm.push(new PlayState());
+            }
         }
-
     }
 
-    public void goNext() {
-        soundmanager.stopMusic("avengersHype");
-        gsm.push(new PlayState());
-    }
     @Override
     public void dispose() {
         cityBackground.dispose();

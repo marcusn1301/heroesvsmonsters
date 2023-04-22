@@ -17,6 +17,7 @@ public class GameMenuState extends State {
     private final Texture menuBackground;
     private final RectangleButton logo;
     private final RectangleButton settingsButton;
+    private final RectangleButton trophyButton;
     int width;
     int height;
 
@@ -28,8 +29,9 @@ public class GameMenuState extends State {
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
         logo = new RectangleButton(0.3f, null, (int) (Gdx.graphics.getHeight() / 2.5), "HvsMstor.png");
-        playButton = new RectangleButton(1f, null, 200, "playButton.png");
+        playButton = new RectangleButton(1f, null, 150, "playButton.png");
         settingsButton = new RectangleButton(0.4f, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 200, "settings-button.png");
+        trophyButton = new RectangleButton(0.5f, 80, Gdx.graphics.getHeight() - 210, "trophy.png");
         menuBackground = new Texture("menuBackground.png");
     }
 
@@ -53,6 +55,7 @@ public class GameMenuState extends State {
         logo.render(batch);
         playButton.render(batch);
         settingsButton.render(batch);
+        trophyButton.render(batch);
         batch.end();
     }
 
@@ -66,11 +69,11 @@ public class GameMenuState extends State {
                 gsm.push(new IntroCutsceneState());
             } else if (settingsButton.getBounds().contains(x,y)) {
                 gsm.push(new SettingsState(Enums.SettingsBackground.CITY, Enums.GameType.MENU));
+            } else if (trophyButton.getBounds().contains(x,y)) {
+                gsm.push(new LeaderBoardState());
             }
         }
     }
-
-
 
     @Override
     public void dispose() {

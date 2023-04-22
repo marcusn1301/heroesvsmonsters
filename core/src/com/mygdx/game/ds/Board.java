@@ -23,7 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
@@ -32,10 +31,7 @@ import com.mygdx.game.components.HeroComponent;
 import com.mygdx.game.entities.DisplayHero;
 import com.mygdx.game.entities.HeroFactory;
 import com.mygdx.game.types.HeroType;
-import com.mygdx.game.utils.DisplayHeroButton;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.mygdx.game.ds.buttons.DisplayHeroButton;
 
 public class Board extends Actor {
     private final int screenHeight = Gdx.graphics.getHeight();
