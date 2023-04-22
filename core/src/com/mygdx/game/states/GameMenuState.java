@@ -92,12 +92,7 @@ public class GameMenuState extends State {
         batch.draw(lobbyButton, buttonX, lobbyButtonY, buttonWidth, lobbyButtonHeight);
         batch.draw(menuButton, buttonX, menuButtonY, buttonWidth, menuButtonHeight);
 
-
         batch.end();
-
-
-
-
     }
 
     private boolean isStartButtonClicked(int x, int y) {
@@ -143,7 +138,7 @@ public class GameMenuState extends State {
                 gsm.push(new SettingsState(Enums.SettingsBackground.CITY, Enums.GameType.MENU));
             }
             if (isMenuButtonClicked(x, y)) {
-                gsm.push(new StartState());
+                gsm.push(new DummyState());
             }
         }
     }

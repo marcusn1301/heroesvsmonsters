@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.components.MonsterComponent;
 import com.mygdx.game.components.MovementSpeedComponent;
 import com.mygdx.game.components.PositionComponent;
+import com.mygdx.game.components.PriceComponent;
 import com.mygdx.game.components.SpriteComponent;
 import com.mygdx.game.types.HeroType;
 import com.mygdx.game.types.MonsterType;
@@ -26,6 +27,7 @@ public class MonsterFactory {
         monster.add(new SpriteComponent(getMonsterSprite(monsterType)));
         monster.add(new PositionComponent(boardPosition));
         monster.add(new MonsterComponent(monsterType));
+        monster.add(new PriceComponent(getMonsterPrice(monsterType)));
         return monster;
     }
 
@@ -35,17 +37,17 @@ public class MonsterFactory {
         Texture texture = null;
         switch (monsterType) {
             case MAGNETO:
-                return new Texture(Gdx.files.internal("characterIcon3.png"));
+                return new Texture(Gdx.files.internal("Monster_4.png"));
             case JUGGERNAUT:
-                return new Texture(Gdx.files.internal("characterIcon1.png"));
+                return new Texture(Gdx.files.internal("Monster_5.png"));
             case VENOM:
-                return new Texture(Gdx.files.internal("Monster_3.png"));
-            case HOBGOBLIN:
-                return new Texture(Gdx.files.internal("Monster_2.png"));
-            case GOBLIN_GLIDER:
                 return new Texture(Gdx.files.internal("Monster_1.png"));
+            case HOBGOBLIN:
+                return new Texture(Gdx.files.internal("Monster_3.png"));
+            case GOBLIN_GLIDER:
+                return new Texture(Gdx.files.internal("Monster_2.png"));
             case MYSTIQUE:
-                return new Texture(Gdx.files.internal("characterIcon6.png"));
+                return new Texture(Gdx.files.internal("Monster_6.png"));
             default:
                 return null;
         }
@@ -84,6 +86,25 @@ public class MonsterFactory {
                 return 35f;
             case MYSTIQUE:
                 return 50f;
+            default:
+                return 0;
+        }
+    }
+
+    private static int getMonsterPrice(MonsterType monsterType) {
+        switch (monsterType) {
+            case MAGNETO:
+                return 50;
+            case JUGGERNAUT:
+                return 100;
+            case VENOM:
+                return 250;
+            case HOBGOBLIN:
+                return 300;
+            case GOBLIN_GLIDER:
+                return 400;
+            case MYSTIQUE:
+                return 650;
             default:
                 return 0;
         }

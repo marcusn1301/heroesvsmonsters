@@ -17,4 +17,5 @@ public class MonsterComponent implements Component {
     }
 
     private MonsterType monsterType;
+
 }
