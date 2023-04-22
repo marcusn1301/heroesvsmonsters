@@ -17,7 +17,7 @@ public class DesktopInterfaceClass implements FireBaseInterface {
     }
 
     @Override
-    public void SetValueInDb(String target, String value) {
+    public void SetValueInDb(String target, Integer value) {
 
     }
 }

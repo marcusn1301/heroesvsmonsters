@@ -26,6 +26,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.FireBaseInterface;
+import com.mygdx.game.FirebaseManager;
 import com.mygdx.game.MoneySystem;
 import com.mygdx.game.components.HeroComponent;
 import com.mygdx.game.entities.DisplayHero;
@@ -69,10 +71,13 @@ public class Board extends Actor {
     private boolean isInputProcessorAdded;
     private final Engine engine;
     private final MoneySystem moneySystem = new MoneySystem(8000);
+    private FireBaseInterface firebaseInterface;
+
 
 
 
     public Board(int rows, int cols, Engine engine) {
+        this.firebaseInterface = FirebaseManager.getInstance().getFirebaseInterface();
         this.engine = engine;
         this.rows = rows;
         this.cols = cols;
@@ -210,6 +215,10 @@ public class Board extends Actor {
 
         System.out.println("Cell clicked: row " + row + ", col " + col);
         moneySystem.removeMoney(450);
+
+
+        firebaseInterface.SetValueInDb("highScores", 33);
+        firebaseInterface.SetOnValueChangedListener();
 
     }
 

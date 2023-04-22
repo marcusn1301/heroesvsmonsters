@@ -12,13 +12,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AndroidInterfaceClass implements FireBaseInterface {
     FirebaseDatabase database;
     DatabaseReference myRef;
 
     public AndroidInterfaceClass() {
         database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("message");
+        myRef = database.getReference("highScores");
     }
 
     @Override
@@ -37,28 +40,40 @@ public class AndroidInterfaceClass implements FireBaseInterface {
 
     @Override
     public void SetOnValueChangedListener() {
+        System.out.println("Yes I am running");
+
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-                Log.d(TAG, "Value is: " + value);
+                List<Integer> values = new ArrayList<>();
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    Integer value = childSnapshot.getValue(Integer.class);
+                    values.add(value);
+                }
+                Log.d(TAG, "Values are: " + values);
+                System.out.println("Values are: " + values);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // Failed to read value
                 Log.w(TAG, "Failed to read value.", error.toException());
+                System.out.println("FAT Error");
             }
         });
-
     }
 
+
     @Override
-    public void SetValueInDb(String target, String value) {
+    public void SetValueInDb(String target, Integer value) {
         myRef = database.getReference(target);
-        myRef.setValue(value);
+        myRef.push().setValue(value);
+
+        //TODO Sykt rart - myRef.listener fungerer ikke når det ikke er en string. Når det er en List kjører den ikke
+       /* myRef = database.getReference("message");
+        myRef.setValue("test");*/
     }
 }
