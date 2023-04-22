@@ -34,6 +34,7 @@ import com.mygdx.game.entities.HeroFactory;
 import com.mygdx.game.ds.buttons.RectangleButton;
 import com.mygdx.game.systems.HeroSystem;
 import com.mygdx.game.systems.ProjectileMovementSystem;
+import com.mygdx.game.systems.WaveSystem;
 import com.mygdx.game.types.HeroType;
 import com.mygdx.game.utils.Enums;
 
@@ -78,9 +79,11 @@ public class PlayState extends State{
         //Systems for game logic
         HeroSystem heroSystem = new HeroSystem(engine);
         ProjectileMovementSystem projectileMovementSystem = new ProjectileMovementSystem(engine);
+        WaveSystem waveSystem = new WaveSystem(engine);
 
         engine.addSystem(heroSystem);
         engine.addSystem(projectileMovementSystem);
+        engine.addSystem(waveSystem);
 
         /*Entity spiderman = HeroFactory.createHero(HeroType.SPIDERMAN, new Vector2(50, 50));
         Entity captain = HeroFactory.createHero(HeroType.CAPTAIN_AMERICA, new Vector2(50, 50));
