@@ -56,25 +56,6 @@ public class HeroSystem extends IteratingSystem {
         }
 
         //Increase the time elapsed field in the attack component on every update
-        attack.setAttackTimeElapsed(attack.getAttackTimeElapsed() + deltaTime*10);
-        //Check if a hero has an active projectile
-        /*boolean projectileExists = false;
-        for (Entity projectile : engine.getEntitiesFor(Family.all(ProjectileComponent.class, PositionComponent.class).get())) {
-            ProjectileComponent projectileComponent = projectileMapper.get(projectile);
-            if (projectileComponent.getSourceEntity() == entity) {
-                //System.out.println(e.getComponent(PositionComponent.class).getPosition());
-                projectileExists = true;
-                break;
-            }
-        }*/
-
-        //If a hero does not have an active projectile, it is created and added to the engine
-        /*if (!projectileExists) {
-            float posX = position.getPosition().x;
-            float posY = position.getPosition().y;
-            Entity projectile = ProjectileFactory.createProjectile(heroComponent.getHeroType(), new Vector2(posX, posY), entity);
-            engine.addEntity(projectile);
-        }*/
-
+        attack.setAttackTimeElapsed(attack.getAttackTimeElapsed() + deltaTime * 5);
     }
 }
