@@ -40,10 +40,7 @@ public class ProjectileMovementSystem extends IteratingSystem {
         }
 
         //Increment the horizontal position of the projectile based on its velocity
-        float posY = positionComponent.getPosition().y;
-        float posX = positionComponent.getPosition().x;
         float speed = projectileComponent.getVelocity();
-        float newPosX = posX + speed;
-        positionComponent.setPosition(new Vector2(newPosX, posY));
+        positionComponent.setPosition(positionComponent.getPosition().add(speed, 0));
     }
 }
