@@ -26,6 +26,7 @@ import com.mygdx.game.MoneySystem;
 import com.mygdx.game.SoundManager;
 import com.mygdx.game.components.AttackComponent;
 import com.mygdx.game.components.HeroComponent;
+import com.mygdx.game.components.MonsterComponent;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.ProjectileComponent;
 import com.mygdx.game.components.SpriteComponent;
@@ -33,6 +34,7 @@ import com.mygdx.game.entities.DisplayHero;
 import com.mygdx.game.entities.HeroFactory;
 import com.mygdx.game.ds.buttons.RectangleButton;
 import com.mygdx.game.systems.HeroSystem;
+import com.mygdx.game.systems.MonsterMovementSystem;
 import com.mygdx.game.systems.ProjectileMovementSystem;
 import com.mygdx.game.systems.WaveSystem;
 import com.mygdx.game.types.HeroType;
@@ -80,10 +82,12 @@ public class PlayState extends State{
         HeroSystem heroSystem = new HeroSystem(engine);
         ProjectileMovementSystem projectileMovementSystem = new ProjectileMovementSystem(engine);
         WaveSystem waveSystem = new WaveSystem(engine);
+        MonsterMovementSystem monsterMovementSystem = new MonsterMovementSystem(engine);
 
         engine.addSystem(heroSystem);
         engine.addSystem(projectileMovementSystem);
         engine.addSystem(waveSystem);
+        engine.addSystem(monsterMovementSystem);
 
         /*Entity spiderman = HeroFactory.createHero(HeroType.SPIDERMAN, new Vector2(50, 50));
         Entity captain = HeroFactory.createHero(HeroType.CAPTAIN_AMERICA, new Vector2(50, 50));
@@ -140,19 +144,28 @@ public class PlayState extends State{
 
     public void renderHeroes(SpriteBatch batch) {
         for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class, AttackComponent.class).get())) {
-            Texture sprite = e.getComponent(SpriteComponent.class).getSprite();
+            Texture texture = e.getComponent(SpriteComponent.class).getSprite();
             Vector2 position = e.getComponent(PositionComponent.class).getPosition();
 
-            batch.draw(sprite, position.x, position.y, (float) board.getTextureWidth(), (float) board.getTextureHeight());
+            batch.draw(texture, position.x, position.y, (float) board.getTextureWidth(), (float) board.getTextureHeight());
         }
     }
 
     public void renderProjectiles(SpriteBatch batch) {
         for (Entity e : engine.getEntitiesFor(Family.all(ProjectileComponent.class, PositionComponent.class).get())) {
-            Texture sprite = e.getComponent(SpriteComponent.class).getSprite();
+            Texture texture = e.getComponent(SpriteComponent.class).getSprite();
             Vector2 position = e.getComponent(PositionComponent.class).getPosition();
 
-            batch.draw(sprite, position.x, position.y, (float) board.getTextureWidth(), (float) board.getTextureHeight());
+            batch.draw(texture, position.x, position.y, (float) board.getTextureWidth(), (float) board.getTextureHeight());
+        }
+    }
+
+    public void renderMonsters(SpriteBatch batch) {
+        for (Entity e : engine.getEntitiesFor(Family.all(MonsterComponent.class, PositionComponent.class).get())) {
+            Texture texture = e.getComponent(SpriteComponent.class).getSprite();
+            Vector2 position = e.getComponent(PositionComponent.class).getPosition();
+
+            batch.draw(texture, position.x, position.y, (float) board.getTextureWidth(), (float) board.getTextureHeight());
         }
     }
 
@@ -166,6 +179,7 @@ public class PlayState extends State{
         board.render(batch);
         renderHeroes(batch);
         renderProjectiles(batch);
+        renderMonsters(batch);
         batch.draw(menuButton.getImg(), menuButton.getPosition().x - menuButton.getWidth() / 2f, menuButton.getPosition().y, menuButton.getWidth(), menuButton.getHeight());
         batch.end();
 

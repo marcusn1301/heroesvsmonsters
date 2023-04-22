@@ -8,6 +8,7 @@ public class MonsterComponent implements Component {
     private float movementSpeed;
     public MonsterComponent(MonsterType monsterType, float movementSpeed) {
         this.monsterType = monsterType;
+        this.movementSpeed = movementSpeed;
     }
 
     public MonsterType getMonsterType() {

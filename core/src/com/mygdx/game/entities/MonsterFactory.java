@@ -22,13 +22,12 @@ public class MonsterFactory {
     }
 
     private static Texture getMonsterSprite(MonsterType monsterType) {
-        //TODO endre path her
-        Texture texture = null;
+        //TODO legg til riktig bilde
         switch (monsterType) {
             case MAGNETO:
-                return new Texture(Gdx.files.internal("characterIcon3.png"));
+                return new Texture(Gdx.files.internal("Monster_3.png"));
             case JUGGERNAUT:
-                return new Texture(Gdx.files.internal("characterIcon1.png"));
+                return new Texture(Gdx.files.internal("Monster_3.png"));
             case VENOM:
                 return new Texture(Gdx.files.internal("Monster_3.png"));
             case HOBGOBLIN:
@@ -36,7 +35,7 @@ public class MonsterFactory {
             case GOBLIN_GLIDER:
                 return new Texture(Gdx.files.internal("Monster_1.png"));
             case MYSTIQUE:
-                return new Texture(Gdx.files.internal("characterIcon6.png"));
+                return new Texture(Gdx.files.internal("Monster_3.png"));
             default:
                 return null;
         }
@@ -45,19 +44,19 @@ public class MonsterFactory {
     private static float getMonsterMovementSpeed(MonsterType monsterType) {
         switch (monsterType) {
             case MAGNETO:
-                return 2f;
+                return 20f;
             case JUGGERNAUT:
-                return 4f;
+                return 30f;
             case VENOM:
-                return 1f;
+                return 30f;
             case HOBGOBLIN:
-                return 2.5f;
+                return 20f;
             case GOBLIN_GLIDER:
-                return 1.5f;
+                return 10f;
             case MYSTIQUE:
-                return 5f;
+                return 15f;
             default:
-                return 0;
+                return 30f;
         }
     }
 
