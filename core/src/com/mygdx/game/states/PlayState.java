@@ -1,53 +1,35 @@
 package com.mygdx.game.states;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.game.Board;
+import com.mygdx.game.ds.Board;
 import com.mygdx.game.MoneySystem;
 import com.mygdx.game.SoundManager;
-import com.mygdx.game.components.AttackComponent;
-import com.mygdx.game.components.HeroComponent;
-import com.mygdx.game.components.PositionComponent;
-import com.mygdx.game.components.ProjectileComponent;
-import com.mygdx.game.components.SpriteComponent;
-import com.mygdx.game.entities.DisplayHero;
-import com.mygdx.game.entities.HeroFactory;
 import com.mygdx.game.ds.buttons.RectangleButton;
 import com.mygdx.game.systems.HeroSystem;
 import com.mygdx.game.systems.ProjectileMovementSystem;
-import com.mygdx.game.types.HeroType;
 import com.mygdx.game.utils.Enums;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class PlayState extends State{
+public class PlayState extends State {
     private SpriteBatch batch;
     private BitmapFont font;
     private Stage stage;
     private ShapeRenderer shapeRenderer;
-    private SoundManager soundManager = SoundManager.getInstance();
-    private MoneySystem moneySystem;
-    private boolean isPlacementAllowed = false;
+    private final MoneySystem moneySystem;
+    private final boolean isPlacementAllowed = false;
+    private final SoundManager soundManager = SoundManager.getInstance();
+
     private static Engine engine;
     private Board board;
     private TextButton counterText1;
@@ -55,20 +37,15 @@ public class PlayState extends State{
     private final GameStateManager gsm;
 
     public PlayState() {
-        //super(gsm);
         menuButton = new RectangleButton(0.5f, Gdx.graphics.getWidth() - 137, Gdx.graphics.getHeight() - 100, "Lobby-button.png");
         gsm = GameStateManager.getGsm();
-        initialize();
-    }
-
-    private void initialize() {
-        initializeGameEngine();
         batch = new SpriteBatch();
         moneySystem = new MoneySystem(4000);
+        soundManager.playSequence();
+
+        initializeGameEngine();
         initFontStageAndRenderer();
         createBoard();
-        soundManager.playSequence();
-        //Game engine & systems
     }
 
     private void initializeGameEngine() {
@@ -102,12 +79,12 @@ public class PlayState extends State{
 
     @Override
     public void update(float dt) {
-        stage.draw();
         engine.update(dt);
+        handleInput();
     }
 
     public void calculateMoney() {
-        float iconSize = Gdx.graphics.getWidth() / 30;
+        float iconSize = Gdx.graphics.getWidth() / 30f;
         BitmapFont counterFont = new BitmapFont();
         counterFont.getData().setScale(4);
         // First counter
@@ -117,7 +94,7 @@ public class PlayState extends State{
         counterText1.setHeight(iconSize / 2);
         board.getRightTable().add(counterText1);
 
-        Texture counterIconTexture1 = new Texture("coin2.png");
+        Texture counterIconTexture1 = new Texture("coin.png");
         Image counterIcon1 = new Image(counterIconTexture1);
         board.getRightTable().add(counterIcon1).size(iconSize, iconSize).pad(5);
         board.getRightTable().row();
@@ -129,28 +106,10 @@ public class PlayState extends State{
         counterText2.setHeight(iconSize / 2);
         board.getRightTable().add(counterText2);
 
-        Texture counterIconTexture2 = new Texture("coin2.png");
+        Texture counterIconTexture2 = new Texture("coin.png");
         Image counterIcon2 = new Image(counterIconTexture2);
         board.getRightTable().add(counterIcon2).size(iconSize, iconSize).pad(5);
         board.getRightTable().row();
-    }
-
-    public void renderHeroes(SpriteBatch batch) {
-        for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class, AttackComponent.class).get())) {
-            Texture sprite = e.getComponent(SpriteComponent.class).getSprite();
-            Vector2 position = e.getComponent(PositionComponent.class).getPosition();
-
-            batch.draw(sprite, position.x, position.y, (float) board.getTextureWidth(), (float) board.getTextureHeight());
-        }
-    }
-
-    public void renderProjectiles(SpriteBatch batch) {
-        for (Entity e : engine.getEntitiesFor(Family.all(ProjectileComponent.class, PositionComponent.class).get())) {
-            Texture sprite = e.getComponent(SpriteComponent.class).getSprite();
-            Vector2 position = e.getComponent(PositionComponent.class).getPosition();
-
-            batch.draw(sprite, position.x, position.y, (float) board.getTextureWidth(), (float) board.getTextureHeight());
-        }
     }
 
     @Override
@@ -161,11 +120,8 @@ public class PlayState extends State{
 
         batch.begin();
         board.render(batch);
-        renderHeroes(batch);
-        renderProjectiles(batch);
         batch.draw(menuButton.getImg(), menuButton.getPosition().x - menuButton.getWidth() / 2f, menuButton.getPosition().y, menuButton.getWidth(), menuButton.getHeight());
         batch.end();
-
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();

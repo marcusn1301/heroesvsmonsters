@@ -3,17 +3,10 @@ package com.mygdx.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.mygdx.game.states.DummyState;
 import com.mygdx.game.states.GameMenuState;
 import com.mygdx.game.states.GameStateManager;
-import com.mygdx.game.states.GameStateManager;
-import com.mygdx.game.states.PlayState;
-import com.mygdx.game.states.SettingsState;
 
 public class HeroesVsMonsters extends ApplicationAdapter {
 	private GameStateManager gsm;

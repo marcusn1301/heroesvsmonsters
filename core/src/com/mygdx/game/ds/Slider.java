@@ -1,10 +1,12 @@
-package com.mygdx.game.utils;
+package com.mygdx.game.ds;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.mygdx.game.HeroesVsMonsters;
+import com.mygdx.game.utils.Enums;
+import com.mygdx.game.utils.SettingsData;
 
 public class Slider {
     private final ShapeRenderer shapeRenderer;

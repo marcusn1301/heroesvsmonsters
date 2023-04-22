@@ -1,9 +1,12 @@
 package com.mygdx.game.ds.buttons;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Null;
 
 public class RectangleButton {
 
@@ -11,17 +14,32 @@ public class RectangleButton {
     private final Rectangle bounds;
     private final ShapeRenderer shape;
     private final Texture img;
-    private final int width;
-    private final int height;
+    private final float width;
+    private final float height;
     private final float scale;
 
-    public RectangleButton(float scale, int xStart, int yStart, String internalPath) {
+    public RectangleButton(float scale, @Null Integer xStart,@Null Integer yStart, String internalPath) {
+        float startPosX;
+        float startPosY;
         this.scale = scale;
         this.img = new Texture(internalPath);
-        this.width = (int) (img.getWidth() * scale);
-        this.height = (int ) (img.getHeight() * scale);
-        this.position = new Vector2(xStart, yStart);
-        this.bounds = new Rectangle(xStart, yStart, width, height);
+        this.width = img.getWidth() * scale;
+        this.height = img.getHeight() * scale;
+
+        if (xStart == null) {
+            startPosX = Gdx.graphics.getWidth() / 2f - width / 2f;
+        } else {
+            startPosX = xStart;
+        }
+
+        if (yStart == null) {
+            startPosY = Gdx.graphics.getHeight() / 2f - height / 2f;
+        } else {
+            startPosY = yStart;
+        }
+
+        this.position = new Vector2(startPosX, startPosY);
+        this.bounds = new Rectangle(startPosX, startPosY, this.width, this.height);
         this.shape = new ShapeRenderer();
     }
 
@@ -37,9 +55,9 @@ public class RectangleButton {
         return shape;
     }
 
-    public int getWidth() {return this.width;}
+    public float getWidth() {return this.width;}
 
-    public int getHeight() {return this.height;}
+    public float getHeight() {return this.height;}
 
     public Texture getImg() {
         return img;
@@ -47,5 +65,13 @@ public class RectangleButton {
 
     public float getScale() {
         return scale;
+    }
+
+    public void render(SpriteBatch sb) {
+        sb.draw(img, position.x, position.y, width, height);
+    }
+
+    public void dispose() {
+
     }
 }

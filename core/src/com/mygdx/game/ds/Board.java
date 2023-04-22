@@ -1,6 +1,5 @@
-package com.mygdx.game;
+package com.mygdx.game.ds;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -24,74 +23,56 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.components.AttackComponent;
+import com.mygdx.game.MoneySystem;
 import com.mygdx.game.components.HeroComponent;
-import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.entities.DisplayHero;
 import com.mygdx.game.entities.HeroFactory;
-import com.mygdx.game.states.GameMenuState;
-import com.mygdx.game.states.GameStateManager;
-import com.mygdx.game.states.PlayState;
 import com.mygdx.game.types.HeroType;
-import com.mygdx.game.utils.DisplayHeroButton;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.mygdx.game.ds.buttons.DisplayHeroButton;
 
 public class Board extends Actor {
-    private int screenHeight = Gdx.graphics.getHeight();
-    private int screenWidth = Gdx.graphics.getWidth();
-    private int rows;
-    private int cols;
-    private int[][] cells;
+    private final int screenHeight = Gdx.graphics.getHeight();
+    private final int screenWidth = Gdx.graphics.getWidth();
+    private final int rows;
+    private final int cols;
+    private final int[][] cells;
     private Texture[][] textures;
-    private ShapeRenderer shapeRenderer;
-    private int textureWidth;
-    private int textureHeight;
+    private final ShapeRenderer shapeRenderer;
+    private final int textureWidth;
+    private final int textureHeight;
     private int cellWidth;
     private int cellHeight;
-    private GameStateManager gsm;
-    private SpriteBatch batch;
+    private final SpriteBatch batch;
 
-    private int xOffset = Gdx.graphics.getWidth()/8; // Add xOffset for moving textures right
-    private int yOffset = 0;  // Add yOffset for moving textures up or down
-    private int dashOffset = Gdx.graphics.getWidth()/8; // Add dashOffset for moving dashed lines right
+    private final int yOffset = 0;  // Add yOffset for moving textures up or down
+    private final int xOffset = 225; // Add xOffset for moving textures right (previously 315)
+    private final int dashOffset = 225; // Add dashOffset for moving dashed lines right (previously 315)
 
     private Texture[] buttonTextures;
     private Texture[] displayTextures;
     private int displayTexturesCount = 5;
     private Vector2[] displayTexturePositions;
-    private int draggingTextureIndex = -1;
-    private Vector2 draggingTextureOffset = new Vector2();
-    private Stage stage;
+    private final Stage stage;
 
-    private Table leftTable;
-    private Table rightTable;
-    private Table boardTable;
-    private TextButton counterText1;
-    private boolean isGridTableVisible = true;
-    private boolean isPlacementAllowed = false;
     private Array<DisplayHero> displayHeroes;
     private Array<DisplayHeroButton> displayHeroButtons;
 
     private boolean placeHero = false;
 
     private HeroType chosenHeroType;
-    private InputMultiplexer multiplexer;
-    private int gridWidth, gridHeight, startX, startY;
+    private final InputMultiplexer multiplexer;
+    private final int gridWidth, gridHeight, startX, startY;
     private boolean gridDrawn;
     private boolean isInputProcessorAdded;
-    private Engine engine;
-    private MoneySystem moneySystem = new MoneySystem(8000);
+    private final Engine engine;
+    private final MoneySystem moneySystem = new MoneySystem(8000);
 
 
 
     public Board(int rows, int cols, Engine engine) {
-        gsm = GameStateManager.getGsm();
         this.engine = engine;
         this.rows = rows;
         this.cols = cols;
@@ -114,7 +95,6 @@ public class Board extends Actor {
         loadDisplayTextures();
         setDisplayHeroes();
         initButtonTextures();
-        //setupInputProcessor();
         displayHeroButtons = new Array<>();
         createDisplayHeroButtons(displayHeroes);
         multiplexer = new InputMultiplexer();
@@ -124,14 +104,14 @@ public class Board extends Actor {
     }
 
     private void drawCounter() {
-        float iconSize = Gdx.graphics.getHeight() / 15;
+        float iconSize = Gdx.graphics.getHeight() / 15f;
         float iconX = screenWidth - iconSize * 2 - 160; // Move 200 pixels to the left
         float iconY = screenHeight - iconSize - 50;
 
         BitmapFont font = new BitmapFont();
         font.getData().setScale(3.5f);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        Texture counterIcon = new Texture("coin2.png");
+        Texture counterIcon = new Texture("coin.png");
 
         this.batch.begin();
         font.draw(batch, String.valueOf(moneySystem.getMoney()), iconX + iconSize * 1.5f, iconY + iconSize * 0.75f);
@@ -185,7 +165,6 @@ public class Board extends Actor {
         //drawDisplayPanel(batch);
 
         this.batch.begin();
-        drawBackButton();
         drawHeroes();
         this.batch.end();
 
@@ -195,25 +174,6 @@ public class Board extends Actor {
         drawCounter();
 
 
-
-    }
-
-    private void drawBackButton() {
-        Texture backButton = new Texture("backButton.png");
-        float buttonWidth = screenWidth / 10;
-        float buttonHeight = buttonWidth * ((float) backButton.getHeight() / backButton.getWidth());
-        float buttonX = 10;
-        float buttonY = 10;
-        batch.draw(backButton, buttonX, buttonY, buttonWidth, buttonHeight);
-
-        if (Gdx.input.isTouched()) {
-            int x = Gdx.input.getX();
-            int y = Gdx.input.getY();
-            if (Gdx.input.justTouched() && buttonX <= x && x <= buttonX + buttonWidth &&
-                    buttonY <= Gdx.graphics.getHeight() - y && Gdx.graphics.getHeight() - y <= buttonY + buttonHeight) {
-                gsm.push(new GameMenuState());
-            }
-        }
 
     }
 
@@ -239,8 +199,8 @@ public class Board extends Actor {
         // Add your logic here for when a cell is clicked
         System.out.println("Cell clicked: row " + row + ", col " + col);
         int displayPanelWidth = Gdx.graphics.getWidth() / 8;
-        int middleOfCellX = (int) (((col) * cellWidth)) + displayPanelWidth ;
-        int middleOfCellY = (int) ((row) * cellHeight);
+        int middleOfCellX = (int) (((col + 0.5) * cellWidth)) + displayPanelWidth ;
+        int middleOfCellY = (int) ((row + 0.5) * cellHeight);
 
         System.out.print(" x: " + middleOfCellX + " y: " + middleOfCellY);
         Vector2 heroPlacement = new Vector2(middleOfCellX, middleOfCellY);
@@ -387,25 +347,12 @@ public class Board extends Actor {
 
     private void placeHero(Vector2 placementPosition) {
         if (chosenHeroType != null) {
-            //Check if hero is already placed in the cell
-            boolean cellHasHero = false;
-            float epsilon = 0.0001f;
-            ComponentMapper<PositionComponent> positionMapper;
-            positionMapper = ComponentMapper.getFor(PositionComponent.class);
-            for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class, AttackComponent.class).get())) {
-                PositionComponent position = positionMapper.get(e);
-                Vector2 heroPos = position.getPosition();
-                if (heroPos.epsilonEquals(placementPosition, epsilon)) {
-                    System.out.println("There is already a hero in this cell");
-                    cellHasHero = true;
-                    break;
-                }
-            }
-            //Place a new hero entity at the given position if the cell is empty
-            if (!cellHasHero) {
-                Entity hero = HeroFactory.createHero(getChosenHeroType(), placementPosition);
-                engine.addEntity(hero);
-                System.out.println("Created new hero entity and added to game engine");
+            Entity hero = HeroFactory.createHero(getChosenHeroType(), placementPosition);
+            engine.addEntity(hero);
+            System.out.println("Created new hero entity and added to game engine");
+            System.out.println("all heroes: :)");
+            for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class).get())) {
+                System.out.println(e.getComponent(HeroComponent.class).getHeroType());
             }
         }
     }
@@ -440,6 +387,7 @@ public class Board extends Actor {
 
 
     public Table getRightTable() {
+        Table rightTable = new Table();
         return rightTable;
     }
 
@@ -451,13 +399,6 @@ public class Board extends Actor {
         }
     }
 
-    public int getTextureWidth() {
-        return textureWidth;
-    }
-
-    public int getTextureHeight() {
-        return textureHeight;
-    }
 
     public void drawLaneDividers() {
         int dashLength = 10;
@@ -514,7 +455,6 @@ public class Board extends Actor {
         for (Texture buttonTexture : buttonTextures) {
             buttonTexture.dispose();
         }
-        batch.dispose();
 
     }
 }

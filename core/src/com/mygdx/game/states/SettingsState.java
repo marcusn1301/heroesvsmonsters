@@ -11,7 +11,7 @@ import com.mygdx.game.ds.buttons.CircleButton;
 import com.mygdx.game.ds.buttons.RectangleButton;
 import com.mygdx.game.utils.Enums;
 import com.mygdx.game.utils.SettingsData;
-import com.mygdx.game.utils.Slider;
+import com.mygdx.game.ds.Slider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
