@@ -35,8 +35,6 @@ public class HeroFactory {
     }
     
     private static Texture getHeroSprite(HeroType heroType) {
-        //TODO endre path her
-        Texture texture = null;
         switch (heroType) {
             case IRONMAN:
                 return new Texture(Gdx.files.internal("characterIcon3.png"));

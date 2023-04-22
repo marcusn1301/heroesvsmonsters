@@ -24,8 +24,6 @@ public class ProjectileFactory {
     }
 
     private static Texture getProjectileSprite(HeroType heroType) {
-        //TODO endre path til en projectile
-        Texture texture = null;
         switch (heroType) {
             case IRONMAN:
                 return new Texture(Gdx.files.internal("ironManShoots.png"));
