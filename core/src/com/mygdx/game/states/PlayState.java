@@ -1,7 +1,9 @@
 package com.mygdx.game.states;
 
+import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.badlogic.gdx.Gdx;
@@ -22,6 +24,11 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Board;
 import com.mygdx.game.MoneySystem;
 import com.mygdx.game.SoundManager;
+import com.mygdx.game.components.AttackComponent;
+import com.mygdx.game.components.HeroComponent;
+import com.mygdx.game.components.PositionComponent;
+import com.mygdx.game.components.ProjectileComponent;
+import com.mygdx.game.components.SpriteComponent;
 import com.mygdx.game.entities.DisplayHero;
 import com.mygdx.game.entities.HeroFactory;
 import com.mygdx.game.ds.buttons.RectangleButton;
@@ -46,7 +53,6 @@ public class PlayState extends State{
     private TextButton counterText1;
     private final RectangleButton menuButton;
     private final GameStateManager gsm;
-
 
     public PlayState() {
         //super(gsm);
@@ -129,6 +135,24 @@ public class PlayState extends State{
         board.getRightTable().row();
     }
 
+    public void renderHeroes(SpriteBatch batch) {
+        for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class, AttackComponent.class).get())) {
+            Texture sprite = e.getComponent(SpriteComponent.class).getSprite();
+            Vector2 position = e.getComponent(PositionComponent.class).getPosition();
+
+            batch.draw(sprite, position.x, position.y, (float) board.getTextureWidth(), (float) board.getTextureHeight());
+        }
+    }
+
+    public void renderProjectiles(SpriteBatch batch) {
+        for (Entity e : engine.getEntitiesFor(Family.all(ProjectileComponent.class, PositionComponent.class).get())) {
+            Texture sprite = e.getComponent(SpriteComponent.class).getSprite();
+            Vector2 position = e.getComponent(PositionComponent.class).getPosition();
+
+            batch.draw(sprite, position.x, position.y, (float) board.getTextureWidth(), (float) board.getTextureHeight());
+        }
+    }
+
     @Override
     public void render(SpriteBatch batch) {
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
@@ -137,6 +161,9 @@ public class PlayState extends State{
 
         batch.begin();
         board.render(batch);
+        renderHeroes(batch);
+        renderProjectiles(batch);
+        batch.draw(menuButton.getImg(), menuButton.getPosition().x - menuButton.getWidth() / 2f, menuButton.getPosition().y, menuButton.getWidth(), menuButton.getHeight());
         //batch.draw(menuButton.getImg(), menuButton.getPosition().x - menuButton.getWidth() / 2f, menuButton.getPosition().y, menuButton.getWidth(), menuButton.getHeight());
         batch.end();
 

@@ -18,7 +18,7 @@ public class HeroFactory {
         Entity hero = new Entity();
         hero.add(new SpriteComponent(getHeroSprite(heroType)));
         hero.add(new PositionComponent(boardPosition));
-        hero.add(new AttackComponent(getHeroAttackDamage(heroType), getHeroAttackTimer(), getHeroAttackTimeElapsed()));
+        hero.add(new AttackComponent(getHeroAttackDamage(heroType), getHeroAttackTimer(heroType), getHeroAttackTimeElapsed()));
         hero.add(new HealthComponent(getHeroHealth()));
         hero.add(new HeroComponent(heroType));
         return hero;
@@ -111,8 +111,21 @@ public class HeroFactory {
         }
     }
 
-    private static float getHeroAttackTimer() {
-        return 10.0f;
+    private static float getHeroAttackTimer(HeroType heroType) {
+        switch (heroType) {
+            case IRONMAN:
+                return 6f;
+            case HULK:
+                return 8f;
+            case SPIDERMAN:
+                return 5.5f;
+            case THOR:
+                return 6.5f;
+            case CAPTAIN_AMERICA:
+                return 7f;
+            default:
+                return 0;
+        }
     }
 
     private static float getHeroAttackTimeElapsed() {
