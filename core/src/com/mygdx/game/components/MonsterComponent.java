@@ -6,6 +6,7 @@ import com.mygdx.game.types.MonsterType;
 public class MonsterComponent implements Component {
     private MonsterType monsterType;
     private float movementSpeed;
+
     public MonsterComponent(MonsterType monsterType, float movementSpeed) {
         this.monsterType = monsterType;
         this.movementSpeed = movementSpeed;

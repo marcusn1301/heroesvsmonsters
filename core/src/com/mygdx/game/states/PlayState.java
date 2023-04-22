@@ -53,6 +53,8 @@ public class PlayState extends State{
     private TextButton counterText1;
     private final RectangleButton menuButton;
     private final GameStateManager gsm;
+    private int screenWidth = Gdx.graphics.getWidth();
+    private int screenHeight = Gdx.graphics.getHeight();
 
     public PlayState() {
         //super(gsm);
@@ -163,9 +165,8 @@ public class PlayState extends State{
         board.render(batch);
         renderHeroes(batch);
         renderProjectiles(batch);
-        batch.draw(menuButton.getImg(), menuButton.getPosition().x - menuButton.getWidth() / 2f, menuButton.getPosition().y, menuButton.getWidth(), menuButton.getHeight());
+        batch.draw(menuButton.getImg(), menuButton.getPosition().x - menuButton.getWidth() / 2f,10,  menuButton.getWidth(), menuButton.getHeight());
         batch.end();
-
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
