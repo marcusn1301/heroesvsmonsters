@@ -41,7 +41,7 @@ public class Board extends Actor {
     private final int[][] cells;
     private Texture[][] textures;
     private final ShapeRenderer shapeRenderer;
-    private final int textureWidth;
+
     private final int textureHeight;
     private int cellWidth;
     private int cellHeight;
@@ -127,6 +127,16 @@ public class Board extends Actor {
 
     public int getCols() {
         return cols;
+    }
+
+    public int getTextureWidth() {
+        return textureWidth;
+    }
+
+    private final int textureWidth;
+
+    public int getTextureHeight() {
+        return textureHeight;
     }
 
     public Texture[][] getTextures() {
