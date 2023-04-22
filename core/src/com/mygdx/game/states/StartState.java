@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.mygdx.game.Board;
+import com.mygdx.game.ds.Board;
 
 public class StartState extends State implements InputProcessor {
     SpriteBatch batch;
