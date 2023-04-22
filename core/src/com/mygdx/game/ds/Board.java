@@ -56,8 +56,8 @@ public class Board extends Actor {
     private final SpriteBatch batch;
 
     private final int yOffset = 0;  // Add yOffset for moving textures up or down
-    private final int xOffset = 225; // Add xOffset for moving textures right (previously 315)
-    private final int dashOffset = 225; // Add dashOffset for moving dashed lines right (previously 315)
+    private int xOffset = Gdx.graphics.getWidth()/8; // Add xOffset for moving textures right
+    private int dashOffset = Gdx.graphics.getWidth()/8; // Add dashOffset for moving dashed lines right
 
     private Texture[] buttonTextures;
     private Texture[] displayTextures;
@@ -76,7 +76,6 @@ public class Board extends Actor {
     private final int gridWidth, gridHeight, startX, startY;
     private boolean gridDrawn;
     private boolean isInputProcessorAdded;
-    private int padding;
     private int rightPaneWidth;
     private final Engine engine;
     private final MoneySystem moneySystem = new MoneySystem(8000);
@@ -210,8 +209,8 @@ public class Board extends Actor {
         // Add your logic here for when a cell is clicked
         System.out.println("Cell clicked: row " + row + ", col " + col);
         int displayPanelWidth = Gdx.graphics.getWidth() / 8;
-        int middleOfCellX = (int) (((col + 0.5) * cellWidth)) + displayPanelWidth ;
-        int middleOfCellY = (int) ((row + 0.5) * cellHeight);
+        int middleOfCellX = (col * cellWidth) + displayPanelWidth;
+        int middleOfCellY = row * cellHeight;
 
         System.out.print(" x: " + middleOfCellX + " y: " + middleOfCellY);
         Vector2 entityPlacement = new Vector2(middleOfCellX, middleOfCellY);
