@@ -38,49 +38,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Board extends Actor {
-    private int screenHeight = Gdx.graphics.getHeight();
-    private int screenWidth = Gdx.graphics.getWidth();
-    private int rows;
-    private int cols;
-    private int[][] cells;
+    private final int screenHeight = Gdx.graphics.getHeight();
+    private final int screenWidth = Gdx.graphics.getWidth();
+    private final int rows;
+    private final int cols;
+    private final int[][] cells;
     private Texture[][] textures;
-    private ShapeRenderer shapeRenderer;
-    private int textureWidth;
-    private int textureHeight;
+    private final ShapeRenderer shapeRenderer;
+    private final int textureWidth;
+    private final int textureHeight;
     private int cellWidth;
     private int cellHeight;
-    private SpriteBatch batch;
+    private final SpriteBatch batch;
 
-    private int yOffset = 0;  // Add yOffset for moving textures up or down
-    private int xOffset = 225; // Add xOffset for moving textures right (previously 315)
-    private int dashOffset = 225; // Add dashOffset for moving dashed lines right (previously 315)
+    private final int yOffset = 0;  // Add yOffset for moving textures up or down
+    private final int xOffset = 225; // Add xOffset for moving textures right (previously 315)
+    private final int dashOffset = 225; // Add dashOffset for moving dashed lines right (previously 315)
 
     private Texture[] buttonTextures;
     private Texture[] displayTextures;
     private int displayTexturesCount = 5;
     private Vector2[] displayTexturePositions;
-    private int draggingTextureIndex = -1;
-    private Vector2 draggingTextureOffset = new Vector2();
-    private Stage stage;
+    private final Stage stage;
 
-    private Table leftTable;
-    private Table rightTable;
-    private Table boardTable;
-    private TextButton counterText1;
-    private boolean isGridTableVisible = true;
-    private boolean isPlacementAllowed = false;
     private Array<DisplayHero> displayHeroes;
     private Array<DisplayHeroButton> displayHeroButtons;
 
     private boolean placeHero = false;
 
     private HeroType chosenHeroType;
-    private InputMultiplexer multiplexer;
-    private int gridWidth, gridHeight, startX, startY;
+    private final InputMultiplexer multiplexer;
+    private final int gridWidth, gridHeight, startX, startY;
     private boolean gridDrawn;
     private boolean isInputProcessorAdded;
-    private Engine engine;
-    private MoneySystem moneySystem = new MoneySystem(8000);
+    private final Engine engine;
+    private final MoneySystem moneySystem = new MoneySystem(8000);
 
 
 
@@ -107,7 +99,6 @@ public class Board extends Actor {
         loadDisplayTextures();
         setDisplayHeroes();
         initButtonTextures();
-        //setupInputProcessor();
         displayHeroButtons = new Array<>();
         createDisplayHeroButtons(displayHeroes);
         multiplexer = new InputMultiplexer();
@@ -117,7 +108,7 @@ public class Board extends Actor {
     }
 
     private void drawCounter() {
-        float iconSize = Gdx.graphics.getHeight() / 15;
+        float iconSize = Gdx.graphics.getHeight() / 15f;
         float iconX = screenWidth - iconSize * 2 - 160; // Move 200 pixels to the left
         float iconY = screenHeight - iconSize - 50;
 
@@ -400,6 +391,7 @@ public class Board extends Actor {
 
 
     public Table getRightTable() {
+        Table rightTable = new Table();
         return rightTable;
     }
 

@@ -21,14 +21,15 @@ import com.mygdx.game.systems.HeroSystem;
 import com.mygdx.game.systems.ProjectileMovementSystem;
 import com.mygdx.game.utils.Enums;
 
-public class PlayState extends State{
+public class PlayState extends State {
     private SpriteBatch batch;
     private BitmapFont font;
     private Stage stage;
     private ShapeRenderer shapeRenderer;
-    private SoundManager soundManager = SoundManager.getInstance();
-    private MoneySystem moneySystem;
-    private boolean isPlacementAllowed = false;
+    private final MoneySystem moneySystem;
+    private final boolean isPlacementAllowed = false;
+    private final SoundManager soundManager = SoundManager.getInstance();
+
     private static Engine engine;
     private Board board;
     private TextButton counterText1;
@@ -36,20 +37,15 @@ public class PlayState extends State{
     private final GameStateManager gsm;
 
     public PlayState() {
-        //super(gsm);
         menuButton = new RectangleButton(0.5f, Gdx.graphics.getWidth() - 137, Gdx.graphics.getHeight() - 100, "Lobby-button.png");
         gsm = GameStateManager.getGsm();
-        initialize();
-    }
-
-    private void initialize() {
-        initializeGameEngine();
         batch = new SpriteBatch();
         moneySystem = new MoneySystem(4000);
+        soundManager.playSequence();
+
+        initializeGameEngine();
         initFontStageAndRenderer();
         createBoard();
-        soundManager.playSequence();
-        //Game engine & systems
     }
 
     private void initializeGameEngine() {
@@ -83,12 +79,12 @@ public class PlayState extends State{
 
     @Override
     public void update(float dt) {
-        stage.draw();
         engine.update(dt);
+        handleInput();
     }
 
     public void calculateMoney() {
-        float iconSize = Gdx.graphics.getWidth() / 30;
+        float iconSize = Gdx.graphics.getWidth() / 30f;
         BitmapFont counterFont = new BitmapFont();
         counterFont.getData().setScale(4);
         // First counter
