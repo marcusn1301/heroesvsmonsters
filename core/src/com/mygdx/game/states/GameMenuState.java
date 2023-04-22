@@ -12,8 +12,7 @@ import com.mygdx.game.utils.Enums;
 
 public class GameMenuState extends State {
     private final GameStateManager gsm;
-    SoundManager soundManager = SoundManager.getInstance();
-    SpriteBatch sb;
+    private SoundManager soundManager = SoundManager.getInstance();
     private final RectangleButton playButton;
     private final Texture menuBackground;
     private final RectangleButton logo;
@@ -26,7 +25,6 @@ public class GameMenuState extends State {
     public GameMenuState() {
         super();
         gsm = GameStateManager.getGsm();
-        sb = new SpriteBatch();
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
         logo = new RectangleButton(0.3f, null, (int) (Gdx.graphics.getHeight() / 2.5), "HvsMstor.png");
@@ -64,7 +62,8 @@ public class GameMenuState extends State {
             int x = Gdx.input.getX();
             int y = Gdx.graphics.getHeight() - Gdx.input.getY();
             if (playButton.getBounds().contains(x, y)) {
-                gsm.push(new PlayState());
+                soundManager.playSound("menuNavigate");
+                gsm.push(new IntroCutsceneState());
             } else if (settingsButton.getBounds().contains(x,y)) {
                 gsm.push(new SettingsState(Enums.SettingsBackground.CITY, Enums.GameType.MENU));
             }
