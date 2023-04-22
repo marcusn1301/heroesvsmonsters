@@ -35,14 +35,14 @@ public class ProjectileMovementSystem extends IteratingSystem {
 
         //If a projectile is out of bounds, remove it from the engine
         if (positionComponent.getPosition().x > Gdx.graphics.getWidth() - Gdx.graphics.getWidth()/8f) {
+            entity.removeAll();
             engine.removeEntity(entity);
         }
 
         //Increment the horizontal position of the projectile based on its velocity
-        float posY = positionComponent.getPosition().y;
-        float posX = positionComponent.getPosition().x;
+        //and update hitbox position
         float speed = projectileComponent.getVelocity();
-        float newPosX = posX + speed;
-        positionComponent.setPosition(new Vector2(newPosX, posY));
+        positionComponent.setPosition(positionComponent.getPosition().add(speed, 0));
+        collisionComponent.setHitbox(collisionComponent.getHitbox().setPosition(positionComponent.getPosition()));
     }
 }

@@ -18,7 +18,7 @@ public class HeroFactory {
         Entity hero = new Entity();
         hero.add(new SpriteComponent(getHeroSprite(heroType)));
         hero.add(new PositionComponent(boardPosition));
-        hero.add(new AttackComponent(getHeroAttackDamage(heroType), getHeroAttackTimer(heroType), getHeroAttackTimeElapsed()));
+        hero.add(new AttackComponent(getHeroAttackTimer(heroType), getHeroAttackTimeElapsed(), getHeroAttackDamage(heroType)));
         hero.add(new HealthComponent(getHeroHealth()));
         hero.add(new HeroComponent(heroType));
         return hero;
@@ -35,8 +35,6 @@ public class HeroFactory {
     }
     
     private static Texture getHeroSprite(HeroType heroType) {
-        //TODO endre path her
-        Texture texture = null;
         switch (heroType) {
             case IRONMAN:
                 return new Texture(Gdx.files.internal("characterIcon3.png"));
@@ -114,13 +112,13 @@ public class HeroFactory {
     private static float getHeroAttackTimer(HeroType heroType) {
         switch (heroType) {
             case IRONMAN:
-                return 6f;
-            case HULK:
-                return 8f;
-            case SPIDERMAN:
-                return 5.5f;
-            case THOR:
                 return 6.5f;
+            case HULK:
+                return 9f;
+            case SPIDERMAN:
+                return 6f;
+            case THOR:
+                return 7.5f;
             case CAPTAIN_AMERICA:
                 return 7f;
             default:

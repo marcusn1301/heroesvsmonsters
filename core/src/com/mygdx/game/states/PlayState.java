@@ -16,9 +16,21 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.ds.Board;
 import com.mygdx.game.MoneySystem;
 import com.mygdx.game.SoundManager;
+import com.mygdx.game.components.AttackComponent;
+import com.mygdx.game.components.HeroComponent;
+import com.mygdx.game.components.MonsterComponent;
+import com.mygdx.game.components.PositionComponent;
+import com.mygdx.game.components.ProjectileComponent;
+import com.mygdx.game.components.SpriteComponent;
+import com.mygdx.game.entities.DisplayHero;
+import com.mygdx.game.entities.HeroFactory;
 import com.mygdx.game.ds.buttons.RectangleButton;
+import com.mygdx.game.systems.CollisionSystem;
 import com.mygdx.game.systems.HeroSystem;
+import com.mygdx.game.systems.MonsterMovementSystem;
 import com.mygdx.game.systems.ProjectileMovementSystem;
+import com.mygdx.game.systems.WaveSystem;
+import com.mygdx.game.types.HeroType;
 import com.mygdx.game.utils.Enums;
 
 public class PlayState extends State {
@@ -55,9 +67,15 @@ public class PlayState extends State {
         //Systems for game logic
         HeroSystem heroSystem = new HeroSystem(engine);
         ProjectileMovementSystem projectileMovementSystem = new ProjectileMovementSystem(engine);
+        WaveSystem waveSystem = new WaveSystem(engine);
+        MonsterMovementSystem monsterMovementSystem = new MonsterMovementSystem(engine);
+        CollisionSystem collisionSystem = new CollisionSystem(engine);
 
         engine.addSystem(heroSystem);
         engine.addSystem(projectileMovementSystem);
+        engine.addSystem(waveSystem);
+        engine.addSystem(monsterMovementSystem);
+        engine.addSystem(collisionSystem);
 
         /*Entity spiderman = HeroFactory.createHero(HeroType.SPIDERMAN, new Vector2(50, 50));
         Entity captain = HeroFactory.createHero(HeroType.CAPTAIN_AMERICA, new Vector2(50, 50));
@@ -112,6 +130,33 @@ public class PlayState extends State {
         board.getRightTable().row();
     }
 
+    public void renderHeroes(SpriteBatch batch) {
+        for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class, AttackComponent.class).get())) {
+            Texture texture = e.getComponent(SpriteComponent.class).getSprite();
+            Vector2 position = e.getComponent(PositionComponent.class).getPosition();
+
+            batch.draw(texture, position.x, position.y, (float) board.getTextureWidth(), (float) board.getTextureHeight());
+        }
+    }
+
+    public void renderProjectiles(SpriteBatch batch) {
+        for (Entity e : engine.getEntitiesFor(Family.all(ProjectileComponent.class, PositionComponent.class).get())) {
+            Texture texture = e.getComponent(SpriteComponent.class).getSprite();
+            Vector2 position = e.getComponent(PositionComponent.class).getPosition();
+
+            batch.draw(texture, position.x, position.y, (float) board.getTextureWidth(), (float) board.getTextureHeight());
+        }
+    }
+
+    public void renderMonsters(SpriteBatch batch) {
+        for (Entity e : engine.getEntitiesFor(Family.all(MonsterComponent.class, PositionComponent.class).get())) {
+            Texture texture = e.getComponent(SpriteComponent.class).getSprite();
+            Vector2 position = e.getComponent(PositionComponent.class).getPosition();
+
+            batch.draw(texture, position.x, position.y, (float) board.getTextureWidth(), (float) board.getTextureHeight());
+        }
+    }
+
     @Override
     public void render(SpriteBatch batch) {
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
@@ -120,6 +165,9 @@ public class PlayState extends State {
 
         batch.begin();
         board.render(batch);
+        renderHeroes(batch);
+        renderProjectiles(batch);
+        renderMonsters(batch);
         batch.draw(menuButton.getImg(), menuButton.getPosition().x - menuButton.getWidth() / 2f, menuButton.getPosition().y, menuButton.getWidth(), menuButton.getHeight());
         batch.end();
 

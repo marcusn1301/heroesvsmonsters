@@ -3,7 +3,10 @@ package com.mygdx.game.entities;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.components.AttackComponent;
+import com.mygdx.game.components.CollisionComponent;
 import com.mygdx.game.components.MonsterComponent;
 import com.mygdx.game.components.MovementSpeedComponent;
 import com.mygdx.game.components.PositionComponent;
@@ -16,19 +19,18 @@ public class MonsterFactory {
         Entity monster = new Entity();
         monster.add(new SpriteComponent(getMonsterSprite(monsterType)));
         monster.add(new PositionComponent(boardPosition));
-        monster.add(new MovementSpeedComponent(getMonsterMovementSpeed(monsterType)));
-        monster.add(new MonsterComponent(monsterType));
+        monster.add(new MonsterComponent(monsterType, getMonsterMovementSpeed(monsterType)));
+        monster.add(new CollisionComponent(new Rectangle(boardPosition.x, boardPosition.y, Gdx.graphics.getWidth()/30f, Gdx.graphics.getHeight()/30f)));
         return monster;
     }
 
     private static Texture getMonsterSprite(MonsterType monsterType) {
-        //TODO endre path her
-        Texture texture = null;
+        //TODO legg til riktig bilde
         switch (monsterType) {
             case MAGNETO:
-                return new Texture(Gdx.files.internal("characterIcon3.png"));
+                return new Texture(Gdx.files.internal("Monster_3.png"));
             case JUGGERNAUT:
-                return new Texture(Gdx.files.internal("characterIcon1.png"));
+                return new Texture(Gdx.files.internal("Monster_3.png"));
             case VENOM:
                 return new Texture(Gdx.files.internal("Monster_3.png"));
             case HOBGOBLIN:
@@ -36,7 +38,7 @@ public class MonsterFactory {
             case GOBLIN_GLIDER:
                 return new Texture(Gdx.files.internal("Monster_1.png"));
             case MYSTIQUE:
-                return new Texture(Gdx.files.internal("characterIcon6.png"));
+                return new Texture(Gdx.files.internal("Monster_3.png"));
             default:
                 return null;
         }
@@ -45,19 +47,19 @@ public class MonsterFactory {
     private static float getMonsterMovementSpeed(MonsterType monsterType) {
         switch (monsterType) {
             case MAGNETO:
-                return 2f;
+                return 16f;
             case JUGGERNAUT:
-                return 4f;
+                return 13f;
             case VENOM:
-                return 1f;
+                return 14f;
             case HOBGOBLIN:
-                return 2.5f;
+                return 12f;
             case GOBLIN_GLIDER:
-                return 1.5f;
+                return 10f;
             case MYSTIQUE:
-                return 5f;
+                return 15f;
             default:
-                return 0;
+                return 10f;
         }
     }
 
