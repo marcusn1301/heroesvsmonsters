@@ -3,8 +3,10 @@ package com.mygdx.game.entities;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.components.AttackComponent;
+import com.mygdx.game.components.CollisionComponent;
 import com.mygdx.game.components.MonsterComponent;
 import com.mygdx.game.components.MovementSpeedComponent;
 import com.mygdx.game.components.PositionComponent;
@@ -18,6 +20,7 @@ public class MonsterFactory {
         monster.add(new SpriteComponent(getMonsterSprite(monsterType)));
         monster.add(new PositionComponent(boardPosition));
         monster.add(new MonsterComponent(monsterType, getMonsterMovementSpeed(monsterType)));
+        monster.add(new CollisionComponent(new Rectangle(boardPosition.x, boardPosition.y, Gdx.graphics.getWidth()/30f, Gdx.graphics.getHeight()/30f)));
         return monster;
     }
 
@@ -44,19 +47,19 @@ public class MonsterFactory {
     private static float getMonsterMovementSpeed(MonsterType monsterType) {
         switch (monsterType) {
             case MAGNETO:
-                return 20f;
+                return 16f;
             case JUGGERNAUT:
-                return 30f;
+                return 13f;
             case VENOM:
-                return 30f;
+                return 14f;
             case HOBGOBLIN:
-                return 20f;
+                return 12f;
             case GOBLIN_GLIDER:
                 return 10f;
             case MYSTIQUE:
                 return 15f;
             default:
-                return 30f;
+                return 10f;
         }
     }
 

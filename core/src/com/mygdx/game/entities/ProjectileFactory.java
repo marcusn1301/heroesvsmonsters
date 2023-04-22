@@ -18,7 +18,7 @@ public class ProjectileFactory {
         Entity projectile = new Entity();
         projectile.add(new ProjectileComponent(true, getProjectileSpeed(heroType), sourceEntity));
         projectile.add(new SpriteComponent(getProjectileSprite(heroType)));
-        projectile.add(new CollisionComponent(new Rectangle(startingPosition.x, startingPosition.y, 10f, 10f)));
+        projectile.add(new CollisionComponent(new Rectangle(startingPosition.x, startingPosition.y, Gdx.graphics.getWidth()/30f, Gdx.graphics.getHeight()/30f)));
         projectile.add(new PositionComponent(startingPosition));
         return projectile;
     }

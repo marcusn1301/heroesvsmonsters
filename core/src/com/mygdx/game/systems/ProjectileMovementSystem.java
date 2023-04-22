@@ -40,7 +40,9 @@ public class ProjectileMovementSystem extends IteratingSystem {
         }
 
         //Increment the horizontal position of the projectile based on its velocity
+        //and update hitbox position
         float speed = projectileComponent.getVelocity();
         positionComponent.setPosition(positionComponent.getPosition().add(speed, 0));
+        collisionComponent.setHitbox(collisionComponent.getHitbox().setPosition(positionComponent.getPosition()));
     }
 }

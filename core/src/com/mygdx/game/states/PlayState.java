@@ -33,6 +33,7 @@ import com.mygdx.game.components.SpriteComponent;
 import com.mygdx.game.entities.DisplayHero;
 import com.mygdx.game.entities.HeroFactory;
 import com.mygdx.game.ds.buttons.RectangleButton;
+import com.mygdx.game.systems.CollisionSystem;
 import com.mygdx.game.systems.HeroSystem;
 import com.mygdx.game.systems.MonsterMovementSystem;
 import com.mygdx.game.systems.ProjectileMovementSystem;
@@ -83,11 +84,13 @@ public class PlayState extends State{
         ProjectileMovementSystem projectileMovementSystem = new ProjectileMovementSystem(engine);
         WaveSystem waveSystem = new WaveSystem(engine);
         MonsterMovementSystem monsterMovementSystem = new MonsterMovementSystem(engine);
+        CollisionSystem collisionSystem = new CollisionSystem(engine);
 
         engine.addSystem(heroSystem);
         engine.addSystem(projectileMovementSystem);
         engine.addSystem(waveSystem);
         engine.addSystem(monsterMovementSystem);
+        engine.addSystem(collisionSystem);
 
         /*Entity spiderman = HeroFactory.createHero(HeroType.SPIDERMAN, new Vector2(50, 50));
         Entity captain = HeroFactory.createHero(HeroType.CAPTAIN_AMERICA, new Vector2(50, 50));

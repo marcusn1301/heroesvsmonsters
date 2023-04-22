@@ -25,7 +25,6 @@ public class CollisionSystem extends IteratingSystem {
 
     public CollisionSystem(Engine engine) {
         super(Family.all(PositionComponent.class, CollisionComponent.class).get());
-        healthMapper = ComponentMapper.getFor(HealthComponent.class);
         positionMapper = ComponentMapper.getFor(PositionComponent.class);
         collisionMapper = ComponentMapper.getFor(CollisionComponent.class);
         monsterMapper = ComponentMapper.getFor(MonsterComponent.class);
@@ -42,11 +41,13 @@ public class CollisionSystem extends IteratingSystem {
         //Check if projectile has collided with a monster
         // Check if the entity is a projectile
         if (projectileMapper.has(entity)) {
-            monsters = engine.getEntitiesFor(Family.all(MonsterComponent.class).get());
-
-            if (monsters.size() > 0) {
-                for (Entity monster : monsters) {
-                    //TODO
+            monsters = engine.getEntitiesFor(Family.all(MonsterComponent.class, CollisionComponent.class).get());
+            for (Entity monster : engine.getEntitiesFor(Family.all(MonsterComponent.class, CollisionComponent.class).get())) {
+                CollisionComponent monsterCollision = collisionMapper.get(monster);
+                if (collision.getHitbox().overlaps(monsterCollision.getHitbox())) {
+                    engine.removeEntity(entity);
+                    engine.removeEntity(monster);
+                    break;
                 }
             }
         }

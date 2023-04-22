@@ -40,12 +40,14 @@ public class WaveSystem extends IteratingSystem {
 
         //Wave duration is incremented
         wave.setWaveTimeElapsed(wave.getWaveTimeElapsed() + deltaTime);
+        wave.setTimeSinceLastSpawn(wave.getTimeSinceLastSpawn() + deltaTime);
 
         //Activate the current wave
         if (wave.getWaveTimeElapsed() >= 5f && !wave.isActive()) {
             wave.setActive(true);
             System.out.println("Beginning wave " + wave.getWaveNumber());
             spawnMonster(wave);
+            wave.setTimeSinceLastSpawn(0f);
         }
 
         //Begin a new wave after the given time
@@ -57,9 +59,10 @@ public class WaveSystem extends IteratingSystem {
             wave.setNumberOfMonsters(wave.getWaveNumber() + 2);
         }
 
-        //Spawn monsters every 25 seconds
-        if (wave.getTimeSinceLastSpawn() >= 25f && wave.isActive()) {
+        //Spawn monsters every 10 seconds
+        if (wave.getTimeSinceLastSpawn() >= 5f && wave.isActive()) {
             spawnMonster(wave);
+            wave.setTimeSinceLastSpawn(0f);
         }
     }
 
@@ -70,7 +73,8 @@ public class WaveSystem extends IteratingSystem {
 
     private void spawnMonster(WaveComponent wave) {
         wave.setTimeSinceLastSpawn(0f);
-        Entity monster = MonsterFactory.createMonster(getRandomType(), new Vector2(1000f, 300f));
+        //TODO monster should not be placed inside a cell
+        Entity monster = MonsterFactory.createMonster(getRandomType(), new Vector2(1500f, 350f));
         engine.addEntity(monster);
     }
 }

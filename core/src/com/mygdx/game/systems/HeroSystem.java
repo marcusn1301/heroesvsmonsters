@@ -56,6 +56,6 @@ public class HeroSystem extends IteratingSystem {
         }
 
         //Increase the time elapsed field in the attack component on every update
-        attack.setAttackTimeElapsed(attack.getAttackTimeElapsed() + deltaTime * 5);
+        attack.setAttackTimeElapsed(attack.getAttackTimeElapsed() + deltaTime);
     }
 }
