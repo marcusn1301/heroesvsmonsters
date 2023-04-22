@@ -4,15 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.Disposable;
+import com.mygdx.game.utils.SettingsData;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class SoundManager implements Disposable {
     private static SoundManager instance;
-    private Map<String, Sound> soundMap;
-    private Map<String, Music> musicMap;
+    private final Map<String, Sound> soundMap;
+    private final Map<String, Music> musicMap;
     private Music currentMusic;
+    private final SettingsData settingsData = SettingsData.loadSettings();
 
     public SoundManager() {
         soundMap = new HashMap<>();
@@ -52,7 +54,7 @@ public class SoundManager implements Disposable {
 
     public void playSound(String soundName) {
         if (soundMap.containsKey(soundName)) {
-            soundMap.get(soundName).play(1.0f);
+            soundMap.get(soundName).play(settingsData.SFX / 100f);
         }
     }
 
@@ -115,7 +117,7 @@ public class SoundManager implements Disposable {
             }
             currentMusic = musicMap.get(musicName);
             currentMusic.setLooping(loop);
-            currentMusic.setVolume(0.6f);
+            currentMusic.setVolume(settingsData.AUDIO / 100f);
             currentMusic.play();
         }
     }

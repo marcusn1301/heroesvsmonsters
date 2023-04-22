@@ -1,26 +1,23 @@
 package com.mygdx.game.states;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.FireBaseInterface;
 import com.mygdx.game.SoundManager;
+import com.mygdx.game.ds.buttons.RectangleButton;
 import com.mygdx.game.utils.Enums;
 
 public class GameMenuState extends State {
-    private GameStateManager gsm;
-    SoundManager soundManager = SoundManager.getInstance();
-    SpriteBatch sb;
-    Texture startButton;
-    Texture lobbyButton;
-    Texture menuButton;
-    private Texture menuBackground;
-
-    Texture logo;
-    Texture img;
+    private final GameStateManager gsm;
+    private SoundManager soundManager = SoundManager.getInstance();
+    private final RectangleButton playButton;
+    private final Texture menuBackground;
+    private final RectangleButton logo;
+    private final RectangleButton settingsButton;
+    private final RectangleButton trophyButton;
     int width;
     int height;
 
@@ -29,15 +26,13 @@ public class GameMenuState extends State {
     public GameMenuState() {
         super();
         gsm = GameStateManager.getGsm();
-        sb = new SpriteBatch();
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
-        startButton = new Texture("playButton.png");
-        lobbyButton = new Texture("Lobby-button.png");
-        menuButton = new Texture("Menu-button.png");
-        logo = new Texture("HvsMstor.png");
+        logo = new RectangleButton(0.3f, null, (int) (Gdx.graphics.getHeight() / 2.5), "HvsMstor.png");
+        playButton = new RectangleButton(1f, null, 150, "playButton.png");
+        settingsButton = new RectangleButton(0.4f, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 200, "settings-button.png");
+        trophyButton = new RectangleButton(0.5f, 80, Gdx.graphics.getHeight() - 210, "trophy.png");
         menuBackground = new Texture("menuBackground.png");
-
     }
 
     public void create() {
@@ -50,111 +45,39 @@ public class GameMenuState extends State {
     @Override
     public void update(float dt) {
         handleInput();
-
     }
 
     @Override
     public void render(SpriteBatch batch) {
         ScreenUtils.clear(Color.BLACK);
-        float centerX = Gdx.graphics.getWidth() / 2f;
-        float centerY = Gdx.graphics.getHeight() / 2f;
-
-
-
-        // Calculate the logo position and size
-        float logoWidth = width / 2.5f;
-        float logoHeight = logoWidth * ((float) logo.getHeight() / logo.getWidth());
-        float logoX = (width - logoWidth) / 2f;
-        float logoY = ((height - logoHeight) / 2f) + height / 5f;
-
-
-        // Calculate the button positions and sizes
-        float buttonWidth = width / 7f;
-        float playButtonWidth = width / 5f;
-        float startButtonHeight = playButtonWidth * ((float) startButton.getHeight() / startButton.getWidth());
-        float lobbyButtonHeight = buttonWidth * ((float) lobbyButton.getHeight() / lobbyButton.getWidth());
-        float menuButtonHeight = buttonWidth * ((float) menuButton.getHeight() / menuButton.getWidth());
-
-
-        float buttonX = (width - buttonWidth) / 2f;
-        float playButtonX = (width - playButtonWidth) /2f;
-        float startButtonY = height * 0.3f - startButtonHeight / 2f;
-        float lobbyButtonY = height * 0.12f - lobbyButtonHeight / 2f;
-        float menuButtonY = height * 0.21f - menuButtonHeight / 2f;
-
-
-
         batch.begin();
         batch.draw(menuBackground, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-        batch.draw(logo, logoX, logoY, logoWidth, logoHeight);
-        batch.draw(startButton, playButtonX, startButtonY, playButtonWidth, startButtonHeight);
-        batch.draw(lobbyButton, buttonX, lobbyButtonY, buttonWidth, lobbyButtonHeight);
-        batch.draw(menuButton, buttonX, menuButtonY, buttonWidth, menuButtonHeight);
-
-
+        logo.render(batch);
+        playButton.render(batch);
+        settingsButton.render(batch);
+        trophyButton.render(batch);
         batch.end();
-
-
-
-
-    }
-
-    private boolean isStartButtonClicked(int x, int y) {
-        float buttonWidth = width / 5f;
-        float startButtonHeight = buttonWidth * ((float) startButton.getHeight() / startButton.getWidth());
-        float buttonX = (width - buttonWidth) / 2f;
-        float startButtonY = height * 0.3f - startButtonHeight / 2f;
-
-        return Gdx.input.justTouched() && buttonX <= x && x <= buttonX + buttonWidth &&
-                startButtonY <= Gdx.graphics.getHeight() - y && Gdx.graphics.getHeight() - y <= startButtonY + startButtonHeight;
-    }
-
-    private boolean isLobbyButtonClicked(int x, int y) {
-        float buttonWidth = width / 7f;
-        float lobbyButtonHeight = buttonWidth * ((float) lobbyButton.getHeight() / lobbyButton.getWidth());
-        float buttonX = (width - buttonWidth) / 2f;
-        float lobbyButtonY = height * 0.12f - lobbyButtonHeight / 2f;
-
-        return Gdx.input.justTouched() && buttonX <= x && x <= buttonX + buttonWidth &&
-                lobbyButtonY <= Gdx.graphics.getHeight() - y && Gdx.graphics.getHeight() - y <= lobbyButtonY + lobbyButtonHeight;
-    }
-
-    private boolean isMenuButtonClicked(int x, int y) {
-        float buttonWidth = width / 7f;
-        float menuButtonHeight = buttonWidth * ((float) menuButton.getHeight() / menuButton.getWidth());
-        float buttonX = (width - buttonWidth) / 2f;
-        float menuButtonY = height * 0.21f - menuButtonHeight / 2f;
-
-        return Gdx.input.justTouched() && buttonX <= x && x <= buttonX + buttonWidth &&
-                menuButtonY <= Gdx.graphics.getHeight() - y && Gdx.graphics.getHeight() - y <= menuButtonY + menuButtonHeight;
     }
 
     @Override
     public void handleInput() {
         if (Gdx.input.isTouched()) {
             int x = Gdx.input.getX();
-            int y = Gdx.input.getY();
-            if (isStartButtonClicked(x, y)) {
+            int y = Gdx.graphics.getHeight() - Gdx.input.getY();
+            if (playButton.getBounds().contains(x, y)) {
                 soundManager.playSound("menuNavigate");
                 gsm.push(new IntroCutsceneState());
-            }
-            if (isLobbyButtonClicked(x, y)) {
+            } else if (settingsButton.getBounds().contains(x,y)) {
                 gsm.push(new SettingsState(Enums.SettingsBackground.CITY, Enums.GameType.MENU));
-            }
-            if (isMenuButtonClicked(x, y)) {
-                gsm.push(new StartState());
+            } else if (trophyButton.getBounds().contains(x,y)) {
+                gsm.push(new LeaderBoardState());
             }
         }
     }
 
-
-
     @Override
     public void dispose() {
-        startButton.dispose();
-        lobbyButton.dispose();
-        menuButton.dispose();
+        playButton.dispose();
         System.out.print("Menu State Disposed");
     }
 }
