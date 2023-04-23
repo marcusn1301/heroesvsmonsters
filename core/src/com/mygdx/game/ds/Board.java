@@ -35,6 +35,8 @@ import com.mygdx.game.entities.HeroFactory;
 import com.mygdx.game.types.HeroType;
 import com.mygdx.game.ds.buttons.DisplayHeroButton;
 
+import java.util.List;
+
 public class Board extends Actor {
     private final int screenHeight = Gdx.graphics.getHeight();
     private final int screenWidth = Gdx.graphics.getWidth();
@@ -72,6 +74,8 @@ public class Board extends Actor {
     private final Engine engine;
     private final MoneySystem moneySystem = new MoneySystem(8000);
     private FireBaseInterface firebaseInterface;
+    private List<Integer> data;
+
 
 
 
@@ -123,6 +127,24 @@ public class Board extends Actor {
 
         batch.draw(counterIcon, iconX, iconY, iconSize, iconSize);
         this.batch.end();
+    }
+
+    public void fetchData(String target) {
+        firebaseInterface.getDataFromDatabase(target, new FireBaseInterface.OnDataLoadedListener() {
+            @Override
+            public void onDataLoaded(List<Integer> values) {
+
+                data = values;
+                System.out.println("Here is the data:");
+                System.out.println(data);
+                // Do something with the data
+            }
+
+            @Override
+            public void onError(Exception exception) {
+                // Handle error
+            }
+        });
     }
 
 
@@ -216,8 +238,9 @@ public class Board extends Actor {
         System.out.println("Cell clicked: row " + row + ", col " + col);
         moneySystem.removeMoney(450);
 
+        firebaseInterface.SetValueInDb("highScores", 12);
 
-        firebaseInterface.SetOnValueChangedListener("highScores");
+        fetchData("highScores");
 
     }
 
