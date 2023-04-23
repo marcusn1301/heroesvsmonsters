@@ -86,6 +86,9 @@ public class Board extends Actor {
     private FireBaseInterface firebaseInterface;
     private List<Integer> data;
     private final MoneySystem moneySystem = new MoneySystem(1200);
+    BitmapFont font = new BitmapFont();
+    Texture counterIcon = new Texture("images/coin2.png");
+
 
 
 
@@ -128,10 +131,8 @@ public class Board extends Actor {
         float iconX = screenWidth - iconSize * 2 - 160; // Move 200 pixels to the left
         float iconY = screenHeight - iconSize - 50;
 
-        BitmapFont font = new BitmapFont();
         font.getData().setScale(3.5f);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        Texture counterIcon = new Texture("images/coin2.png");
 
         this.batch.begin();
         font.draw(batch, String.valueOf(moneySystem.getMoney()), iconX + iconSize * 1.5f - rightPaneWidth - 50, iconY + iconSize * 0.75f);
@@ -329,7 +330,6 @@ public class Board extends Actor {
             circleTexture = createCircle(circleRadius, Color.WHITE);
         }
 
-        BitmapFont font = new BitmapFont(); // Create a BitmapFont instance
         font.getData().setScale(2); // Increase the font size
         Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE); // Set the font and color (white) for the label style
 
@@ -384,7 +384,6 @@ public class Board extends Actor {
             circleTexture = createCircle(circleRadius, Color.WHITE);
         }
 
-        BitmapFont font = new BitmapFont(); // Create a BitmapFont instance
         font.getData().setScale(2); // Increase the font size
         Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE); // Set the font and color (white) for the label style
 
