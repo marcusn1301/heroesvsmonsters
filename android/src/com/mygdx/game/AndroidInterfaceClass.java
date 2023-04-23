@@ -6,6 +6,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -70,14 +72,49 @@ public class AndroidInterfaceClass implements FireBaseInterface {
 
     @Override
     public void SetValueInDb(String target, Integer value) {
-        /*myRef = database.getReference(target);
-        myRef.push().setValue(value);*/
-
         DatabaseReference targetRef = database.getReference(target);
-        targetRef.push().setValue(value);
 
-        //TODO Sykt rart - myRef.listener fungerer ikke når det ikke er en string. Når det er en List kjører den ikke
-       /* myRef = database.getReference("message");
-        myRef.setValue("test");*/
+        // Read current maximum key from the database
+        targetRef.orderByKey().limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                long newKey = 1; // Default key if there are no keys yet
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    // Get the current maximum key and increment it
+                    newKey = Long.parseLong(childSnapshot.getKey()) + 1;
+                }
+                // Set the new value with the incremented key
+                targetRef.child(String.valueOf(newKey)).setValue(value);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println("Error :(");
+            }
+        });
     }
+
+    @Override
+    public void getDataFromDatabase(String target, OnDataLoadedListener onDataLoadedListener) {
+        DatabaseReference targetRef = database.getReference(target);
+
+        targetRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Integer> values = new ArrayList<>();
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    Integer value = childSnapshot.getValue(Integer.class);
+                    values.add(value);
+                }
+                onDataLoadedListener.onDataLoaded(values);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                onDataLoadedListener.onError(error.toException());
+            }
+        });
+    }
+
+
 }
