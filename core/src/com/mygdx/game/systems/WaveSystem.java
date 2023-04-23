@@ -64,10 +64,10 @@ public class WaveSystem extends IteratingSystem {
         }
 
         //Spawn monsters every 10 seconds
-        if (wave.getTimeSinceLastSpawn() >= 5f && wave.isActive()) {
+        /*if (wave.getTimeSinceLastSpawn() >= 5f && wave.isActive()) {
             spawnMonster(wave);
             wave.setTimeSinceLastSpawn(0f);
-        }
+        }*/
     }
 
     private MonsterType getRandomType() {
