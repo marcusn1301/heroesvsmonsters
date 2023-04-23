@@ -216,15 +216,16 @@ public class Board extends Actor {
         Vector2 entityPlacement = new Vector2(middleOfCellX, middleOfCellY);
 
         //Creates new hero entity and sets its position to the middle of the clicked cell
-        getChosenHeroType();
+        if (getChosenHeroType() != null) {
         placeHero(entityPlacement);
-
-        //Creates a new monster entity and places it in the midddle of the cell
-        getChosenMonsterType();
-        placeMonster(entityPlacement);
-
         System.out.println("Cell clicked: row " + row + ", col " + col);
         moneySystem.removeMoney(450);
+        } else if (getChosenMonsterType() != null) {
+        //Creates a new monster entity and places it in the midddle of the cell
+        placeMonster(entityPlacement);
+        }
+
+
     }
 
     public void drawHeroes() {
@@ -403,12 +404,15 @@ public class Board extends Actor {
     }
 
     public void setChosenMonsterType(MonsterType monsterType) {
+        //setChosenHeroType(null);
         this.chosenMonsterType = monsterType;
+        this.chosenHeroType = null;
     }
 
     private void setChosenHeroType(HeroType heroType) {
         this.chosenHeroType = heroType;
-        this.placeHero = !this.placeHero;
+        this.chosenMonsterType = null;
+        //this.placeHero = !this.placeHero;
     }
 
     public HeroType getChosenHeroType() {
