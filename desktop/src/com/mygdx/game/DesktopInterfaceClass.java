@@ -1,5 +1,9 @@
 package com.mygdx.game;
 
+import com.google.android.gms.tasks.Task;
+
+import java.util.List;
+
 public class DesktopInterfaceClass implements FireBaseInterface {
     @Override
     public void SomeFunction() {
@@ -12,12 +16,19 @@ public class DesktopInterfaceClass implements FireBaseInterface {
     }
 
     @Override
-    public void SetOnValueChangedListener() {
+    public void SetOnValueChangedListener(String target) {
 
     }
 
     @Override
-    public void SetValueInDb(String target, String value) {
+    public void SetValueInDb(String target, Integer value) {
 
     }
+
+    @Override
+    public void getDataFromDatabase(String target, OnDataLoadedListener onDataLoadedListener) {
+
+    }
+
+
 }

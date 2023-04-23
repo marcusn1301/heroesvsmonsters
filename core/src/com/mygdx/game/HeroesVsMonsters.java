@@ -17,6 +17,8 @@ public class HeroesVsMonsters extends ApplicationAdapter {
 	//FireBaseInterface FBIC;
 
 	public HeroesVsMonsters(FireBaseInterface FBIC) {
+		FirebaseManager.initialize(FBIC);
+
 		//this.FBIC = FBIC;
 	}
 

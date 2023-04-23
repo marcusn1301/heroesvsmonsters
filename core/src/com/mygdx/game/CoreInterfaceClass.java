@@ -1,5 +1,8 @@
 package com.mygdx.game;
 
+
+import java.util.List;
+
 public class CoreInterfaceClass implements FireBaseInterface {
 
     @Override
@@ -13,12 +16,19 @@ public class CoreInterfaceClass implements FireBaseInterface {
     }
 
     @Override
-    public void SetOnValueChangedListener() {
+    public void SetOnValueChangedListener(String target) {
 
     }
 
     @Override
-    public void SetValueInDb(String target, String value) {
+    public void SetValueInDb(String target, Integer value) {
 
     }
+
+    @Override
+    public void getDataFromDatabase(String target, OnDataLoadedListener onDataLoadedListener) {
+
+    }
+
+
 }

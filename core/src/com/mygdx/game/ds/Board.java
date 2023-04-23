@@ -27,6 +27,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.FireBaseInterface;
+import com.mygdx.game.FirebaseManager;
 import com.mygdx.game.MoneySystem;
 import com.mygdx.game.components.AttackComponent;
 import com.mygdx.game.components.HeroComponent;
@@ -40,6 +42,8 @@ import com.mygdx.game.entities.MonsterFactory;
 import com.mygdx.game.types.HeroType;
 import com.mygdx.game.ds.buttons.DisplayHeroButton;
 import com.mygdx.game.types.MonsterType;
+
+import java.util.List;
 
 public class Board extends Actor {
     private final int screenHeight = Gdx.graphics.getHeight();
@@ -79,10 +83,15 @@ public class Board extends Actor {
     private int rightPaneWidth;
     private final Engine engine;
     private final MoneySystem moneySystem = new MoneySystem(8000);
+    private FireBaseInterface firebaseInterface;
+    private List<Integer> data;
+
+
 
 
 
     public Board(int rows, int cols, Engine engine) {
+        this.firebaseInterface = FirebaseManager.getInstance().getFirebaseInterface();
         this.engine = engine;
         this.rows = rows;
         this.cols = cols;
@@ -131,6 +140,27 @@ public class Board extends Actor {
         batch.draw(counterIcon, iconX, iconY, iconSize, iconSize);
         this.batch.end();
     }
+
+    // Fetches the highscore list from the firebase realtime database and stores the
+    //values in data;
+    public void fetchData(String target) {
+        firebaseInterface.getDataFromDatabase(target, new FireBaseInterface.OnDataLoadedListener() {
+            @Override
+            public void onDataLoaded(List<Integer> values) {
+
+                data = values;
+                System.out.println("Here is the data:");
+                System.out.println(data);
+                // Do something with the data
+            }
+
+            @Override
+            public void onError(Exception exception) {
+                System.out.println(exception);
+            }
+        });
+    }
+
 
     public int getRows() {
         return rows;
@@ -225,6 +255,11 @@ public class Board extends Actor {
 
         System.out.println("Cell clicked: row " + row + ", col " + col);
         moneySystem.removeMoney(450);
+
+        firebaseInterface.SetValueInDb("highScores", 12);
+
+        fetchData("highScores");
+
     }
 
     public void drawHeroes() {
