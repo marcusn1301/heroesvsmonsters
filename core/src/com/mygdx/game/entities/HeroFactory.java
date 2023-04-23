@@ -3,8 +3,10 @@ package com.mygdx.game.entities;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.components.AttackComponent;
+import com.mygdx.game.components.CollisionComponent;
 import com.mygdx.game.components.HealthComponent;
 import com.mygdx.game.components.HeroComponent;
 import com.mygdx.game.components.PositionComponent;
@@ -21,6 +23,7 @@ public class HeroFactory {
         hero.add(new AttackComponent(getHeroAttackTimer(heroType), getHeroAttackTimeElapsed(), getHeroAttackDamage(heroType)));
         hero.add(new HealthComponent(getHeroHealth()));
         hero.add(new HeroComponent(heroType));
+        hero.add(new CollisionComponent(new Rectangle(boardPosition.x, boardPosition.y, Gdx.graphics.getWidth()/30f, Gdx.graphics.getHeight()/10f)));
         return hero;
     }
 

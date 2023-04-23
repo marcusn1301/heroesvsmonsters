@@ -9,6 +9,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.mygdx.game.components.AttackComponent;
 import com.mygdx.game.components.CollisionComponent;
 import com.mygdx.game.components.HealthComponent;
+import com.mygdx.game.components.HeroComponent;
 import com.mygdx.game.components.MonsterComponent;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.ProjectileComponent;
@@ -20,6 +21,7 @@ public class CollisionSystem extends IteratingSystem {
     private ComponentMapper<CollisionComponent> collisionMapper;
     private ComponentMapper<MonsterComponent> monsterMapper;
     private ComponentMapper<ProjectileComponent> projectileMapper;
+    private ComponentMapper<HeroComponent> heroMapper;
     private ImmutableArray<Entity> monsters;
     private Engine engine;
 
@@ -29,6 +31,7 @@ public class CollisionSystem extends IteratingSystem {
         collisionMapper = ComponentMapper.getFor(CollisionComponent.class);
         monsterMapper = ComponentMapper.getFor(MonsterComponent.class);
         projectileMapper = ComponentMapper.getFor(ProjectileComponent.class);
+        heroMapper = ComponentMapper.getFor(HeroComponent.class);
         this.engine = engine;
     }
 
@@ -37,17 +40,29 @@ public class CollisionSystem extends IteratingSystem {
         PositionComponent position = positionMapper.get(entity);
         CollisionComponent collision = collisionMapper.get(entity);
         ProjectileComponent projectile = projectileMapper.get(entity);
+        HeroComponent hero = heroMapper.get(entity);
 
         //Check if projectile has collided with a monster
-        // Check if the entity is a projectile
         if (projectileMapper.has(entity)) {
-            monsters = engine.getEntitiesFor(Family.all(MonsterComponent.class, CollisionComponent.class).get());
             for (Entity monster : engine.getEntitiesFor(Family.all(MonsterComponent.class, CollisionComponent.class).get())) {
                 CollisionComponent monsterCollision = collisionMapper.get(monster);
                 if (collision.getHitbox().overlaps(monsterCollision.getHitbox())) {
                     engine.removeEntity(entity);
                     engine.removeEntity(monster);
                     break;
+                }
+            }
+        }
+
+        //Check if a hero entity is colliding with a monster
+        if (heroMapper.has(entity)) {
+            for (Entity monster : engine.getEntitiesFor(Family.all(MonsterComponent.class, CollisionComponent.class).get())) {
+                CollisionComponent monsterCollision = collisionMapper.get(monster);
+                if (collision.getHitbox().overlaps(monsterCollision.getHitbox())) {
+                    engine.removeEntity(entity);
+                    engine.removeEntity(monster);
+                    //game over
+                    engine.removeSystem(engine.getSystem(HeroSystem.class));
                 }
             }
         }
