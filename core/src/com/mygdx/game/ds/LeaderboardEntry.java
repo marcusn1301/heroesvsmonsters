@@ -37,7 +37,7 @@ public class LeaderboardEntry {
         this.lineHeight = Gdx.graphics.getHeight() / 1.4f - ((Gdx.graphics.getHeight() / 14f) * index);
         this.bounds = new Rectangle();
         this.font = new BitmapFont();
-        font.setColor(Color.WHITE);
+        font.setColor(Color.BLACK);
         font.getData().setScale(2f);
     }
 
