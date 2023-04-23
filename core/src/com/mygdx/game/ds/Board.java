@@ -129,6 +129,8 @@ public class Board extends Actor {
         this.batch.end();
     }
 
+    // Fetches the highscore list from the firebase realtime database and stores the
+    //values in data;
     public void fetchData(String target) {
         firebaseInterface.getDataFromDatabase(target, new FireBaseInterface.OnDataLoadedListener() {
             @Override
@@ -142,7 +144,7 @@ public class Board extends Actor {
 
             @Override
             public void onError(Exception exception) {
-                // Handle error
+                System.out.println(exception);
             }
         });
     }

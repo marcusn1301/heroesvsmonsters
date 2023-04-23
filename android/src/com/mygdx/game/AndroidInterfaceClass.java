@@ -70,6 +70,7 @@ public class AndroidInterfaceClass implements FireBaseInterface {
     }
 
 
+    // Pushes a highscore into the highscore list in the firebase realtime database
     @Override
     public void SetValueInDb(String target, Integer value) {
         DatabaseReference targetRef = database.getReference(target);
@@ -89,7 +90,7 @@ public class AndroidInterfaceClass implements FireBaseInterface {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                System.out.println("Error :(");
+                System.out.println(error);
             }
         });
     }
