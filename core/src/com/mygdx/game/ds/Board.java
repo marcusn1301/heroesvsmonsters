@@ -489,6 +489,7 @@ public class Board extends Actor {
             }
             //Place a new monster entity at the given position if the cell is empty
             if (!cellHasMonster) {
+                placementPosition.x = Gdx.graphics.getWidth() - this.rightPaneWidth - textureWidth;
                 Entity monster = MonsterFactory.createMonster(getChosenMonsterType(), placementPosition);
                 engine.addEntity(monster);
                 System.out.println("Created new monster entity and added to game engine");

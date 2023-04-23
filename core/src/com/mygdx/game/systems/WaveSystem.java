@@ -50,8 +50,6 @@ public class WaveSystem extends IteratingSystem {
         if (wave.getWaveTimeElapsed() >= 5f && !wave.isActive()) {
             wave.setActive(true);
             System.out.println("Beginning wave " + wave.getWaveNumber());
-            spawnMonster(wave);
-            wave.setTimeSinceLastSpawn(0f);
         }
 
         //Begin a new wave after the given time
