@@ -55,6 +55,7 @@ public class PlayState extends State{
     private int waveCount = 0;
     private int totalKills = 0;
     private int monsterToKill = 0;
+    private int score = 0;
 
     public PlayState() {
         //super(gsm);
@@ -182,9 +183,11 @@ public class PlayState extends State{
 
         font.setColor(Color.RED);
         font.getData().setScale(3.0f);
-        font.draw(batch, "Monster left: " + monsterCount, screenWidth - screenWidth/2.5f, screenHeight - screenHeight/20f);
-        font.draw(batch, "Wave: " + waveCount, screenWidth/4.5f, screenHeight - screenHeight/20f);
-        font.draw(batch, "Total kills: " + totalKills + "/" + monsterToKill, screenWidth/3f, screenHeight - screenHeight/20f);
+        font.draw(batch, "Wave: " + waveCount, screenWidth/7.5f, screenHeight - screenHeight/25f);
+        font.draw(batch, "Total kills: " + totalKills + "/" + monsterToKill, screenWidth/4f, screenHeight - screenHeight/25f);
+        font.draw(batch, "Monster left: " + monsterCount, screenWidth - screenWidth/2.3f, screenHeight - screenHeight/25f);
+        font.setColor(Color.WHITE);
+        font.draw(batch, "Score: " + score, screenWidth/2.4f, screenHeight - screenHeight/25f);
     }
 
     @Override
