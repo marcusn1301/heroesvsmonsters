@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.states.GameMenuState;
 import com.mygdx.game.states.GameStateManager;
+import com.mygdx.game.states.LeaderboardState;
 
 public class HeroesVsMonsters extends ApplicationAdapter {
 	private GameStateManager gsm;

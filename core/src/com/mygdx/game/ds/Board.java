@@ -1,5 +1,6 @@
 package com.mygdx.game.ds;
 
+import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -29,11 +30,18 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.FireBaseInterface;
 import com.mygdx.game.FirebaseManager;
 import com.mygdx.game.MoneySystem;
+import com.mygdx.game.components.AttackComponent;
 import com.mygdx.game.components.HeroComponent;
+import com.mygdx.game.components.MonsterComponent;
+import com.mygdx.game.components.PositionComponent;
+import com.mygdx.game.components.PriceComponent;
+import com.mygdx.game.components.SpriteComponent;
 import com.mygdx.game.entities.DisplayHero;
 import com.mygdx.game.entities.HeroFactory;
+import com.mygdx.game.entities.MonsterFactory;
 import com.mygdx.game.types.HeroType;
 import com.mygdx.game.ds.buttons.DisplayHeroButton;
+import com.mygdx.game.types.MonsterType;
 
 import java.util.List;
 
@@ -52,8 +60,8 @@ public class Board extends Actor {
     private final SpriteBatch batch;
 
     private final int yOffset = 0;  // Add yOffset for moving textures up or down
-    private final int xOffset = 225; // Add xOffset for moving textures right (previously 315)
-    private final int dashOffset = 225; // Add dashOffset for moving dashed lines right (previously 315)
+    private int xOffset = Gdx.graphics.getWidth()/8; // Add xOffset for moving textures right
+    private int dashOffset = Gdx.graphics.getWidth()/8; // Add dashOffset for moving dashed lines right
 
     private Texture[] buttonTextures;
     private Texture[] displayTextures;
@@ -63,14 +71,16 @@ public class Board extends Actor {
 
     private Array<DisplayHero> displayHeroes;
     private Array<DisplayHeroButton> displayHeroButtons;
+    private Array<Entity> displayMonsters;
 
     private boolean placeHero = false;
-
     private HeroType chosenHeroType;
+    private MonsterType chosenMonsterType;
     private final InputMultiplexer multiplexer;
     private final int gridWidth, gridHeight, startX, startY;
     private boolean gridDrawn;
     private boolean isInputProcessorAdded;
+    private int rightPaneWidth;
     private final Engine engine;
     private final MoneySystem moneySystem = new MoneySystem(8000);
     private FireBaseInterface firebaseInterface;
@@ -103,7 +113,9 @@ public class Board extends Actor {
         batch = new SpriteBatch();
         loadDisplayTextures();
         setDisplayHeroes();
+        setDisplayMonsters();
         initButtonTextures();
+        //setupInputProcessor();
         displayHeroButtons = new Array<>();
         createDisplayHeroButtons(displayHeroes);
         multiplexer = new InputMultiplexer();
@@ -120,7 +132,7 @@ public class Board extends Actor {
         BitmapFont font = new BitmapFont();
         font.getData().setScale(3.5f);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        Texture counterIcon = new Texture("coin.png");
+        Texture counterIcon = new Texture("images/coin.png");
 
         this.batch.begin();
         font.draw(batch, String.valueOf(moneySystem.getMoney()), iconX + iconSize * 1.5f, iconY + iconSize * 0.75f);
@@ -198,11 +210,10 @@ public class Board extends Actor {
         this.batch.end();
 
         drawDisplayHeroButtons();
+        drawDisplayMonsterButtons();
         this.stage.act();
         this.stage.draw();
         drawCounter();
-
-
 
     }
 
@@ -228,14 +239,19 @@ public class Board extends Actor {
         // Add your logic here for when a cell is clicked
         System.out.println("Cell clicked: row " + row + ", col " + col);
         int displayPanelWidth = Gdx.graphics.getWidth() / 8;
-        int middleOfCellX = (int) (((col + 0.5) * cellWidth)) + displayPanelWidth ;
-        int middleOfCellY = (int) ((row + 0.5) * cellHeight);
+        int middleOfCellX = (col * cellWidth) + displayPanelWidth;
+        int middleOfCellY = row * cellHeight;
 
         System.out.print(" x: " + middleOfCellX + " y: " + middleOfCellY);
-        Vector2 heroPlacement = new Vector2(middleOfCellX, middleOfCellY);
+        Vector2 entityPlacement = new Vector2(middleOfCellX, middleOfCellY);
+
         //Creates new hero entity and sets its position to the middle of the clicked cell
         getChosenHeroType();
-        placeHero(heroPlacement);
+        placeHero(entityPlacement);
+
+        //Creates a new monster entity and places it in the midddle of the cell
+        getChosenMonsterType();
+        placeMonster(entityPlacement);
 
         System.out.println("Cell clicked: row " + row + ", col " + col);
         moneySystem.removeMoney(450);
@@ -245,7 +261,6 @@ public class Board extends Actor {
         fetchData("highScores");
 
     }
-
 
     public void drawHeroes() {
         for (int row = 0; row < rows; row++) {
@@ -308,9 +323,58 @@ public class Board extends Actor {
         }
     }
 
+    public void drawDisplayMonsterButtons() {
+        float circleRadius = Gdx.graphics.getHeight() / 15;
+        int diameter = (int) ((circleRadius * 2) + 5);
+        Texture circleTexture = createWhiteCircle(circleRadius);
+
+        BitmapFont font = new BitmapFont(); // Create a BitmapFont instance
+        font.getData().setScale(2); // Increase the font size
+        Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE); // Set the font and color (white) for the label style
+
+        for (final Entity button : displayMonsters) {
+            Group buttonGroup = new Group();
+            Texture sprite = button.getComponent(SpriteComponent.class).getSprite();
+            Vector2 position = button.getComponent(PositionComponent.class).getPosition();
+
+            // Button background
+            Image circle = new Image(circleTexture);
+            circle.setPosition((screenWidth - circle.getWidth() - (((rightPaneWidth - circle.getWidth()) / 2))), position.y);
+            circle.setSize(diameter, diameter);
+            buttonGroup.addActor(circle);
+
+            // Button with monster-texture
+            final Button buttonClickable = new Button(new TextureRegionDrawable(new TextureRegion(sprite)));
+            buttonClickable.setPosition((screenWidth - circle.getWidth() - (((rightPaneWidth - circle.getWidth()) / 2))), position.y);
+            buttonClickable.setSize(screenWidth / 12, screenHeight / 7);
+
+
+            final MonsterType monsterType = button.getComponent(MonsterComponent.class).getMonsterType();
+            buttonClickable.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    System.out.println("Button position: (" + monsterType + ", at " + buttonClickable.getX() + ", " + buttonClickable.getY() + ")");
+                    setChosenMonsterType(monsterType);
+                }
+            });
+            buttonGroup.addActor(buttonClickable);
+
+            int price = button.getComponent(PriceComponent.class).getPrice();
+            // Create the label for the button number
+            Label buttonNumber = new Label(Integer.toString(price), labelStyle);
+
+            // Adjust the label's position to be centered horizontally and vertically below the button
+            float labelX = screenWidth - (rightPaneWidth / 2);
+            float labelY = position.y - (buttonNumber.getHeight() * 1.5f);
+            buttonNumber.setPosition(labelX, labelY);
+
+            buttonGroup.addActor(buttonNumber); // Add the label to the buttonGroup
+            stage.addActor(buttonGroup); // Add the buttonGroup to the stage
+        }
+    }
 
     public void drawDisplayHeroButtons() {
-        float circleRadius = Gdx.graphics.getHeight() / 15;
+        float circleRadius = Gdx.graphics.getHeight() / 15f;
         int diameter = (int) ((circleRadius * 2) + 5);
         Texture circleTexture = createWhiteCircle(circleRadius);
 
@@ -331,8 +395,8 @@ public class Board extends Actor {
 
             // Button with hero-texture
             final Button buttonClickable = new Button(new TextureRegionDrawable(new TextureRegion(button.getTexture())));
-            buttonClickable.setPosition(button.getPosition().x, button.getPosition().y);
-            buttonClickable.setSize(button.getWidth() - 30, button.getHeight() - 40);
+            buttonClickable.setPosition(button.getPosition().x - (screenWidth / 130), button.getPosition().y);
+            buttonClickable.setSize(screenWidth / 16, screenHeight / 7);
 
             // Event listener
             buttonClickable.addListener(new ClickListener() {
@@ -369,6 +433,14 @@ public class Board extends Actor {
         }
      */
 
+    public MonsterType getChosenMonsterType() {
+        return chosenMonsterType;
+    }
+
+    public void setChosenMonsterType(MonsterType monsterType) {
+        this.chosenMonsterType = monsterType;
+    }
+
     private void setChosenHeroType(HeroType heroType) {
         this.chosenHeroType = heroType;
         this.placeHero = !this.placeHero;
@@ -386,6 +458,31 @@ public class Board extends Actor {
             System.out.println("all heroes: :)");
             for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class).get())) {
                 System.out.println(e.getComponent(HeroComponent.class).getHeroType());
+            }
+        }
+    }
+
+    private void placeMonster(Vector2 placementPosition) {
+        if (chosenMonsterType != null) {
+            //Check if monster is already placed in the cell
+            boolean cellHasMonster = false;
+            float epsilon = 0.0001f;
+            ComponentMapper<PositionComponent> positionMapper;
+            positionMapper = ComponentMapper.getFor(PositionComponent.class);
+            for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class, AttackComponent.class).get())) {
+                PositionComponent position = positionMapper.get(e);
+                Vector2 monsterPos = position.getPosition();
+                if (monsterPos.epsilonEquals(placementPosition, epsilon)) {
+                    System.out.println("There is already a monster in this cell");
+                    cellHasMonster = true;
+                    break;
+                }
+            }
+            //Place a new monster entity at the given position if the cell is empty
+            if (!cellHasMonster) {
+                Entity monster = MonsterFactory.createMonster(getChosenMonsterType(), placementPosition);
+                engine.addEntity(monster);
+                System.out.println("Created new monster entity and added to game engine");
             }
         }
     }
@@ -410,10 +507,9 @@ public class Board extends Actor {
         shapeRenderer.rect(0, 0, Gdx.graphics.getWidth() / 8, Gdx.graphics.getHeight());
 
         // Draw right pane background with increased padding
-        float padding = 80;
-        float rightPaneWidth = Gdx.graphics.getWidth() / 8;
+        rightPaneWidth = (Gdx.graphics.getWidth() / 8);
         shapeRenderer.setColor(leftRightPaneColor);
-        shapeRenderer.rect(Gdx.graphics.getWidth() - rightPaneWidth - padding, 0, rightPaneWidth + padding, Gdx.graphics.getHeight());
+        shapeRenderer.rect(Gdx.graphics.getWidth() - rightPaneWidth, 0, rightPaneWidth, Gdx.graphics.getHeight());
 
         shapeRenderer.end();
     }
@@ -432,6 +528,13 @@ public class Board extends Actor {
         }
     }
 
+    public int getTextureWidth() {
+        return textureWidth;
+    }
+
+    public int getTextureHeight() {
+        return textureHeight;
+    }
 
     public void drawLaneDividers() {
         int dashLength = 10;
@@ -464,7 +567,7 @@ public class Board extends Actor {
         displayTexturePositions = new Vector2[displayTexturesCount];
 
         for (int i = 0; i < displayTexturesCount; i++) {
-            displayTextures[i] = new Texture("characterIcon" + (i + 1) + ".png");
+            displayTextures[i] = new Texture("images/characterIcon" + (i + 1) + ".png");
             displayTexturePositions[i] = new Vector2(20, 20 + (i * (textureHeight + 20)));
         }
     }
@@ -484,10 +587,26 @@ public class Board extends Actor {
         this.displayHeroes.add(thor);
     }
 
+    public void setDisplayMonsters() {
+        displayMonsters = new Array<>();
+        Entity magneto = MonsterFactory.createDisplayMonster(MonsterType.MAGNETO, new Vector2(displayTexturePositions[0].x, displayTexturePositions[0].y + textureHeight / 2));
+        Entity juggernaut = MonsterFactory.createDisplayMonster(MonsterType.JUGGERNAUT, new Vector2(displayTexturePositions[1].x + textureWidth/3, displayTexturePositions[1].y + textureHeight / 2));
+        Entity venom = MonsterFactory.createDisplayMonster(MonsterType.VENOM, new Vector2(displayTexturePositions[2].x + textureWidth/3, displayTexturePositions[2].y + textureHeight / 2));
+        Entity hoboblin = MonsterFactory.createDisplayMonster(MonsterType.HOBGOBLIN, new Vector2(displayTexturePositions[3].x + textureWidth/3, displayTexturePositions[3].y + textureHeight / 2));
+        Entity goblin_glider = MonsterFactory.createDisplayMonster(MonsterType.GOBLIN_GLIDER, new Vector2(displayTexturePositions[4].x + textureWidth/3, displayTexturePositions[4].y + textureHeight / 2));
+
+        this.displayMonsters.add(magneto);
+        this.displayMonsters.add(juggernaut);
+        this.displayMonsters.add(venom);
+        this.displayMonsters.add(hoboblin);
+        this.displayMonsters.add(goblin_glider);
+    }
+
     private void dispose() {
         for (Texture buttonTexture : buttonTextures) {
             buttonTexture.dispose();
         }
+        batch.dispose();
 
     }
 }

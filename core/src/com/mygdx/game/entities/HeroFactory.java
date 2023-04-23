@@ -18,7 +18,7 @@ public class HeroFactory {
         Entity hero = new Entity();
         hero.add(new SpriteComponent(getHeroSprite(heroType)));
         hero.add(new PositionComponent(boardPosition));
-        hero.add(new AttackComponent(getHeroAttackDamage(heroType), getHeroAttackTimer(heroType), getHeroAttackTimeElapsed()));
+        hero.add(new AttackComponent(getHeroAttackTimer(heroType), getHeroAttackTimeElapsed(), getHeroAttackDamage(heroType)));
         hero.add(new HealthComponent(getHeroHealth()));
         hero.add(new HeroComponent(heroType));
         return hero;
@@ -35,19 +35,17 @@ public class HeroFactory {
     }
     
     private static Texture getHeroSprite(HeroType heroType) {
-        //TODO endre path her
-        Texture texture = null;
         switch (heroType) {
             case IRONMAN:
-                return new Texture(Gdx.files.internal("characterIcon3.png"));
+                return new Texture(Gdx.files.internal("images/Hero_2.png"));
             case HULK:
-                return new Texture(Gdx.files.internal("characterIcon1.png"));
+                return new Texture(Gdx.files.internal("images/Hero_5.png"));
             case SPIDERMAN:
-                return new Texture(Gdx.files.internal("characterIcon2.png"));
+                return new Texture(Gdx.files.internal("images/Hero_1.png"));
             case THOR:
-                return new Texture(Gdx.files.internal("characterIcon4.png"));
+                return new Texture(Gdx.files.internal("images/Hero_3.png"));
             case CAPTAIN_AMERICA:
-                return new Texture(Gdx.files.internal("characterIcon5.png"));
+                return new Texture(Gdx.files.internal("images/Hero_4.png"));
             default:
                 return null;
         }
@@ -114,13 +112,13 @@ public class HeroFactory {
     private static float getHeroAttackTimer(HeroType heroType) {
         switch (heroType) {
             case IRONMAN:
-                return 6f;
-            case HULK:
-                return 8f;
-            case SPIDERMAN:
-                return 5.5f;
-            case THOR:
                 return 6.5f;
+            case HULK:
+                return 9f;
+            case SPIDERMAN:
+                return 6f;
+            case THOR:
+                return 7.5f;
             case CAPTAIN_AMERICA:
                 return 7f;
             default:

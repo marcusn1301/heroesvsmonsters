@@ -23,6 +23,7 @@ public class SettingsState extends State {
     private Boolean isBlack;
     private final CircleButton exitButton;
     private final RectangleButton leaveGameButton;
+    private final RectangleButton settingsHeader;
     private final Slider audioBar;
     private final Slider sfxBar;
     private Texture bgImage;
@@ -31,35 +32,25 @@ public class SettingsState extends State {
     public SettingsState(Enums.SettingsBackground bg, Enums.GameType type) {
         gsm = GameStateManager.getGsm();
         font = new BitmapFont();
+        font.getData().setScale(3f);
         gameType = type;
 
         switch (bg) {
             case MENU:
                 bgColor = new ArrayList<>(Arrays.asList(0.0f, 0.0f, 0.7f, 1f));
-                bgImage = new Texture("City.jpg");
+                bgImage = new Texture("images/City.jpg");
                 isBlack = false;
                 break;
             case CITY:
                 bgColor = new ArrayList<>(Arrays.asList(0.35f, 0.35f, 0.35f, 1f));
-                bgImage = new Texture("City.jpg");
+                bgImage = new Texture("images/City.jpg");
                 isBlack = false;
                 break;
         }
 
-        switch (type) {
-            //Replace with leave game button when implemented
-            case SINGLEPLAYER:
-                leaveGameButton = new RectangleButton(0.7f, Gdx.graphics.getWidth() / 2, 30, "Lobby-button.png");
-                break;
-            case MULTIPLAYER:
-                leaveGameButton = new RectangleButton(0.7f, Gdx.graphics.getWidth() / 2, 30, "Lobby-button.png");
-                break;
-            default:
-                //For testing
-                leaveGameButton = new RectangleButton(0.7f, Gdx.graphics.getWidth() / 2, 30, "Lobby-button.png");
-        }
-
-        exitButton = new CircleButton(70, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 140, "redExitCross.png");
+        leaveGameButton = new RectangleButton(0.7f, Gdx.graphics.getWidth() / 2, 30, "images/leave-game.png");
+        exitButton = new CircleButton(70, Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - 140, "images/redExitCross.png");
+        settingsHeader = new RectangleButton(1f, null, Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / 4, "images/settings.png");
         audioBar = new Slider(Enums.SliderType.AUDIO, 800, 30, 100);
         sfxBar = new Slider(Enums.SliderType.SFX, 800, 30, -100);
         if (isBlack) {
@@ -70,24 +61,10 @@ public class SettingsState extends State {
     }
 
     private void renderText(SpriteBatch sb) {
-        font.getData().setScale(8f);
-        GlyphLayout glyphLayout = new GlyphLayout();
-        glyphLayout.setText(font, "Settings");
-        font.draw(sb, "Settings", Gdx.graphics.getWidth() / 2f - glyphLayout.width / 2, Gdx.graphics.getHeight() - 80);
-        font.getData().setScale(3f);
         font.draw(sb, "Audio", Gdx.graphics.getWidth() / 2f - 400, Gdx.graphics.getHeight() / 2f + 170);
         font.draw(sb, "SFX", Gdx.graphics.getWidth() / 2f - 400, Gdx.graphics.getHeight() / 2f -30);
     }
 
-    private void renderExitButton(SpriteBatch sb) {
-        sb.draw(exitButton.getImg(), exitButton.getPosition().x - 40, exitButton.getPosition().y - 40, 80, 80);
-    }
-    private void renderAudioBar() {
-        audioBar.render();
-    }
-    private void renderSfxBar() {
-        sfxBar.render();
-    }
     private void renderLeaveGame(SpriteBatch sb) {
         switch (gameType) {
             case SINGLEPLAYER:
@@ -110,11 +87,12 @@ public class SettingsState extends State {
         sb.begin();
         sb.draw(bgImage, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         renderText(sb);
-        renderExitButton(sb);
+        settingsHeader.render(sb);
+        exitButton.render(sb);
         renderLeaveGame(sb);
         sb.end();
-        renderAudioBar();
-        renderSfxBar();
+        audioBar.render();
+        sfxBar.render();
     }
 
     @Override
@@ -123,7 +101,7 @@ public class SettingsState extends State {
             float touchX = Gdx.input.getX();
             float touchY = Gdx.graphics.getHeight() - Gdx.input.getY();
             if (exitButton.getBounds().contains(touchX, touchY)) {
-                //dispose();
+                dispose();
                 gsm.pop();
             } else if(leaveGameButton.getBounds().contains(touchX, touchY)) {
                 gsm.set(new GameMenuState());
@@ -136,9 +114,9 @@ public class SettingsState extends State {
 
     @Override
     public void dispose() {
+        font.dispose();
         audioBar.dispose();
         sfxBar.dispose();
-        font.dispose();
     }
 
 

@@ -18,25 +18,23 @@ public class ProjectileFactory {
         Entity projectile = new Entity();
         projectile.add(new ProjectileComponent(true, getProjectileSpeed(heroType), sourceEntity));
         projectile.add(new SpriteComponent(getProjectileSprite(heroType)));
-        projectile.add(new CollisionComponent(new Rectangle(startingPosition.x, startingPosition.y, 10f, 10f)));
+        projectile.add(new CollisionComponent(new Rectangle(startingPosition.x, startingPosition.y, Gdx.graphics.getWidth()/30f, Gdx.graphics.getHeight()/30f)));
         projectile.add(new PositionComponent(startingPosition));
         return projectile;
     }
 
     private static Texture getProjectileSprite(HeroType heroType) {
-        //TODO endre path til en projectile
-        Texture texture = null;
         switch (heroType) {
             case IRONMAN:
-                return new Texture(Gdx.files.internal("ironManShoots.png"));
+                return new Texture(Gdx.files.internal("images/ironManShoots.png"));
             case HULK:
-                return new Texture(Gdx.files.internal("rock.png"));
+                return new Texture(Gdx.files.internal("images/rock.png"));
             case SPIDERMAN:
-                return new Texture(Gdx.files.internal("web.png"));
+                return new Texture(Gdx.files.internal("images/web.png"));
             case THOR:
-                return new Texture(Gdx.files.internal("lightning.png"));
+                return new Texture(Gdx.files.internal("images/lightning.png"));
             case CAPTAIN_AMERICA:
-                return new Texture(Gdx.files.internal("shield.png"));
+                return new Texture(Gdx.files.internal("images/shield.png"));
             default:
                 return null;
         }
