@@ -13,7 +13,7 @@ public class CoreInterfaceClass implements FireBaseInterface {
     }
 
     @Override
-    public void SetOnValueChangedListener() {
+    public void SetOnValueChangedListener(String target) {
 
     }
 

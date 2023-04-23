@@ -12,7 +12,7 @@ public class DesktopInterfaceClass implements FireBaseInterface {
     }
 
     @Override
-    public void SetOnValueChangedListener() {
+    public void SetOnValueChangedListener(String target) {
 
     }
 
