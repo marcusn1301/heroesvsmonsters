@@ -8,7 +8,7 @@ public class HealthComponent implements Component {
         this.health = health;
     }
 
-    public float getHealth() {
+    public int getHealth() {
         return health;
     }
 

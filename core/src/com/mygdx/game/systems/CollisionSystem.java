@@ -17,48 +17,48 @@ import com.mygdx.game.components.SpriteComponent;
 import com.mygdx.game.components.WaveComponent;
 
 public class CollisionSystem extends IteratingSystem {
-    private ComponentMapper<HealthComponent> healthMapper;
-    private ComponentMapper<PositionComponent> positionMapper;
     private ComponentMapper<CollisionComponent> collisionMapper;
-    private ComponentMapper<MonsterComponent> monsterMapper;
     private ComponentMapper<ProjectileComponent> projectileMapper;
     private ComponentMapper<HeroComponent> heroMapper;
     private ComponentMapper<WaveComponent> waveMapper;
+    private ComponentMapper<HealthComponent> healthMapper;
     private ImmutableArray<Entity> monsters;
     private Engine engine;
 
     public CollisionSystem(Engine engine) {
         super(Family.all(PositionComponent.class, CollisionComponent.class).get());
-        positionMapper = ComponentMapper.getFor(PositionComponent.class);
         collisionMapper = ComponentMapper.getFor(CollisionComponent.class);
-        monsterMapper = ComponentMapper.getFor(MonsterComponent.class);
         projectileMapper = ComponentMapper.getFor(ProjectileComponent.class);
         heroMapper = ComponentMapper.getFor(HeroComponent.class);
         waveMapper = ComponentMapper.getFor(WaveComponent.class);
+        healthMapper = ComponentMapper.getFor(HealthComponent.class);
         this.engine = engine;
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        PositionComponent position = positionMapper.get(entity);
         CollisionComponent collision = collisionMapper.get(entity);
-        ProjectileComponent projectile = projectileMapper.get(entity);
-        HeroComponent hero = heroMapper.get(entity);
 
         //Check if projectile has collided with a monster
         if (projectileMapper.has(entity)) {
             for (Entity monster : engine.getEntitiesFor(Family.all(MonsterComponent.class, CollisionComponent.class).get())) {
                 CollisionComponent monsterCollision = collisionMapper.get(monster);
+                HealthComponent monsterHealth = healthMapper.get(monster);
                 if (collision.getHitbox().overlaps(monsterCollision.getHitbox())) {
+                    //Remove projectile on collision
                     engine.removeEntity(entity);
-                    engine.removeEntity(monster);
-                    Entity waveEntity = engine.getEntitiesFor(Family.all(WaveComponent.class).get()).first();
-                    WaveComponent waveComponent = waveMapper.get(waveEntity);
-                    //Increase the kill amount
-                    waveComponent.setMonstersKilled(waveComponent.getMonstersKilled() + 1);
-                    //Increase the score
-                    waveComponent.setScore(waveComponent.getScore() + 500);
-                    break;
+                    if (monsterHealth.getHealth() - 1 <= 0) {
+                        engine.removeEntity(monster);
+                        Entity waveEntity = engine.getEntitiesFor(Family.all(WaveComponent.class).get()).first();
+                        WaveComponent waveComponent = waveMapper.get(waveEntity);
+                        //Increase the kill amount
+                        waveComponent.setMonstersKilled(waveComponent.getMonstersKilled() + 1);
+                        //Increase the score
+                        waveComponent.setScore(waveComponent.getScore() + 500);
+                        break;
+                    } else {
+                        monsterHealth.setHealth(monsterHealth.getHealth() - 1);
+                    }
                 }
             }
         }

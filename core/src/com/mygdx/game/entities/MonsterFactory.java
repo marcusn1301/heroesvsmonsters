@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.components.AttackComponent;
 import com.mygdx.game.components.CollisionComponent;
+import com.mygdx.game.components.HealthComponent;
 import com.mygdx.game.components.MonsterComponent;
 import com.mygdx.game.components.MovementSpeedComponent;
 import com.mygdx.game.components.PositionComponent;
@@ -22,6 +23,7 @@ public class MonsterFactory {
         monster.add(new PositionComponent(boardPosition));
         monster.add(new MonsterComponent(monsterType, getMonsterMovementSpeed(monsterType)));
         monster.add(new CollisionComponent(new Rectangle(boardPosition.x, boardPosition.y, Gdx.graphics.getWidth()/30f, Gdx.graphics.getHeight()/10f)));
+        monster.add(new HealthComponent(2));
         return monster;
     }
 
