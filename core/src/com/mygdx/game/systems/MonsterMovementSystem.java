@@ -11,10 +11,10 @@ import com.mygdx.game.components.MonsterComponent;
 import com.mygdx.game.components.PositionComponent;
 
 public class MonsterMovementSystem extends IteratingSystem {
-    private ComponentMapper<MonsterComponent> monsterMapper;
-    private ComponentMapper<PositionComponent> positionMapper;
-    private ComponentMapper<CollisionComponent> collisionMapper;
-    private Engine engine;
+    private final ComponentMapper<MonsterComponent> monsterMapper;
+    private final ComponentMapper<PositionComponent> positionMapper;
+    private final ComponentMapper<CollisionComponent> collisionMapper;
+    private final Engine engine;
 
     public MonsterMovementSystem(Engine engine) {
         super(Family.all(MonsterComponent.class, PositionComponent.class).get());
@@ -36,7 +36,7 @@ public class MonsterMovementSystem extends IteratingSystem {
         collision.setHitbox(collision.getHitbox().setPosition(monsterPos.getPosition()));
 
         //Remove monsters that are out of bounds
-        if (monsterPos.getPosition().x <= 0 + Gdx.graphics.getWidth() / 8) {
+        if (monsterPos.getPosition().x <= 0 + Gdx.graphics.getWidth() / 8f) {
             entity.removeAll();
             engine.removeEntity(entity);
         }

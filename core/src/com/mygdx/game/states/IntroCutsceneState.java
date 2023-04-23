@@ -24,12 +24,12 @@ public class IntroCutsceneState extends State {
     private int phase;
 
     public IntroCutsceneState() {
-        cityBackground = new Texture("City.jpg");
-        explosionsBackground = new Texture("Explosions.png");
-        nick = new Texture("Nick.png");
-        speech_1 = new Texture("speech_1.png");
-        speech_2 = new Texture("speech_2.png");
-        speech_3 = new Texture("speech_3.png");
+        cityBackground = new Texture("images/City.jpg");
+        explosionsBackground = new Texture("images/Explosions.png");
+        nick = new Texture("images/Nick.png");
+        speech_1 = new Texture("images/speech_1.png");
+        speech_2 = new Texture("images/speech_2.png");
+        speech_3 = new Texture("images/speech_3.png");
 
         gsm = GameStateManager.getGsm();
 

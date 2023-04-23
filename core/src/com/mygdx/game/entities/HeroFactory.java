@@ -37,15 +37,15 @@ public class HeroFactory {
     private static Texture getHeroSprite(HeroType heroType) {
         switch (heroType) {
             case IRONMAN:
-                return new Texture(Gdx.files.internal("Hero_2.png"));
+                return new Texture(Gdx.files.internal("images/Hero_2.png"));
             case HULK:
-                return new Texture(Gdx.files.internal("Hero_5.png"));
+                return new Texture(Gdx.files.internal("images/Hero_5.png"));
             case SPIDERMAN:
-                return new Texture(Gdx.files.internal("Hero_1.png"));
+                return new Texture(Gdx.files.internal("images/Hero_1.png"));
             case THOR:
-                return new Texture(Gdx.files.internal("Hero_3.png"));
+                return new Texture(Gdx.files.internal("images/Hero_3.png"));
             case CAPTAIN_AMERICA:
-                return new Texture(Gdx.files.internal("Hero_4.png"));
+                return new Texture(Gdx.files.internal("images/Hero_4.png"));
             default:
                 return null;
         }
