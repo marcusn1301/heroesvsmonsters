@@ -21,7 +21,7 @@ public class MonsterFactory {
         monster.add(new SpriteComponent(getMonsterSprite(monsterType)));
         monster.add(new PositionComponent(boardPosition));
         monster.add(new MonsterComponent(monsterType, getMonsterMovementSpeed(monsterType)));
-        monster.add(new CollisionComponent(new Rectangle(boardPosition.x, boardPosition.y, Gdx.graphics.getWidth()/30f, Gdx.graphics.getHeight()/30f)));
+        monster.add(new CollisionComponent(new Rectangle(boardPosition.x, boardPosition.y, Gdx.graphics.getWidth()/30f, Gdx.graphics.getHeight()/10f)));
         return monster;
     }
 

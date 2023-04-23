@@ -21,6 +21,7 @@ public class MonsterMovementSystem extends IteratingSystem {
         monsterMapper = ComponentMapper.getFor(MonsterComponent.class);
         positionMapper = ComponentMapper.getFor(PositionComponent.class);
         collisionMapper = ComponentMapper.getFor(CollisionComponent.class);
+
         this.engine = engine;
 
     }
