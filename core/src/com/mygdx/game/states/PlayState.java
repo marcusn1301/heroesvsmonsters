@@ -181,13 +181,13 @@ public class PlayState extends State{
             monsterToKill = e.getComponent(WaveComponent.class).getMonstersToKill();
         }
 
-        font.setColor(Color.RED);
+        font.setColor(Color.WHITE);
         font.getData().setScale(3.0f);
         font.draw(batch, "Wave: " + waveCount, screenWidth/7.5f, screenHeight - screenHeight/25f);
         font.draw(batch, "Total kills: " + totalKills + "/" + monsterToKill, screenWidth/4f, screenHeight - screenHeight/25f);
-        font.draw(batch, "Monster left: " + monsterCount, screenWidth - screenWidth/2.3f, screenHeight - screenHeight/25f);
-        font.setColor(Color.WHITE);
         font.draw(batch, "Score: " + score, screenWidth/2.4f, screenHeight - screenHeight/25f);
+        font.setColor(Color.RED);
+        font.draw(batch, "Monster left: " + monsterCount, screenWidth - screenWidth/2.3f, screenHeight - screenHeight/25f);
     }
 
     @Override

@@ -322,7 +322,12 @@ public class Board extends Actor {
     public void drawDisplayMonsterButtons() {
         float circleRadius = Gdx.graphics.getHeight() / 15;
         int diameter = (int) ((circleRadius * 2) + 5);
-        Texture circleTexture = createWhiteCircle(circleRadius);
+        Texture circleTexture;
+        if (chosenMonsterType != null) {
+            circleTexture = createCircle(circleRadius, Color.RED);
+        } else {
+            circleTexture = createCircle(circleRadius, Color.WHITE);
+        }
 
         BitmapFont font = new BitmapFont(); // Create a BitmapFont instance
         font.getData().setScale(2); // Increase the font size
@@ -372,7 +377,12 @@ public class Board extends Actor {
     public void drawDisplayHeroButtons() {
         float circleRadius = Gdx.graphics.getHeight() / 15f;
         int diameter = (int) ((circleRadius * 2) + 5);
-        Texture circleTexture = createWhiteCircle(circleRadius);
+        Texture circleTexture;
+        if (chosenHeroType != null) {
+            circleTexture = createCircle(circleRadius, Color.ROYAL);
+        } else {
+            circleTexture = createCircle(circleRadius, Color.WHITE);
+        }
 
         BitmapFont font = new BitmapFont(); // Create a BitmapFont instance
         font.getData().setScale(2); // Increase the font size
@@ -508,10 +518,10 @@ public class Board extends Actor {
         }
     }
 
-    private Texture createWhiteCircle(float circleRadius) {
+    private Texture createCircle(float circleRadius, Color color) {
         int diameter = (int) (circleRadius * 2);
         Pixmap pixmap = new Pixmap(diameter, diameter, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.WHITE);
+        pixmap.setColor(color);
         pixmap.fillCircle(diameter / 2, diameter / 2, (int) circleRadius);
         Texture circleTexture = new Texture(pixmap);
         pixmap.dispose();
