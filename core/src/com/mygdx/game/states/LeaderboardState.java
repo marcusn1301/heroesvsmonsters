@@ -33,8 +33,8 @@ public class LeaderboardState extends State {
         highscoreHeader = new RectangleButton(0.7f, null, Gdx.graphics.getHeight() - 160, "images/highscore.png");
         trophies = new ArrayList<>();
         trophies.add(new RectangleButton(0.15f, Gdx.graphics.getWidth() / 4 - 70, (int)(Gdx.graphics.getHeight() / 1.4 - (Gdx.graphics.getHeight() / 28)),"images/trophy.png"));
-        trophies.add(new RectangleButton(0.15f, Gdx.graphics.getWidth() / 4 - 70, (int)(Gdx.graphics.getHeight() / 1.4 - (Gdx.graphics.getHeight() / 9.4)), "images/trophy.png"));
-        trophies.add(new RectangleButton(0.15f, Gdx.graphics.getWidth() / 4 - 70, (int)(Gdx.graphics.getHeight() / 1.4 - (Gdx.graphics.getHeight() / 5.6)), "images/trophy.png"));
+        trophies.add(new RectangleButton(0.15f, Gdx.graphics.getWidth() / 4 - 70, (int)(Gdx.graphics.getHeight() / 1.4 - (Gdx.graphics.getHeight() / 9.4)), "images/Trophy_2.png"));
+        trophies.add(new RectangleButton(0.15f, Gdx.graphics.getWidth() / 4 - 70, (int)(Gdx.graphics.getHeight() / 1.4 - (Gdx.graphics.getHeight() / 5.6)), "images/Trophy_3.png"));
         trophies.subList(0, Math.min(entries.size(), 3));
         exitButton = new CircleButton(70, Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - 140, "images/redExitCross.png");
     }

@@ -39,17 +39,17 @@ public class MonsterFactory {
         //TODO legg til riktig bilde
         switch (monsterType) {
             case MAGNETO:
-                return new Texture(Gdx.files.internal("Monster_4.png"));
+                return new Texture(Gdx.files.internal("images/Monster_4.png"));
             case JUGGERNAUT:
-                return new Texture(Gdx.files.internal("Monster_5.png"));
+                return new Texture(Gdx.files.internal("images/Monster_5.png"));
             case VENOM:
-                return new Texture(Gdx.files.internal("Monster_1.png"));
+                return new Texture(Gdx.files.internal("images/Monster_1.png"));
             case HOBGOBLIN:
-                return new Texture(Gdx.files.internal("Monster_3.png"));
+                return new Texture(Gdx.files.internal("images/Monster_3.png"));
             case GOBLIN_GLIDER:
-                return new Texture(Gdx.files.internal("Monster_2.png"));
+                return new Texture(Gdx.files.internal("images/Monster_2.png"));
             case MYSTIQUE:
-                return new Texture(Gdx.files.internal("Monster_6.png"));
+                return new Texture(Gdx.files.internal("images/Monster_6.png"));
             default:
                 return null;
         }

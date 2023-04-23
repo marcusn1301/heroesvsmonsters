@@ -48,15 +48,7 @@ public class SettingsState extends State {
                 break;
         }
 
-        switch (type) {
-            case SINGLEPLAYER:
-            case MULTIPLAYER:
-                leaveGameButton = new RectangleButton(0.7f, Gdx.graphics.getWidth() / 2, 30, "images/leave-game.png");
-                break;
-            default:
-                leaveGameButton = null;
-        }
-
+        leaveGameButton = new RectangleButton(0.7f, Gdx.graphics.getWidth() / 2, 30, "images/leave-game.png");
         exitButton = new CircleButton(70, Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - 140, "images/redExitCross.png");
         settingsHeader = new RectangleButton(1f, null, Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / 4, "images/settings.png");
         audioBar = new Slider(Enums.SliderType.AUDIO, 800, 30, 100);
