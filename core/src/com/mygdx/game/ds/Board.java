@@ -123,7 +123,7 @@ public class Board extends Actor {
         BitmapFont font = new BitmapFont();
         font.getData().setScale(3.5f);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        Texture counterIcon = new Texture("coin2.png");
+        Texture counterIcon = new Texture("images/coin2.png");
 
         this.batch.begin();
         font.draw(batch, String.valueOf(moneySystem.getMoney()), iconX + iconSize * 1.5f, iconY + iconSize * 0.75f);
@@ -339,7 +339,7 @@ public class Board extends Actor {
     }
 
     public void drawDisplayHeroButtons() {
-        float circleRadius = Gdx.graphics.getHeight() / 15;
+        float circleRadius = Gdx.graphics.getHeight() / 15f;
         int diameter = (int) ((circleRadius * 2) + 5);
         Texture circleTexture = createWhiteCircle(circleRadius);
 
@@ -532,7 +532,7 @@ public class Board extends Actor {
         displayTexturePositions = new Vector2[displayTexturesCount];
 
         for (int i = 0; i < displayTexturesCount; i++) {
-            displayTextures[i] = new Texture("characterIcon" + (i + 1) + ".png");
+            displayTextures[i] = new Texture("images/characterIcon" + (i + 1) + ".png");
             displayTexturePositions[i] = new Vector2(20, 20 + (i * (textureHeight + 20)));
         }
     }

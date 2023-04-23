@@ -58,6 +58,10 @@ public class CircleButton {
     }
 
     public void render(SpriteBatch sb) {
-        sb.draw(img, position.x, position.y, radius * 2, radius * 2);
+        sb.draw(img, position.x - radius, position.y - radius, radius * 2, radius * 2);
+    }
+
+    public void dispose() {
+        shape.dispose();
     }
 }
