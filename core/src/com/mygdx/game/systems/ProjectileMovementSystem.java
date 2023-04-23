@@ -44,5 +44,6 @@ public class ProjectileMovementSystem extends IteratingSystem {
         float speed = projectileComponent.getVelocity();
         positionComponent.setPosition(positionComponent.getPosition().add(speed, 0));
         collisionComponent.setHitbox(collisionComponent.getHitbox().setPosition(positionComponent.getPosition()));
+
     }
 }

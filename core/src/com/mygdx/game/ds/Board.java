@@ -82,11 +82,9 @@ public class Board extends Actor {
     private boolean isInputProcessorAdded;
     private int rightPaneWidth;
     private final Engine engine;
-    private final MoneySystem moneySystem = new MoneySystem(8000);
     private FireBaseInterface firebaseInterface;
     private List<Integer> data;
-
-
+    private final MoneySystem moneySystem = new MoneySystem(1200);
 
 
 
@@ -132,12 +130,12 @@ public class Board extends Actor {
         BitmapFont font = new BitmapFont();
         font.getData().setScale(3.5f);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        Texture counterIcon = new Texture("images/coin.png");
+        Texture counterIcon = new Texture("images/coin2.png");
 
         this.batch.begin();
-        font.draw(batch, String.valueOf(moneySystem.getMoney()), iconX + iconSize * 1.5f, iconY + iconSize * 0.75f);
+        font.draw(batch, String.valueOf(moneySystem.getMoney()), iconX + iconSize * 1.5f - rightPaneWidth - 50, iconY + iconSize * 0.75f);
 
-        batch.draw(counterIcon, iconX, iconY, iconSize, iconSize);
+        batch.draw(counterIcon, iconX - 100, iconY, iconSize, iconSize);
         this.batch.end();
     }
 
@@ -246,20 +244,17 @@ public class Board extends Actor {
         Vector2 entityPlacement = new Vector2(middleOfCellX, middleOfCellY);
 
         //Creates new hero entity and sets its position to the middle of the clicked cell
-        getChosenHeroType();
-        placeHero(entityPlacement);
-
-        //Creates a new monster entity and places it in the midddle of the cell
-        getChosenMonsterType();
-        placeMonster(entityPlacement);
-
-        System.out.println("Cell clicked: row " + row + ", col " + col);
-        moneySystem.removeMoney(450);
-
+        if (getChosenHeroType() != null) {
+            placeHero(entityPlacement);
+            System.out.println("Cell clicked: row " + row + ", col " + col);
+            moneySystem.removeMoney(450);
+        } else if (getChosenMonsterType() != null) {
+            //Creates a new monster entity and places it in the midddle of the cell
+            placeMonster(entityPlacement);
+        }
         firebaseInterface.SetValueInDb("highScores", 12);
 
         fetchData("highScores");
-
     }
 
     public void drawHeroes() {
@@ -439,11 +434,12 @@ public class Board extends Actor {
 
     public void setChosenMonsterType(MonsterType monsterType) {
         this.chosenMonsterType = monsterType;
+        this.chosenHeroType = null;
     }
 
     private void setChosenHeroType(HeroType heroType) {
         this.chosenHeroType = heroType;
-        this.placeHero = !this.placeHero;
+        this.chosenMonsterType = null;
     }
 
     public HeroType getChosenHeroType() {
@@ -452,12 +448,25 @@ public class Board extends Actor {
 
     private void placeHero(Vector2 placementPosition) {
         if (chosenHeroType != null) {
-            Entity hero = HeroFactory.createHero(getChosenHeroType(), placementPosition);
-            engine.addEntity(hero);
-            System.out.println("Created new hero entity and added to game engine");
-            System.out.println("all heroes: :)");
-            for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class).get())) {
-                System.out.println(e.getComponent(HeroComponent.class).getHeroType());
+            //Check if hero is already placed in the cell
+            boolean cellHasHero = false;
+            float epsilon = 0.0001f;
+            ComponentMapper<PositionComponent> positionMapper;
+            positionMapper = ComponentMapper.getFor(PositionComponent.class);
+            for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class, AttackComponent.class).get())) {
+                PositionComponent position = positionMapper.get(e);
+                Vector2 heroPos = position.getPosition();
+                if (heroPos.epsilonEquals(placementPosition, epsilon)) {
+                    System.out.println("There is already a hero in this cell");
+                    cellHasHero = true;
+                    break;
+                }
+            }
+            //Place a new hero entity at the given position if the cell is empty
+            if (!cellHasHero) {
+                Entity hero = HeroFactory.createHero(getChosenHeroType(), placementPosition);
+                engine.addEntity(hero);
+                System.out.println("Created new hero entity and added to game engine");
             }
         }
     }
@@ -469,7 +478,7 @@ public class Board extends Actor {
             float epsilon = 0.0001f;
             ComponentMapper<PositionComponent> positionMapper;
             positionMapper = ComponentMapper.getFor(PositionComponent.class);
-            for (Entity e : engine.getEntitiesFor(Family.all(HeroComponent.class, AttackComponent.class).get())) {
+            for (Entity e : engine.getEntitiesFor(Family.all(MonsterComponent.class, AttackComponent.class).get())) {
                 PositionComponent position = positionMapper.get(e);
                 Vector2 monsterPos = position.getPosition();
                 if (monsterPos.epsilonEquals(placementPosition, epsilon)) {
