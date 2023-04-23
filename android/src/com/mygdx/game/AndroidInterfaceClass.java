@@ -21,7 +21,7 @@ public class AndroidInterfaceClass implements FireBaseInterface {
 
     public AndroidInterfaceClass() {
         database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("highScores");
+        //myRef = database.getReference("highScores");
     }
 
     @Override
@@ -31,16 +31,17 @@ public class AndroidInterfaceClass implements FireBaseInterface {
 
     @Override
     public void FirstFirebaseTest() {
-        if (myRef != null) {
+       /* if (myRef != null) {
             myRef.setValue("hello world");
         } else {
             System.out.println("dbRef was not set. Could not write to database.");
-        }
+        }*/
     }
 
     @Override
-    public void SetOnValueChangedListener() {
+    public void SetOnValueChangedListener(String target) {
         System.out.println("Yes I am running");
+        myRef = database.getReference(target);
 
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
@@ -69,8 +70,11 @@ public class AndroidInterfaceClass implements FireBaseInterface {
 
     @Override
     public void SetValueInDb(String target, Integer value) {
-        myRef = database.getReference(target);
-        myRef.push().setValue(value);
+        /*myRef = database.getReference(target);
+        myRef.push().setValue(value);*/
+
+        DatabaseReference targetRef = database.getReference(target);
+        targetRef.push().setValue(value);
 
         //TODO Sykt rart - myRef.listener fungerer ikke når det ikke er en string. Når det er en List kjører den ikke
        /* myRef = database.getReference("message");

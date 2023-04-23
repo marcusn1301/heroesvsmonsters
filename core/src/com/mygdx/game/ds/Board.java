@@ -217,8 +217,7 @@ public class Board extends Actor {
         moneySystem.removeMoney(450);
 
 
-        firebaseInterface.SetValueInDb("highScores", 33);
-        firebaseInterface.SetOnValueChangedListener();
+        firebaseInterface.SetOnValueChangedListener("highScores");
 
     }
 
