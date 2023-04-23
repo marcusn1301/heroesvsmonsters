@@ -52,6 +52,9 @@ public class PlayState extends State{
     private int screenWidth = Gdx.graphics.getWidth();
     private int screenHeight = Gdx.graphics.getHeight();
     private int monsterCount = 0;
+    private int waveCount = 0;
+    private int totalKills = 0;
+    private int monsterToKill = 0;
 
     public PlayState() {
         //super(gsm);
@@ -169,14 +172,19 @@ public class PlayState extends State{
         }
     }
 
-    public void renderMonsterCount(SpriteBatch batch) {
+    public void renderWaveInfo(SpriteBatch batch) {
         for (Entity e : engine.getEntitiesFor(Family.all(WaveComponent.class).get())) {
             monsterCount = e.getComponent(WaveComponent.class).getNumberOfMonsters();
-            break;
+            waveCount = e.getComponent(WaveComponent.class).getWaveNumber();
+            totalKills = e.getComponent(WaveComponent.class).getMonstersKilled();
+            monsterToKill = e.getComponent(WaveComponent.class).getMonstersToKill();
         }
+
         font.setColor(Color.RED);
         font.getData().setScale(3.0f);
-        font.draw(batch, "Monster left: " + monsterCount, screenWidth - screenWidth/2f, screenHeight - screenHeight/20f);
+        font.draw(batch, "Monster left: " + monsterCount, screenWidth - screenWidth/2.5f, screenHeight - screenHeight/20f);
+        font.draw(batch, "Wave: " + waveCount, screenWidth/4.5f, screenHeight - screenHeight/20f);
+        font.draw(batch, "Total kills: " + totalKills + "/" + monsterToKill, screenWidth/3f, screenHeight - screenHeight/20f);
     }
 
     @Override
@@ -190,7 +198,7 @@ public class PlayState extends State{
         renderHeroes(batch);
         renderProjectiles(batch);
         renderMonsters(batch);
-        renderMonsterCount(batch);
+        renderWaveInfo(batch);
         batch.draw(menuButton.getImg(), menuButton.getPosition().x - menuButton.getWidth() / 2f,10,  menuButton.getWidth(), menuButton.getHeight());
         batch.end();
 

@@ -11,6 +11,8 @@ public class WaveComponent implements Component {
     private int waveNumber;
     private float spawnTimer;
     private float waveTimeElapsed;
+    private int monstersKilled;
+    private int monstersToKill;
 
     public WaveComponent(int numberOfMonsters, int waveNumber) {
         this.numberOfMonsters = numberOfMonsters;
@@ -19,6 +21,8 @@ public class WaveComponent implements Component {
         this.isActive = false;
         this.spawnTimer = 5f;
         this.waveTimeElapsed = 0f;
+        this.monstersKilled = 0;
+        this.monstersToKill = numberOfMonsters;
     }
 
     public float getSpawnTimer() {
@@ -67,5 +71,20 @@ public class WaveComponent implements Component {
 
     public void setWaveTimeElapsed(float waveTimeElapsed) {
         this.waveTimeElapsed = waveTimeElapsed;
+    }
+    public int getMonstersKilled() {
+        return monstersKilled;
+    }
+
+    public void setMonstersKilled(int monstersKilled) {
+        this.monstersKilled = monstersKilled;
+    }
+
+    public int getMonstersToKill() {
+        return monstersToKill;
+    }
+
+    public void setMonstersToKill(int monstersToKill) {
+        this.monstersToKill = monstersToKill;
     }
 }

@@ -29,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.FireBaseInterface;
 import com.mygdx.game.FirebaseManager;
+import com.mygdx.game.components.WaveComponent;
 import com.mygdx.game.systems.MoneySystem;
 import com.mygdx.game.components.AttackComponent;
 import com.mygdx.game.components.HeroComponent;
@@ -489,10 +490,20 @@ public class Board extends Actor {
             }
             //Place a new monster entity at the given position if the cell is empty
             if (!cellHasMonster) {
-                placementPosition.x = Gdx.graphics.getWidth() - this.rightPaneWidth - this.textureWidth;
-                Entity monster = MonsterFactory.createMonster(getChosenMonsterType(), placementPosition);
-                engine.addEntity(monster);
-                System.out.println("Created new monster entity and added to game engine");
+                //Decrease the number of monsters left in the wave
+                Entity waveEntity = engine.getEntitiesFor(Family.all(WaveComponent.class).get()).get(0);
+                ComponentMapper<WaveComponent> waveMapper;
+                waveMapper = ComponentMapper.getFor(WaveComponent.class);
+                WaveComponent wave = waveMapper.get(waveEntity);
+
+                if (wave.getNumberOfMonsters() > 0) {
+                    wave.setNumberOfMonsters(wave.getNumberOfMonsters() - 1);
+                    //Place monster
+                    placementPosition.x = Gdx.graphics.getWidth() - this.rightPaneWidth - this.textureWidth;
+                    Entity monster = MonsterFactory.createMonster(getChosenMonsterType(), placementPosition);
+                    engine.addEntity(monster);
+                    System.out.println("Created new monster entity and added to game engine");
+                }
             }
         }
     }

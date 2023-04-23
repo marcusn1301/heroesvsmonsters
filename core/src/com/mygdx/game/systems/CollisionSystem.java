@@ -14,6 +14,7 @@ import com.mygdx.game.components.MonsterComponent;
 import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.ProjectileComponent;
 import com.mygdx.game.components.SpriteComponent;
+import com.mygdx.game.components.WaveComponent;
 
 public class CollisionSystem extends IteratingSystem {
     private ComponentMapper<HealthComponent> healthMapper;
@@ -22,6 +23,7 @@ public class CollisionSystem extends IteratingSystem {
     private ComponentMapper<MonsterComponent> monsterMapper;
     private ComponentMapper<ProjectileComponent> projectileMapper;
     private ComponentMapper<HeroComponent> heroMapper;
+    private ComponentMapper<WaveComponent> waveMapper;
     private ImmutableArray<Entity> monsters;
     private Engine engine;
 
@@ -32,6 +34,7 @@ public class CollisionSystem extends IteratingSystem {
         monsterMapper = ComponentMapper.getFor(MonsterComponent.class);
         projectileMapper = ComponentMapper.getFor(ProjectileComponent.class);
         heroMapper = ComponentMapper.getFor(HeroComponent.class);
+        waveMapper = ComponentMapper.getFor(WaveComponent.class);
         this.engine = engine;
     }
 
@@ -49,6 +52,9 @@ public class CollisionSystem extends IteratingSystem {
                 if (collision.getHitbox().overlaps(monsterCollision.getHitbox())) {
                     engine.removeEntity(entity);
                     engine.removeEntity(monster);
+                    Entity waveEntity = engine.getEntitiesFor(Family.all(WaveComponent.class).get()).first();
+                    WaveComponent waveComponent = waveMapper.get(waveEntity);
+                    waveComponent.setMonstersKilled(waveComponent.getMonstersKilled() + 1);
                     break;
                 }
             }

@@ -41,23 +41,22 @@ public class WaveSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         WaveComponent wave = waveMapper.get(entity);
 
-        //Wave duration is incremented
-        wave.setWaveTimeElapsed(wave.getWaveTimeElapsed() + deltaTime);
-        wave.setTimeSinceLastSpawn(wave.getTimeSinceLastSpawn() + deltaTime);
-
-        //Activate the current wave
-        if (wave.getWaveTimeElapsed() >= 3f && !wave.isActive()) {
+        //Begin new wave 5 seconds after all monsters are gone
+        if (wave.getWaveTimeElapsed() >= 5f && !wave.isActive()) {
             wave.setActive(true);
             System.out.println("Beginning wave " + wave.getWaveNumber());
-        }
-
-        //Begin a new wave after the given time
-        if (wave.getNumberOfMonsters() <= 0) {
-            //System.out.println("Ending wave " + wave.getWaveNumber());
-            wave.setActive(false);
             wave.setWaveNumber(wave.getWaveNumber() + 1);
             wave.setWaveTimeElapsed(0f);
             wave.setNumberOfMonsters(wave.getWaveNumber() + 2);
+            wave.setMonstersToKill(wave.getWaveNumber() + 2);
+            wave.setMonstersKilled(0);
+        }
+
+        //End wave and begin timer when all monsters are killed
+        if (wave.getMonstersKilled() == wave.getMonstersToKill()) {
+            //System.out.println("Ending wave " + wave.getWaveNumber());
+            wave.setActive(false);
+            wave.setWaveTimeElapsed(wave.getWaveTimeElapsed() + deltaTime);
         }
     }
 }
