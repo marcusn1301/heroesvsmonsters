@@ -3,6 +3,8 @@ package com.mygdx.game.states;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.badlogic.gdx.Gdx;
@@ -16,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.game.components.WaveComponent;
 import com.mygdx.game.systems.MoneySystem;
 import com.mygdx.game.SoundManager;
 import com.mygdx.game.components.AttackComponent;
@@ -48,6 +51,7 @@ public class PlayState extends State{
     private final GameStateManager gsm;
     private int screenWidth = Gdx.graphics.getWidth();
     private int screenHeight = Gdx.graphics.getHeight();
+    private int monsterCount = 0;
 
     public PlayState() {
         //super(gsm);
@@ -165,6 +169,16 @@ public class PlayState extends State{
         }
     }
 
+    public void renderMonsterCount(SpriteBatch batch) {
+        for (Entity e : engine.getEntitiesFor(Family.all(WaveComponent.class).get())) {
+            monsterCount = e.getComponent(WaveComponent.class).getNumberOfMonsters();
+            break;
+        }
+        font.setColor(Color.RED);
+        font.getData().setScale(3.0f);
+        font.draw(batch, "Monster left: " + monsterCount, screenWidth - screenWidth/2f, screenHeight - screenHeight/20f);
+    }
+
     @Override
     public void render(SpriteBatch batch) {
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
@@ -176,6 +190,7 @@ public class PlayState extends State{
         renderHeroes(batch);
         renderProjectiles(batch);
         renderMonsters(batch);
+        renderMonsterCount(batch);
         batch.draw(menuButton.getImg(), menuButton.getPosition().x - menuButton.getWidth() / 2f,10,  menuButton.getWidth(), menuButton.getHeight());
         batch.end();
 

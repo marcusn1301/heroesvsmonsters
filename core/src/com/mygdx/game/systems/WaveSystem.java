@@ -19,7 +19,6 @@ public class WaveSystem extends IteratingSystem {
     private ComponentMapper<WaveComponent> waveMapper;
     private MonsterType[] monsterTypes;
     private Engine engine;
-    private float[] rows = {Gdx.graphics.getHeight()/4, Gdx.graphics.getHeight()/5, Gdx.graphics.getHeight()/3, 0};
 
     public WaveSystem(Engine engine) {
         super(Family.all(WaveComponent.class).get());
@@ -47,41 +46,18 @@ public class WaveSystem extends IteratingSystem {
         wave.setTimeSinceLastSpawn(wave.getTimeSinceLastSpawn() + deltaTime);
 
         //Activate the current wave
-        if (wave.getWaveTimeElapsed() >= 5f && !wave.isActive()) {
+        if (wave.getWaveTimeElapsed() >= 3f && !wave.isActive()) {
             wave.setActive(true);
             System.out.println("Beginning wave " + wave.getWaveNumber());
         }
 
         //Begin a new wave after the given time
-        if (wave.getWaveTimeElapsed() >= 100f) {
+        if (wave.getNumberOfMonsters() <= 0) {
             //System.out.println("Ending wave " + wave.getWaveNumber());
-            //wave.setActive(false);
+            wave.setActive(false);
             wave.setWaveNumber(wave.getWaveNumber() + 1);
             wave.setWaveTimeElapsed(0f);
             wave.setNumberOfMonsters(wave.getWaveNumber() + 2);
         }
-
-        //Spawn monsters every 10 seconds
-        /*if (wave.getTimeSinceLastSpawn() >= 5f && wave.isActive()) {
-            spawnMonster(wave);
-            wave.setTimeSinceLastSpawn(0f);
-        }*/
-    }
-
-    private MonsterType getRandomType() {
-        Random rand = new Random();
-        return monsterTypes[rand.nextInt(monsterTypes.length)];
-    }
-
-    private void spawnMonster(WaveComponent wave) {
-        wave.setTimeSinceLastSpawn(0f);
-        //TODO monster should not be placed inside a cell
-        Entity monster = MonsterFactory.createMonster(getRandomType(), new Vector2(1500f, getRandomRow()));
-
-        engine.addEntity(monster);
-    }
-
-    private float getRandomRow() {
-        return rows[random.nextInt(rows.length)];
     }
 }
