@@ -40,6 +40,7 @@ public class WaveSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         WaveComponent wave = waveMapper.get(entity);
+        wave.setScore(wave.getScore() + 1);
 
         //Begin new wave 5 seconds after all monsters are gone
         if (wave.getWaveTimeElapsed() >= 5f && !wave.isActive()) {

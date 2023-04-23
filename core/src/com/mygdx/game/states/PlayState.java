@@ -179,6 +179,7 @@ public class PlayState extends State{
             waveCount = e.getComponent(WaveComponent.class).getWaveNumber();
             totalKills = e.getComponent(WaveComponent.class).getMonstersKilled();
             monsterToKill = e.getComponent(WaveComponent.class).getMonstersToKill();
+            score = e.getComponent(WaveComponent.class).getScore();
         }
 
         font.setColor(Color.WHITE);

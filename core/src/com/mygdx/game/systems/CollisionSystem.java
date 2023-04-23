@@ -54,7 +54,10 @@ public class CollisionSystem extends IteratingSystem {
                     engine.removeEntity(monster);
                     Entity waveEntity = engine.getEntitiesFor(Family.all(WaveComponent.class).get()).first();
                     WaveComponent waveComponent = waveMapper.get(waveEntity);
+                    //Increase the kill amount
                     waveComponent.setMonstersKilled(waveComponent.getMonstersKilled() + 1);
+                    //Increase the score
+                    waveComponent.setScore(waveComponent.getScore() + 500);
                     break;
                 }
             }
