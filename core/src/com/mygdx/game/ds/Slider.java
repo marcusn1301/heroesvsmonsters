@@ -10,7 +10,6 @@ import com.mygdx.game.utils.SettingsData;
 
 public class Slider {
     private final ShapeRenderer shapeRenderer;
-    private final SpriteBatch sb;
     private final Enums.SliderType sliderType;
     private final float width;
     private final float height;
@@ -24,8 +23,6 @@ public class Slider {
     private final SettingsData settingsData;
 
     public Slider(Enums.SliderType type, float barWidth, float barHeight, float yPos) {
-        //General variables
-        sb = HeroesVsMonsters.getSb();
         shapeRenderer = new ShapeRenderer();
         float SCREEN_WIDTH = Gdx.graphics.getWidth();
         float SCREEN_HEIGHT = Gdx.graphics.getHeight();
@@ -132,7 +129,6 @@ public class Slider {
     }
 
     public void dispose () {
-        sb.dispose();
         shapeRenderer.dispose();
     }
 }

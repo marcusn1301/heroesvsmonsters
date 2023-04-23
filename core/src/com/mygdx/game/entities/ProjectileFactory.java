@@ -26,15 +26,15 @@ public class ProjectileFactory {
     private static Texture getProjectileSprite(HeroType heroType) {
         switch (heroType) {
             case IRONMAN:
-                return new Texture(Gdx.files.internal("ironManShoots.png"));
+                return new Texture(Gdx.files.internal("images/ironManShoots.png"));
             case HULK:
-                return new Texture(Gdx.files.internal("rock.png"));
+                return new Texture(Gdx.files.internal("images/rock.png"));
             case SPIDERMAN:
-                return new Texture(Gdx.files.internal("web.png"));
+                return new Texture(Gdx.files.internal("images/web.png"));
             case THOR:
-                return new Texture(Gdx.files.internal("lightning.png"));
+                return new Texture(Gdx.files.internal("images/lightning.png"));
             case CAPTAIN_AMERICA:
-                return new Texture(Gdx.files.internal("shield.png"));
+                return new Texture(Gdx.files.internal("images/shield.png"));
             default:
                 return null;
         }
