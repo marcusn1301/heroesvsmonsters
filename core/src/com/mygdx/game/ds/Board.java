@@ -29,7 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.FireBaseInterface;
 import com.mygdx.game.FirebaseManager;
-import com.mygdx.game.MoneySystem;
+import com.mygdx.game.systems.MoneySystem;
 import com.mygdx.game.components.AttackComponent;
 import com.mygdx.game.components.HeroComponent;
 import com.mygdx.game.components.MonsterComponent;
@@ -489,7 +489,7 @@ public class Board extends Actor {
             }
             //Place a new monster entity at the given position if the cell is empty
             if (!cellHasMonster) {
-                placementPosition.x = Gdx.graphics.getWidth() - this.rightPaneWidth - textureWidth;
+                placementPosition.x = Gdx.graphics.getWidth() - this.rightPaneWidth - this.textureWidth;
                 Entity monster = MonsterFactory.createMonster(getChosenMonsterType(), placementPosition);
                 engine.addEntity(monster);
                 System.out.println("Created new monster entity and added to game engine");

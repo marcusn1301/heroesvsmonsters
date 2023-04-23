@@ -1,27 +1,22 @@
 package com.mygdx.game.states;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.game.MoneySystem;
+import com.mygdx.game.systems.MoneySystem;
 import com.mygdx.game.SoundManager;
 import com.mygdx.game.components.AttackComponent;
 import com.mygdx.game.components.HeroComponent;
@@ -30,19 +25,13 @@ import com.mygdx.game.components.PositionComponent;
 import com.mygdx.game.components.ProjectileComponent;
 import com.mygdx.game.components.SpriteComponent;
 import com.mygdx.game.ds.Board;
-import com.mygdx.game.entities.DisplayHero;
-import com.mygdx.game.entities.HeroFactory;
 import com.mygdx.game.ds.buttons.RectangleButton;
 import com.mygdx.game.systems.CollisionSystem;
 import com.mygdx.game.systems.HeroSystem;
 import com.mygdx.game.systems.MonsterMovementSystem;
 import com.mygdx.game.systems.ProjectileMovementSystem;
 import com.mygdx.game.systems.WaveSystem;
-import com.mygdx.game.types.HeroType;
 import com.mygdx.game.utils.Enums;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PlayState extends State{
     private SpriteBatch batch;
