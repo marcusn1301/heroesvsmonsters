@@ -48,8 +48,6 @@ public class LeaderboardState extends State {
         entries = populateLeaderboardEntries();
     }
 
-    // Fetches the highscore list with name and score from the firebase realtime database and stores the
-    //values in data;
     public void fetchData(String target) {
         firebaseInterface.getDataFromDatabase(target, new FireBaseInterface.OnDataLoadedListener() {
             @Override
