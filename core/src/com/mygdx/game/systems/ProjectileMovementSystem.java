@@ -34,7 +34,7 @@ public class ProjectileMovementSystem extends IteratingSystem {
         PositionComponent positionComponent = positionMapper.get(entity);
 
         //If a projectile is out of bounds, remove it from the engine
-        if (positionComponent.getPosition().x > Gdx.graphics.getWidth() - Gdx.graphics.getWidth()/8f) {
+        if (positionComponent.getPosition().x > Gdx.graphics.getWidth() - Gdx.graphics.getWidth()/4f) {
             entity.removeAll();
             engine.removeEntity(entity);
         }

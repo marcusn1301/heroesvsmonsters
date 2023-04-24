@@ -196,7 +196,6 @@ public class Board extends Actor {
         drawGrid();
         drawLaneDividers();
         drawPaneBackgrounds();
-        loadDisplayTextures();
         if (!isInputProcessorAdded) {
             setupInputProcessor();
             isInputProcessorAdded = true;
