@@ -33,7 +33,7 @@ public class MonsterMovementSystem extends IteratingSystem {
         CollisionComponent collision = collisionMapper.get(entity);
 
         //Make the monster move to the left
-        monsterPos.setPosition(monsterPos.getPosition().add(monster.getMovementSpeed() * -1, 0));
+        monsterPos.setPosition(monsterPos.getPosition().add(monster.getMovementSpeed() * -10*deltaTime, 0));
         collision.setHitbox(collision.getHitbox().setPosition(monsterPos.getPosition()));
 
         //Remove monsters that are out of bounds

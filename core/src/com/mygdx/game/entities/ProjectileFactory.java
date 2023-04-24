@@ -43,17 +43,17 @@ public class ProjectileFactory {
     private static float getProjectileSpeed(HeroType heroType) {
         switch (heroType) {
             case IRONMAN:
-                return 30f;
+                return 300f;
             case HULK:
-                return 15f;
+                return 150f;
             case SPIDERMAN:
-                return 40f;
+                return 400f;
             case THOR:
-                return 20;
+                return 200;
             case CAPTAIN_AMERICA:
-                return 25f;
+                return 250f;
             default:
-                return 7f;
+                return 70f;
         }
     }
 }
