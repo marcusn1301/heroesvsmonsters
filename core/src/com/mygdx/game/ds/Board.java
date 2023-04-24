@@ -27,8 +27,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.FireBaseInterface;
 import com.mygdx.game.FirebaseManager;
+import com.mygdx.game.MoneyObserver;
 import com.mygdx.game.components.WaveComponent;
 import com.mygdx.game.systems.MoneySystem;
 import com.mygdx.game.components.AttackComponent;
@@ -46,7 +48,7 @@ import com.mygdx.game.types.MonsterType;
 
 import java.util.List;
 
-public class Board extends Actor {
+public class Board extends Actor implements MoneyObserver {
     private final int screenHeight = Gdx.graphics.getHeight();
     private final int screenWidth = Gdx.graphics.getWidth();
     private final int rows;
@@ -77,6 +79,7 @@ public class Board extends Actor {
     private boolean placeHero = false;
     private HeroType chosenHeroType;
     private MonsterType chosenMonsterType;
+    private Integer chosenHeroPrice = 0;
     private final InputMultiplexer multiplexer;
     private final int gridWidth, gridHeight, startX, startY;
     private boolean gridDrawn;
@@ -85,11 +88,9 @@ public class Board extends Actor {
     private final Engine engine;
     private FireBaseInterface firebaseInterface;
     private List<Integer> data;
-    private final MoneySystem moneySystem = new MoneySystem(1200);
+    private MoneySystem moneySystem = MoneySystem.getInstance();
     BitmapFont font = new BitmapFont();
     Texture counterIcon = new Texture("images/coin2.png");
-
-
 
 
     public Board(int rows, int cols, Engine engine) {
@@ -246,16 +247,17 @@ public class Board extends Actor {
 
         //Creates new hero entity and sets its position to the middle of the clicked cell
         if (getChosenHeroType() != null) {
+
             placeHero(entityPlacement);
             System.out.println("Cell clicked: row " + row + ", col " + col);
-            moneySystem.removeMoney(450);
+
         } else if (getChosenMonsterType() != null) {
             //Creates a new monster entity and places it in the midddle of the cell
             placeMonster(entityPlacement);
         }
-        firebaseInterface.SetValueInDb("highScores", 12);
+       // firebaseInterface.SetValueInDb("highScores", 12);
 
-        fetchData("highScores");
+       // fetchData("highScores");
     }
 
     public void drawHeroes() {
@@ -408,6 +410,9 @@ public class Board extends Actor {
                 public void clicked(InputEvent event, float x, float y) {
                     System.out.println("Button position: (" + button.getHeroType() + ", at " + buttonClickable.getX() + ", " + buttonClickable.getY() + ")");
                     setChosenHeroType(button.getHeroType());
+
+                    // Sets the cost of the hero to be placed
+                    chosenHeroPrice = button.getPrice();
                 }
             });
 
@@ -473,12 +478,42 @@ public class Board extends Actor {
             }
             //Place a new hero entity at the given position if the cell is empty
             if (!cellHasHero) {
-                Entity hero = HeroFactory.createHero(getChosenHeroType(), placementPosition);
-                engine.addEntity(hero);
-                System.out.println("Created new hero entity and added to game engine");
+                // Player has enough money to place a hero
+                if (moneySystem.getMoney() - chosenHeroPrice >= 0) {
+                    Entity hero = HeroFactory.createHero(getChosenHeroType(), placementPosition);
+                    engine.addEntity(hero);
+                    System.out.println("Created new hero entity and added to game engine");
+
+                    // Subtract the money spent on the hero
+                    moneySystem.removeMoney(chosenHeroPrice);
+
+                }
+                // If the user does not have enough money to place a hero, display insufficient
+                //money in the middle of the screen
+                else {
+                    BitmapFont counterFont = new BitmapFont();
+                    counterFont.getData().setScale(8f);
+                    final Label insufficientMoneyLabel = new Label("Insufficient Money", new Label.LabelStyle(counterFont, Color.RED));
+                    insufficientMoneyLabel.setPosition(Gdx.graphics.getWidth()/2 - insufficientMoneyLabel.getWidth()/2, Gdx.graphics.getHeight()/2 - insufficientMoneyLabel.getHeight()/2);
+
+                    stage.addActor(insufficientMoneyLabel);
+
+                    Timer.schedule(new Timer.Task() {
+                        @Override
+                        public void run() {
+                            insufficientMoneyLabel.remove();
+                        }
+                    }, 1.5f); // 1 second delay
+
+                }
+
+            }
+
+            } else {
+                System.out.println("Cell already has a hero");
             }
         }
-    }
+
 
     private void placeMonster(Vector2 placementPosition) {
         if (chosenMonsterType != null) {
@@ -636,6 +671,12 @@ public class Board extends Actor {
             buttonTexture.dispose();
         }
         batch.dispose();
+
+    }
+
+    @Override
+    public void onMoneyChanged(int newMoney) {
+        drawCounter();
 
     }
 }
