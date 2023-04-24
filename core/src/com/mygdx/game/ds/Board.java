@@ -124,6 +124,7 @@ public class Board extends Actor {
         stage = new Stage();
         multiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(multiplexer);
+        drawGrid();
     }
 
     private void drawCounter() {
@@ -193,7 +194,6 @@ public class Board extends Actor {
 
     public void render(SpriteBatch batch) {
         //createLeftTable();
-        drawGrid();
         drawLaneDividers();
         drawPaneBackgrounds();
         if (!isInputProcessorAdded) {
