@@ -1,27 +1,53 @@
 package com.mygdx.game.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.mygdx.game.ds.buttons.RectangleButton;
+import com.mygdx.game.utils.Enums;
 
 public class GameOverState extends State{
+    private final GameStateManager gsm;
     private boolean gameOverBoolean;
+    private boolean gameWonBoolean;
     private final Texture gameOver;
     private final Texture playAgain;
-    private final Texture yes;
-    private final Texture no;
-    private int screenHeight;
-    private int screenWidth;
+    private final RectangleButton yes;
+    private final RectangleButton no;
+    private int screenHeight = Gdx.graphics.getHeight();
+    private int screenWidth = Gdx.graphics.getWidth();
+    private SpriteBatch batch;
+    private float playAgainY;
+    private float playAgainX;
 
     // Singleton instance
     private static GameOverState instance;
 
     public GameOverState() {
+        super();
+        gsm = GameStateManager.getGsm();
         gameOver = new Texture("images/GameOver.png");
         playAgain = new Texture("images/PlayAgain.png");
-        yes = new Texture("images/Yes.png");
-        no = new Texture("images/No.png");
+        Texture yesTexture = new Texture("images/Yes.png");
+
+        playAgainX = (screenWidth - playAgain.getWidth()) / 2;
+        playAgainY = (screenHeight / 2) - (playAgain.getHeight());
+
+        float yesX = (screenWidth / 2) - yesTexture.getWidth() - 20;
+        float yesY = (int) playAgainY - playAgain.getHeight() * 2;
+        yes = new RectangleButton(1F, (int) yesX, (int) yesY, "images/Yes.png");
+
+        float noX = (screenWidth / 2) + 10;
+        float noY = (int) (playAgainY - playAgain.getHeight() * 2);
+        no = new RectangleButton(1F, (int) noX, (int) noY, "images/No.png");
+        batch = new SpriteBatch();
+
     }
 
     // Static method to get the singleton instance
@@ -40,6 +66,8 @@ public class GameOverState extends State{
         this.gameOverBoolean = gameOverBoolean;
     }
 
+
+
     @Override
     public void update(float dt) {
 
@@ -47,25 +75,40 @@ public class GameOverState extends State{
 
     @Override
     public void render(SpriteBatch batch) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.begin();
-        double gameOverX = screenHeight * 0.75;
-        batch.draw(gameOver, (float) ((screenWidth + gameOver.getWidth())/2), (float) gameOverX, (float) (screenWidth / 2), (float) (screenWidth/6));
-        batch.draw(playAgain, (float) ((screenWidth + playAgain.getWidth())/2), (float) (gameOverX - 100));
-        batch.draw(yes, (float) ((screenWidth / 2) - playAgain.getWidth()), (float) (gameOverX - 200));
-        batch.draw(no, (float) ((screenWidth + playAgain.getWidth())/2), (float) (gameOverX - 200));
 
-        batch.end();
+        this.batch.begin();
+        float gameOverX = (screenWidth - gameOver.getWidth()) / 2;
+        float gameOverY = (screenHeight + gameOver.getHeight()) / 2;
+        batch.draw(gameOver, gameOverX, gameOverY);
+        batch.draw(playAgain, playAgainX, playAgainY);
+
+        yes.render(batch);
+        no.render(batch);
+
+        this.batch.end();
 
     }
 
+
     @Override
     public void handleInput() {
-
+        if (Gdx.input.isTouched()) {
+            int x = Gdx.input.getX();
+            int y = Gdx.graphics.getHeight() - Gdx.input.getY();
+            if (yes.getBounds().contains(x, y)) {
+                gsm.push(new PlayState());
+            } else if (no.getBounds().contains(x,y)) {
+                gsm.push(new GameMenuState());
+            }
+        }
     }
 
     @Override
     public void dispose() {
-
+        batch.dispose();
+        gameOver.dispose();
+        playAgain.dispose();
+        yes.dispose();
+        no.dispose();
     }
 }

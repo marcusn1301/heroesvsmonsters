@@ -56,6 +56,7 @@ public class PlayState extends State{
     private int totalKills = 0;
     private int monsterToKill = 0;
     private int score = 0;
+    private boolean gameOver = false;
 
     public PlayState() {
         //super(gsm);
@@ -116,10 +117,17 @@ public class PlayState extends State{
         if (!GameOverState.getInstance().isGameOverBoolean()) {
             engine.update(dt);
         } else {
-            gsm.push(new GameOverState());
+            gameOver = true;
+            try {
+                // Sleep for a short duration to reduce CPU usage when the game is over
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
+    /*
     public void calculateMoney() {
         float iconSize = Gdx.graphics.getWidth() / 30;
         BitmapFont counterFont = new BitmapFont();
@@ -147,6 +155,12 @@ public class PlayState extends State{
         Image counterIcon2 = new Image(counterIconTexture2);
         board.getRightTable().add(counterIcon2).size(iconSize, iconSize).pad(5);
         board.getRightTable().row();
+    }
+     */
+
+    public void renderGameOver(SpriteBatch batch) {
+        GameOverState.getInstance().render(batch);
+        //Make yes and no button able to access
     }
 
     public void renderHeroes(SpriteBatch batch) {
@@ -208,6 +222,10 @@ public class PlayState extends State{
         renderProjectiles(batch);
         renderMonsters(batch);
         renderWaveInfo(batch);
+        if (gameOver) {
+            renderGameOver(batch);
+        }
+
         batch.draw(menuButton.getImg(), menuButton.getPosition().x - menuButton.getWidth() / 2f,10,  menuButton.getWidth(), menuButton.getHeight());
         batch.end();
 
