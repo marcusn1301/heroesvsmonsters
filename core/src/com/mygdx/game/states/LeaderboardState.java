@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Null;
+import com.mygdx.game.FireBaseInterface;
+import com.mygdx.game.FirebaseManager;
 import com.mygdx.game.ds.LeaderboardEntry;
 import com.mygdx.game.ds.buttons.CircleButton;
 import com.mygdx.game.ds.buttons.RectangleButton;
@@ -14,6 +16,7 @@ import com.mygdx.game.ds.buttons.RectangleButton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Map;
 
 public class LeaderboardState extends State {
     private final GameStateManager gsm = GameStateManager.getGsm();
@@ -24,8 +27,15 @@ public class LeaderboardState extends State {
     private final BitmapFont font = new BitmapFont();
     private final Texture brickBackground;
     private final Texture highscoreBoard;
+    private FireBaseInterface firebaseInterface;
+    private ArrayList<Map<String, Object>>  highScoreList;
+
+
 
     public LeaderboardState() {
+        this.firebaseInterface = FirebaseManager.getInstance().getFirebaseInterface();
+        fetchData("HighScores");
+
         ArrayList<LeaderboardEntry> templist = new ArrayList<>();
         for (int i = 0; i < 12; i++) {
             templist.add(new LeaderboardEntry("player " + (i + 1), (int)(Math.random()*1000*(i+1)), 100*(i+1), i));
@@ -43,6 +53,26 @@ public class LeaderboardState extends State {
         trophies.add(new RectangleButton(0.2f, Gdx.graphics.getWidth() / 4 - 70, (int)(Gdx.graphics.getHeight() / 1.4 - (Gdx.graphics.getHeight() / 5.6) + (trophy.getWidth() * 0.1 /2)), "images/Trophy_3.png"));
         trophies.subList(0, Math.min(entries.size(), 3));
         exitButton = new CircleButton(70, Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - 140, "images/redExitCross.png");
+    }
+
+    // Fetches the highscore list with name and score from the firebase realtime database and stores the
+    //values in data;
+    public void fetchData(String target) {
+        firebaseInterface.getDataFromDatabase(target, new FireBaseInterface.OnDataLoadedListener() {
+            @Override
+            public void onDataLoaded(ArrayList<Map<String, Object>> values) {
+
+                highScoreList = values;
+                System.out.println("Here is the data:");
+                System.out.println(highScoreList);
+                // Do something with the data
+            }
+
+            @Override
+            public void onError(Exception exception) {
+                System.out.println(exception);
+            }
+        });
     }
 
     private ArrayList<LeaderboardEntry> populateLeaderboardEntries(@Null ArrayList<LeaderboardEntry> dbEntries) {
