@@ -129,17 +129,17 @@ public class Board extends Actor implements MoneyObserver {
     }
 
     private void drawCounter() {
-        float iconSize = Gdx.graphics.getHeight() / 15f;
-        float iconX = screenWidth - iconSize * 2 - 160; // Move 200 pixels to the left
+        float iconSize = screenHeight / 15f;
+        float iconX = screenWidth - screenWidth/4.5f - iconSize;
         float iconY = screenHeight - iconSize - 50;
 
         font.getData().setScale(3.5f);
         font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         this.batch.begin();
-        font.draw(batch, String.valueOf(moneySystem.getMoney()), iconX + iconSize * 1.5f - rightPaneWidth - 50, iconY + iconSize * 0.75f);
+        font.draw(batch, String.valueOf(moneySystem.getMoney()), iconX + iconSize*1.1f, iconY + iconSize * 0.75f);
 
-        batch.draw(counterIcon, iconX - 100, iconY, iconSize, iconSize);
+        batch.draw(counterIcon, iconX, iconY, iconSize, iconSize);
         this.batch.end();
     }
 
@@ -360,17 +360,6 @@ public class Board extends Actor implements MoneyObserver {
                 }
             });
             buttonGroup.addActor(buttonClickable);
-
-            int price = button.getComponent(PriceComponent.class).getPrice();
-            // Create the label for the button number
-            Label buttonNumber = new Label(Integer.toString(price), labelStyle);
-
-            // Adjust the label's position to be centered horizontally and vertically below the button
-            float labelX = screenWidth - (rightPaneWidth / 2);
-            float labelY = position.y - (buttonNumber.getHeight() * 1.5f);
-            buttonNumber.setPosition(labelX, labelY);
-
-            buttonGroup.addActor(buttonNumber); // Add the label to the buttonGroup
             stage.addActor(buttonGroup); // Add the buttonGroup to the stage
         }
     }
