@@ -16,7 +16,9 @@ import com.mygdx.game.components.ProjectileComponent;
 import com.mygdx.game.components.SpriteComponent;
 import com.mygdx.game.components.WaveComponent;
 
-public class CollisionSystem extends IteratingSystem {
+public class
+
+CollisionSystem extends IteratingSystem {
     private ComponentMapper<CollisionComponent> collisionMapper;
     private ComponentMapper<ProjectileComponent> projectileMapper;
     private ComponentMapper<HeroComponent> heroMapper;
@@ -24,6 +26,8 @@ public class CollisionSystem extends IteratingSystem {
     private ComponentMapper<HealthComponent> healthMapper;
     private ImmutableArray<Entity> monsters;
     private Engine engine;
+    private MoneySystem moneySystem = MoneySystem.getInstance();
+
 
     public CollisionSystem(Engine engine) {
         super(Family.all(PositionComponent.class, CollisionComponent.class).get());
@@ -48,6 +52,8 @@ public class CollisionSystem extends IteratingSystem {
                     //Remove projectile on collision
                     engine.removeEntity(entity);
                     if (monsterHealth.getHealth() - 1 <= 0) {
+                        // Add 100 coins when a monster dies
+                        moneySystem.addMoney(100);
                         engine.removeEntity(monster);
                         Entity waveEntity = engine.getEntitiesFor(Family.all(WaveComponent.class).get()).first();
                         WaveComponent waveComponent = waveMapper.get(waveEntity);
