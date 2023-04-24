@@ -12,7 +12,6 @@ public class RectangleButton {
 
     private final Vector2 position;
     private final Rectangle bounds;
-    private final ShapeRenderer shape;
     private final Texture img;
     private final float width;
     private final float height;
@@ -40,7 +39,6 @@ public class RectangleButton {
 
         this.position = new Vector2(startPosX, startPosY);
         this.bounds = new Rectangle(startPosX, startPosY, this.width, this.height);
-        this.shape = new ShapeRenderer();
     }
 
     public Vector2 getPosition() {
@@ -51,20 +49,12 @@ public class RectangleButton {
         return bounds;
     }
 
-    public ShapeRenderer getShape() {
-        return shape;
-    }
-
     public float getWidth() {return this.width;}
 
     public float getHeight() {return this.height;}
 
     public Texture getImg() {
         return img;
-    }
-
-    public float getScale() {
-        return scale;
     }
 
     public void render(SpriteBatch sb) {

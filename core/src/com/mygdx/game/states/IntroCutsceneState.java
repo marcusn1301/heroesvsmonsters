@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.SoundManager;
+import com.mygdx.game.utils.Enums;
 
 public class IntroCutsceneState extends State {
     private final GameStateManager gsm;
@@ -22,8 +23,10 @@ public class IntroCutsceneState extends State {
     private final float slidingSpeed;
     private float elapsedTime;
     private int phase;
+    private final Enums.GameType type;
 
-    public IntroCutsceneState() {
+    public IntroCutsceneState(Enums.GameType type) {
+        this.type = type;
         cityBackground = new Texture("images/City.jpg");
         explosionsBackground = new Texture("images/Explosions.png");
         nick = new Texture("images/Nick.png");

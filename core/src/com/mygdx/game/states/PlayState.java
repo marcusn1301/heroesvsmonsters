@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.components.WaveComponent;
+import com.mygdx.game.ds.buttons.CircleButton;
 import com.mygdx.game.systems.MoneySystem;
 import com.mygdx.game.SoundManager;
 import com.mygdx.game.components.AttackComponent;
@@ -47,8 +48,8 @@ public class PlayState extends State{
     private static Engine engine;
     private Board board;
     private TextButton counterText1;
-    private final RectangleButton menuButton;
     private final GameStateManager gsm;
+    private final CircleButton settingsButton;
     private int screenWidth = Gdx.graphics.getWidth();
     private int screenHeight = Gdx.graphics.getHeight();
     private int monsterCount = 0;
@@ -59,7 +60,7 @@ public class PlayState extends State{
 
     public PlayState() {
         //super(gsm);
-        menuButton = new RectangleButton(0.5f, Gdx.graphics.getWidth() - 137, Gdx.graphics.getHeight() - 100, "images/Lobby-button.png");
+        settingsButton = new CircleButton(40, (Gdx.graphics.getWidth() - 140),  60, "images/settings-button.png");
         gsm = GameStateManager.getGsm();
         initialize();
     }
@@ -113,10 +114,11 @@ public class PlayState extends State{
     public void update(float dt) {
         stage.draw();
         engine.update(dt);
+        handleInput();
     }
 
     public void calculateMoney() {
-        float iconSize = Gdx.graphics.getWidth() / 30;
+        float iconSize = Gdx.graphics.getWidth() / 30f;
         BitmapFont counterFont = new BitmapFont();
         counterFont.getData().setScale(4);
         // First counter
@@ -203,7 +205,7 @@ public class PlayState extends State{
         renderProjectiles(batch);
         renderMonsters(batch);
         renderWaveInfo(batch);
-        batch.draw(menuButton.getImg(), menuButton.getPosition().x - menuButton.getWidth() / 2f,10,  menuButton.getWidth(), menuButton.getHeight());
+        settingsButton.render(batch);
         batch.end();
 
         stage.act(Gdx.graphics.getDeltaTime());
@@ -215,8 +217,7 @@ public class PlayState extends State{
         if (Gdx.input.isTouched()) {
             float touchX = Gdx.input.getX();
             float touchY = Gdx.graphics.getHeight() - Gdx.input.getY();
-            if (menuButton.getBounds().contains(touchX, touchY)) {
-                //Implement Game.pause();
+            if (settingsButton.getBounds().contains(touchX, touchY)) {
                 gsm.push(new SettingsState(Enums.SettingsBackground.CITY, Enums.GameType.SINGLEPLAYER));
             }
         }

@@ -13,7 +13,9 @@ import com.mygdx.game.utils.Enums;
 public class GameMenuState extends State {
     private final GameStateManager gsm;
     private final SoundManager soundManager = SoundManager.getInstance();
-    private final RectangleButton playButton;
+    private final RectangleButton singleplayerButton;
+    private final RectangleButton multiplayerButton;
+
     private final Texture menuBackground;
     private final RectangleButton logo;
     private final RectangleButton settingsButton;
@@ -29,7 +31,8 @@ public class GameMenuState extends State {
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
         logo = new RectangleButton(0.3f, null, (int) (Gdx.graphics.getHeight() / 2.5), "images/HvsMstor.png");
-        playButton = new RectangleButton(1f, null, 150, "images/playButton.png");
+        singleplayerButton = new RectangleButton(0.8f, null, 200, "images/singleplayer-button.png");
+        multiplayerButton = new RectangleButton(0.8f, null, 50, "images/multiplayer-button.png");
         settingsButton = new RectangleButton(0.4f, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 200, "images/settings-button.png");
         trophyButton = new RectangleButton(0.5f, 80, Gdx.graphics.getHeight() - 210, "images/trophy.png");
         menuBackground = new Texture("images/menuBackground.png");
@@ -53,7 +56,8 @@ public class GameMenuState extends State {
         batch.begin();
         batch.draw(menuBackground, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         logo.render(batch);
-        playButton.render(batch);
+        singleplayerButton.render(batch);
+        multiplayerButton.render(batch);
         settingsButton.render(batch);
         trophyButton.render(batch);
         batch.end();
@@ -64,9 +68,12 @@ public class GameMenuState extends State {
         if (Gdx.input.isTouched()) {
             int x = Gdx.input.getX();
             int y = Gdx.graphics.getHeight() - Gdx.input.getY();
-            if (playButton.getBounds().contains(x, y)) {
+            if (singleplayerButton.getBounds().contains(x, y)) {
                 soundManager.playSound("menuNavigate");
-                gsm.push(new IntroCutsceneState());
+                gsm.push(new IntroCutsceneState(Enums.GameType.SINGLEPLAYER));
+            } else if (multiplayerButton.getBounds().contains(x,y)) {
+                soundManager.playSound("menuNavigate");
+                gsm.push(new IntroCutsceneState(Enums.GameType.MULTIPLAYER));
             } else if (settingsButton.getBounds().contains(x,y)) {
                 gsm.push(new SettingsState(Enums.SettingsBackground.CITY, Enums.GameType.MENU));
             } else if (trophyButton.getBounds().contains(x,y)) {
@@ -77,7 +84,8 @@ public class GameMenuState extends State {
 
     @Override
     public void dispose() {
-        playButton.dispose();
+        singleplayerButton.dispose();
+        multiplayerButton.dispose();
         System.out.print("Menu State Disposed");
     }
 }
