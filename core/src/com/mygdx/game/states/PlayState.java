@@ -112,7 +112,12 @@ public class PlayState extends State{
     @Override
     public void update(float dt) {
         stage.draw();
-        engine.update(dt);
+
+        if (!GameOverState.getInstance().isGameOverBoolean()) {
+            engine.update(dt);
+        } else {
+            gsm.push(new GameOverState());
+        }
     }
 
     public void calculateMoney() {

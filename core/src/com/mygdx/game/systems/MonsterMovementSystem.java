@@ -9,6 +9,7 @@ import com.badlogic.gdx.Gdx;
 import com.mygdx.game.components.CollisionComponent;
 import com.mygdx.game.components.MonsterComponent;
 import com.mygdx.game.components.PositionComponent;
+import com.mygdx.game.states.GameOverState;
 
 public class MonsterMovementSystem extends IteratingSystem {
     private final ComponentMapper<MonsterComponent> monsterMapper;
@@ -38,8 +39,11 @@ public class MonsterMovementSystem extends IteratingSystem {
 
         //Remove monsters that are out of bounds
         if (monsterPos.getPosition().x <= 0 + Gdx.graphics.getWidth() / 8f) {
+            System.out.print("Game over");
+            GameOverState.getInstance().setGameOverBoolean(true);
             entity.removeAll();
             engine.removeEntity(entity);
+
         }
 
 
