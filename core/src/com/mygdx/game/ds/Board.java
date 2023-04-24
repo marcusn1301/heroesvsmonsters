@@ -143,25 +143,7 @@ public class Board extends Actor implements MoneyObserver {
         this.batch.end();
     }
 
-    // Fetches the highscore list from the firebase realtime database and stores the
-    //values in data;
-    public void fetchData(String target) {
-        firebaseInterface.getDataFromDatabase(target, new FireBaseInterface.OnDataLoadedListener() {
-            @Override
-            public void onDataLoaded(List<Integer> values) {
 
-                data = values;
-                System.out.println("Here is the data:");
-                System.out.println(data);
-                // Do something with the data
-            }
-
-            @Override
-            public void onError(Exception exception) {
-                System.out.println(exception);
-            }
-        });
-    }
 
 
     public int getRows() {
@@ -255,7 +237,7 @@ public class Board extends Actor implements MoneyObserver {
             //Creates a new monster entity and places it in the midddle of the cell
             placeMonster(entityPlacement);
         }
-       // firebaseInterface.SetValueInDb("highScores", 12);
+       firebaseInterface.SetValueInDb("HighScores", "sindri", 69);
 
        // fetchData("highScores");
     }

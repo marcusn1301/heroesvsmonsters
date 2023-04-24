@@ -21,9 +21,10 @@ public class CoreInterfaceClass implements FireBaseInterface {
     }
 
     @Override
-    public void SetValueInDb(String target, Integer value) {
+    public void SetValueInDb(String target, String name, Integer value) {
 
     }
+
 
     @Override
     public void getDataFromDatabase(String target, OnDataLoadedListener onDataLoadedListener) {

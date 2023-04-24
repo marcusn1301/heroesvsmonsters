@@ -6,8 +6,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -15,7 +13,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AndroidInterfaceClass implements FireBaseInterface {
     FirebaseDatabase database;
@@ -72,7 +72,7 @@ public class AndroidInterfaceClass implements FireBaseInterface {
 
     // Pushes a highscore into the highscore list in the firebase realtime database
     @Override
-    public void SetValueInDb(String target, Integer value) {
+    public void SetValueInDb(String target, String name, Integer score) {
         DatabaseReference targetRef = database.getReference(target);
 
         // Read current maximum key from the database
@@ -84,8 +84,14 @@ public class AndroidInterfaceClass implements FireBaseInterface {
                     // Get the current maximum key and increment it
                     newKey = Long.parseLong(childSnapshot.getKey()) + 1;
                 }
-                // Set the new value with the incremented key
-                targetRef.child(String.valueOf(newKey)).setValue(value);
+
+                // Create a new Map to store the name and score
+                Map<String, Object> newObject = new HashMap<>();
+                newObject.put("name", name);
+                newObject.put("score", score);
+
+                // Set the new object with the incremented key
+                targetRef.child(String.valueOf(newKey)).setValue(newObject);
             }
 
             @Override
@@ -99,14 +105,17 @@ public class AndroidInterfaceClass implements FireBaseInterface {
     public void getDataFromDatabase(String target, OnDataLoadedListener onDataLoadedListener) {
         DatabaseReference targetRef = database.getReference(target);
 
-        targetRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        targetRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<Integer> values = new ArrayList<>();
+                ArrayList<Map<String, Object>> values = new ArrayList<>();
+
                 for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                    Integer value = childSnapshot.getValue(Integer.class);
-                    values.add(value);
+                    // Convert the DataSnapshot to a Map<String, Object>
+                    Map<String, Object> data = (Map<String, Object>) childSnapshot.getValue();
+                    values.add(data);
                 }
+
                 onDataLoadedListener.onDataLoaded(values);
             }
 
@@ -116,6 +125,7 @@ public class AndroidInterfaceClass implements FireBaseInterface {
             }
         });
     }
+
 
 
 }
