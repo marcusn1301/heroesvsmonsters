@@ -108,7 +108,7 @@ public class PlayState extends State{
     }
 
     private void createBoard() {
-        board = new Board(6,9, engine);
+        board = new Board(6,9, engine, isSinglePlayer());
         board.render(batch);
     }
 

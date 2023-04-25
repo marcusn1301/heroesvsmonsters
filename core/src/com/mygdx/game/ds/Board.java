@@ -91,11 +91,13 @@ public class Board extends Actor implements MoneyObserver {
     private MoneySystem moneySystem = MoneySystem.getInstance();
     BitmapFont font = new BitmapFont();
     Texture counterIcon = new Texture("images/coin2.png");
+    private boolean isSinglePlayer;
 
 
-    public Board(int rows, int cols, Engine engine) {
+    public Board(int rows, int cols, Engine engine, boolean isSinglePlayer) {
         this.firebaseInterface = FirebaseManager.getInstance().getFirebaseInterface();
         this.engine = engine;
+        this.isSinglePlayer = isSinglePlayer;
         this.rows = rows;
         this.cols = cols;
         gridWidth = cols * cellWidth;
@@ -192,7 +194,9 @@ public class Board extends Actor implements MoneyObserver {
         this.batch.end();
 
         drawDisplayHeroButtons();
-        drawDisplayMonsterButtons();
+        if (!isSinglePlayer) {
+            drawDisplayMonsterButtons();
+        }
         this.stage.act();
         this.stage.draw();
         drawCounter();
