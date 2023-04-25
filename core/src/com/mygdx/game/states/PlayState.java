@@ -59,13 +59,14 @@ public class PlayState extends State{
     private int monsterToKill = 0;
     private int score = 0;
     private boolean singlePlayer;
-    private boolean gameOver = false;
+    private boolean gameOver;
 
     public PlayState(Enums.GameType type) {
         //super(gsm);
         this.singlePlayer = type.equals(Enums.GameType.SINGLEPLAYER);
         settingsButton = new CircleButton(40, (Gdx.graphics.getWidth() - 140),  60, "images/settings-button.png");
         gsm = GameStateManager.getGsm();
+        gameOver = false;
         initialize();
     }
 

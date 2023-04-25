@@ -25,6 +25,7 @@ public class GameStateManager {
 
     public void pop() {
         states.pop();
+        System.out.println(states.size());
     }
 
     public void set(State state) {
