@@ -60,17 +60,17 @@ public class MonsterFactory {
     private static float getMonsterMovementSpeed(MonsterType monsterType) {
         switch (monsterType) {
             case MAGNETO:
-                return 16f;
-            case JUGGERNAUT:
-                return 13f;
-            case VENOM:
-                return 14f;
-            case HOBGOBLIN:
                 return 12f;
+            case JUGGERNAUT:
+                return 8f;
+            case VENOM:
+                return 9f;
+            case HOBGOBLIN:
+                return 7f;
             case GOBLIN_GLIDER:
-                return 10f;
+                return 6.5f;
             case MYSTIQUE:
-                return 15f;
+                return 13f;
             default:
                 return 10f;
         }
