@@ -37,6 +37,7 @@ public class LeaderboardState extends State {
         this.firebaseInterface = FirebaseManager.getInstance().getFirebaseInterface();
         firebaseInterface.SetOnValueChangedListener("name");
 
+        //comment
         brickBackground = new Texture("images/brickWall.png");
         highscoreBoard = new Texture("images/highscoreBoard.png");
         font.setColor(Color.BLACK);
