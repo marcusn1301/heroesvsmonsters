@@ -236,7 +236,7 @@ public class PlayState extends State{
 
     @Override
     public void handleInput() {
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.justTouched()) {
             float touchX = Gdx.input.getX();
             float touchY = Gdx.graphics.getHeight() - Gdx.input.getY();
             if (settingsButton.getBounds().contains(touchX, touchY)) {

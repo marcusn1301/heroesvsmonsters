@@ -84,6 +84,7 @@ public class IntroCutsceneState extends State {
             case 4:
                 if (elapsedTime >= 3.0f) {
                     soundmanager.stopMusic("avengersHype");
+                    gsm.pop();
                     gsm.push(new PlayState());
                 }
                 break;

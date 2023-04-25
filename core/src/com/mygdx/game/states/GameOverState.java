@@ -27,6 +27,7 @@ public class GameOverState extends State{
 
     // Singleton instance
     private static GameOverState instance;
+    private final RectangleButton submitButton;
 
     public GameOverState() {
         super();
@@ -46,6 +47,8 @@ public class GameOverState extends State{
         float noY = (int) (playAgainY - playAgain.getHeight() * 2);
         no = new RectangleButton(1F, (int) noX, (int) noY, "images/No.png");
         batch = new SpriteBatch();
+
+        submitButton = new RectangleButton(1f, null, Gdx.graphics.getHeight() / 14, "images/submit-button.png");
     }
 
     // Static method to get the singleton instance
@@ -66,7 +69,7 @@ public class GameOverState extends State{
 
     @Override
     public void update(float dt) {
-
+        handleInput();
     }
 
     @Override
@@ -77,7 +80,7 @@ public class GameOverState extends State{
         float gameOverY = (screenHeight + gameOver.getHeight()) / 2;
         batch.draw(gameOver, gameOverX, gameOverY);
         batch.draw(playAgain, playAgainX, playAgainY);
-
+        submitButton.render(batch);
         yes.render(batch);
         no.render(batch);
 
@@ -88,7 +91,7 @@ public class GameOverState extends State{
 
     @Override
     public void handleInput() {
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.justTouched()) {
             int x = Gdx.input.getX();
             int y = Gdx.graphics.getHeight() - Gdx.input.getY();
             if (yes.getBounds().contains(x, y)) {
@@ -98,6 +101,11 @@ public class GameOverState extends State{
             } else if (no.getBounds().contains(x,y)) {
                 gsm.push(new GameMenuState());
                 setGameOverBoolean(false);
+            } else if (submitButton.getBounds().contains(x,y)) {
+                //implement firebase logic
+                gsm.pop();
+                gsm.push(new GameMenuState());
+                gsm.push(new LeaderboardState());
             }
         }
     }
