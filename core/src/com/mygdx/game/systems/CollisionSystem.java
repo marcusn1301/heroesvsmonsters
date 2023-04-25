@@ -75,8 +75,6 @@ CollisionSystem extends IteratingSystem {
                 CollisionComponent monsterCollision = collisionMapper.get(monster);
                 if (collision.getHitbox().overlaps(monsterCollision.getHitbox())) {
                     engine.removeEntity(entity);
-                    engine.removeEntity(monster);
-                    //game over
                     engine.removeSystem(engine.getSystem(HeroSystem.class));
                 }
             }
