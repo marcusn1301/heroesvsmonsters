@@ -53,7 +53,7 @@ CollisionSystem extends IteratingSystem {
                     engine.removeEntity(entity);
                     if (monsterHealth.getHealth() - 1 <= 0) {
                         // Add 100 coins when a monster dies
-                        moneySystem.addMoney(100);
+                        moneySystem.addMoney(150);
                         engine.removeEntity(monster);
                         Entity waveEntity = engine.getEntitiesFor(Family.all(WaveComponent.class).get()).first();
                         WaveComponent waveComponent = waveMapper.get(waveEntity);

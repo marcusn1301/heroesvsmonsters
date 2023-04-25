@@ -8,7 +8,7 @@ import java.util.List;
 public class MoneySystem {
     private static MoneySystem instance;
     private int money;
-    private final int initialMoney = 1200; // Declare initialMoney as a field
+    private final int initialMoney = 1000; // Declare initialMoney as a field
     private MoneyChangeListener moneyChangeListener;
 
     private MoneySystem(int initialMoney) {
