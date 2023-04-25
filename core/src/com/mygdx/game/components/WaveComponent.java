@@ -19,7 +19,7 @@ public class WaveComponent implements Component {
         this.numberOfMonsters = numberOfMonsters;
         this.waveNumber = waveNumber;
         this.timeSinceLastSpawn = 0f;
-        this.isActive = false;
+        this.isActive = true;
         this.spawnTimer = 5f;
         this.waveTimeElapsed = 0f;
         this.monstersKilled = 0;
