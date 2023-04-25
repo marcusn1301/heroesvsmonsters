@@ -28,7 +28,7 @@ public class GameOverState extends State {
         this.gsm = GameStateManager.getGsm();
 
         generateRandomName();
-        gameOver = new RectangleButton(0.5f, null, (int)(Gdx.graphics.getHeight() / 1.4),"images/GameOver.png");
+        gameOver = new RectangleButton(0.8f, null, (int)(Gdx.graphics.getHeight() / 1.5),"images/GameOver.png");
         batch = new SpriteBatch();
         submitButton = new RectangleButton(0.7f, null, Gdx.graphics.getHeight() / 14, "images/submit-button.png");
         exitButton = new CircleButton(70, (int)(Gdx.graphics.getWidth()/ 1.2), Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / 8, "images/redExitCross.png");
