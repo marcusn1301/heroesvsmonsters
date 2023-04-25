@@ -57,6 +57,7 @@ public class PlayState extends State{
     private int monsterToKill = 0;
     private int score = 0;
     private final boolean singlePlayer;
+
     public PlayState(Enums.GameType type) {
         this.singlePlayer = type.equals(Enums.GameType.SINGLEPLAYER);
         settingsButton = new CircleButton(40, (Gdx.graphics.getWidth() - 140),  60, "images/settings-button.png");
@@ -65,6 +66,8 @@ public class PlayState extends State{
     }
 
     private void initialize() {
+        MoneySystem.getInstance().resetMoney();
+
         initializeGameEngine();
         batch = new SpriteBatch();
         initFontStageAndRenderer();

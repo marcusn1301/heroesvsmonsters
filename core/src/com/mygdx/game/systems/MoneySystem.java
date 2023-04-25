@@ -8,6 +8,7 @@ import java.util.List;
 public class MoneySystem {
     private static MoneySystem instance;
     private int money;
+    private final int initialMoney = 1200; // Declare initialMoney as a field
     private MoneyChangeListener moneyChangeListener;
 
     private MoneySystem(int initialMoney) {
@@ -21,6 +22,14 @@ public class MoneySystem {
         return instance;
     }
 
+    // Add this method to reset the money to the initial amount
+    public void resetMoney() {
+        money = initialMoney;
+        if (moneyChangeListener != null) {
+            moneyChangeListener.onMoneyChanged();
+        }
+    }
+
     public void setMoneyChangeListener(MoneyChangeListener moneyChangeListener) {
         this.moneyChangeListener = moneyChangeListener;
     }
@@ -30,6 +39,10 @@ public class MoneySystem {
         if (moneyChangeListener != null) {
             moneyChangeListener.onMoneyChanged();
         }
+    }
+
+    public void setMoney(int amount) {
+        money += amount;
     }
 
     public boolean removeMoney(int amount) {
