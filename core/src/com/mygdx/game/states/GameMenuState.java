@@ -30,9 +30,10 @@ public class GameMenuState extends State {
         gsm = GameStateManager.getGsm();
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
+        int singleplayerButtonY = Gdx.graphics.getHeight() / 5;
         logo = new RectangleButton(0.3f, null, (int) (Gdx.graphics.getHeight() / 2.5), "images/HvsMstor.png");
-        singleplayerButton = new RectangleButton(0.8f, null, 200, "images/singleplayer-button.png");
-        multiplayerButton = new RectangleButton(0.8f, null, 50, "images/multiplayer-button.png");
+        singleplayerButton = new RectangleButton(0.8f, null, singleplayerButtonY, "images/singleplayer-button.png");
+        multiplayerButton = new RectangleButton(0.8f, (Integer) null, (int) (singleplayerButtonY - singleplayerButton.getHeight() - 20), "images/multiplayer-button.png");
         settingsButton = new RectangleButton(0.4f, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 200, "images/settings-button.png");
         trophyButton = new RectangleButton(0.5f, 80, Gdx.graphics.getHeight() - 210, "images/trophy.png");
         menuBackground = new Texture("images/menuBackground.png");

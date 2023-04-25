@@ -115,6 +115,7 @@ public class PlayState extends State{
     @Override
     public void update(float dt) {
         stage.draw();
+        handleInput();
 
         if (!GameOverState.getInstance().isGameOverBoolean()) {
             engine.update(dt);
@@ -128,7 +129,6 @@ public class PlayState extends State{
                 e.printStackTrace();
             }
         }
-        handleInput();
     }
 
     public void calculateMoney() {
@@ -216,7 +216,6 @@ public class PlayState extends State{
     public void render(SpriteBatch batch) {
         Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        //calculateMoney();
 
         batch.begin();
         board.render(batch);
@@ -225,6 +224,10 @@ public class PlayState extends State{
         renderMonsters(batch);
         renderWaveInfo(batch);
         settingsButton.render(batch);
+
+        if (gameOver) {
+            renderGameOver(batch);
+        }
         batch.end();
 
         stage.act(Gdx.graphics.getDeltaTime());
