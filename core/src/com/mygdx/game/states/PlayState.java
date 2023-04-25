@@ -120,6 +120,7 @@ public class PlayState extends State{
             engine.update(dt);
         } else {
             gameOver = true;
+            GameOverState.getInstance().setScore(this.score);
             try {
                 // Sleep for a short duration to reduce CPU usage when the game is over
                 Thread.sleep(100);
