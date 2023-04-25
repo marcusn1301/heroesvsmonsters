@@ -82,7 +82,7 @@ public class LeaderboardState extends State {
             entry.updateTrophy(i);
         }
         updateLeaderboard = false;
-        return leaderboardList;
+        return new ArrayList<>(leaderboardList.subList(0,Math.min(leaderboardList.size(), 10)));
     }
 
     @Override
