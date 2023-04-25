@@ -115,15 +115,15 @@ public class HeroFactory {
     private static float getHeroAttackTimer(HeroType heroType) {
         switch (heroType) {
             case IRONMAN:
-                return 6.5f;
+                return 4f;
             case HULK:
-                return 9f;
+                return 3f;
             case SPIDERMAN:
                 return 6f;
             case THOR:
-                return 7.5f;
+                return 5f;
             case CAPTAIN_AMERICA:
-                return 7f;
+                return 2f;
             default:
                 return 0;
         }

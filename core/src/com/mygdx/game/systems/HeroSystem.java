@@ -48,15 +48,15 @@ public class HeroSystem extends IteratingSystem {
         HeroComponent heroComponent = heroTypeMapper.get(entity);
 
         //If the time elapsed is greater than the given interval, create a new projectile
-        if (attack.getAttackTimeElapsed() >= attack.getAttackInterval() || !heroComponent.isProjectileActive()) {
-            attack.setAttackTimeElapsed(0);
-
             if (engine.getEntitiesFor(Family.all(MonsterComponent.class, CollisionComponent.class).get()).size() > 0) {
-                float posX = position.getPosition().x;
-                float posY = position.getPosition().y;
-                Entity projectile = ProjectileFactory.createProjectile(heroComponent.getHeroType(), new Vector2(posX, posY), entity);
-                engine.addEntity(projectile);
-                heroComponent.setProjectileActive(true);
+                if (attack.getAttackTimeElapsed() >= attack.getAttackInterval() || !heroComponent.isProjectileActive()) {
+                    attack.setAttackTimeElapsed(0);
+
+                    float posX = position.getPosition().x;
+                    float posY = position.getPosition().y;
+                    Entity projectile = ProjectileFactory.createProjectile(heroComponent.getHeroType(), new Vector2(posX, posY), entity);
+                    engine.addEntity(projectile);
+                    heroComponent.setProjectileActive(true);
             }
         }
 
