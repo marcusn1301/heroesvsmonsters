@@ -45,6 +45,10 @@ public class IntroCutsceneState extends State {
         phase = 0;
     }
 
+    public Enums.GameType getType() {
+        return type;
+    }
+
     @Override
     public void update(float dt) {
         elapsedTime += dt;
@@ -85,7 +89,7 @@ public class IntroCutsceneState extends State {
                 if (elapsedTime >= 3.0f) {
                     soundmanager.stopMusic("avengersHype");
                     gsm.pop();
-                    gsm.push(new PlayState());
+                    gsm.push(new PlayState(getType()));
                 }
                 break;
         }
@@ -121,7 +125,7 @@ public class IntroCutsceneState extends State {
                 phase += 1;
             } else {
                 soundmanager.stopMusic("avengersHype");
-                gsm.push(new PlayState());
+                gsm.push(new PlayState(getType()));
             }
         }
     }

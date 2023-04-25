@@ -58,10 +58,12 @@ public class PlayState extends State{
     private int totalKills = 0;
     private int monsterToKill = 0;
     private int score = 0;
+    private boolean singlePlayer;
     private boolean gameOver = false;
 
-    public PlayState() {
+    public PlayState(Enums.GameType type) {
         //super(gsm);
+        this.singlePlayer = type.equals(Enums.GameType.SINGLEPLAYER);
         settingsButton = new CircleButton(40, (Gdx.graphics.getWidth() - 140),  60, "images/settings-button.png");
         gsm = GameStateManager.getGsm();
         initialize();
@@ -83,7 +85,7 @@ public class PlayState extends State{
         //Systems for game logic
         HeroSystem heroSystem = new HeroSystem(engine);
         ProjectileMovementSystem projectileMovementSystem = new ProjectileMovementSystem(engine);
-        WaveSystem waveSystem = new WaveSystem(engine);
+        WaveSystem waveSystem = new WaveSystem(engine, isSinglePlayer());
         MonsterMovementSystem monsterMovementSystem = new MonsterMovementSystem(engine);
         CollisionSystem collisionSystem = new CollisionSystem(engine);
 
@@ -107,8 +109,12 @@ public class PlayState extends State{
     }
 
     private void createBoard() {
-        board = new Board(6,9, engine);
+        board = new Board(6,9, engine, isSinglePlayer());
         board.render(batch);
+    }
+
+    public boolean isSinglePlayer() {
+        return singlePlayer;
     }
 
     @Override
