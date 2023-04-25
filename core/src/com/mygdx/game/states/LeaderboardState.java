@@ -33,18 +33,22 @@ public class LeaderboardState extends State {
     private boolean updateLeaderboard = false;
 
 
-
-
     public LeaderboardState() {
         this.firebaseInterface = FirebaseManager.getInstance().getFirebaseInterface();
-        fetchData("HighScores");
+        firebaseInterface.SetOnValueChangedListener("name");
 
+        //comment
         brickBackground = new Texture("images/brickWall.png");
         highscoreBoard = new Texture("images/highscoreBoard.png");
         font.setColor(Color.BLACK);
         font.getData().setScale(5f);
         highscoreHeader = new RectangleButton(0.7f, null, Gdx.graphics.getHeight() - 170, "images/highscore.png");
         exitButton = new CircleButton(70, Gdx.graphics.getWidth() - 150, Gdx.graphics.getHeight() - 140, "images/redExitCross.png");
+        setHighScoreList();
+    }
+
+    public void setHighScoreList() {
+        fetchData("HighScore");
         entries = populateLeaderboardEntries();
     }
 
@@ -89,7 +93,7 @@ public class LeaderboardState extends State {
     public void update(float dt) {
         handleInput();
         if (updateLeaderboard) {
-            entries = populateLeaderboardEntries();
+            setHighScoreList();
         }
     }
 
