@@ -104,7 +104,7 @@ public class LeaderboardState extends State {
         batch.begin();
 
         batch.draw(brickBackground, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.draw(highscoreBoard, (float) ((Gdx.graphics.getWidth() - highscoreBoard.getWidth() * 1.3 ) / 2), 40, (float) (highscoreBoard.getWidth() * 1.3), (float) (highscoreBoard.getHeight() * 1.32));
+        batch.draw(highscoreBoard, (float) (Gdx.graphics.getWidth() /8), 40, (float) (Gdx.graphics.getWidth() * 6/8), (float) (Gdx.graphics.getHeight() * 4/5));
 
         highscoreHeader.render(batch);
         font.draw(batch, "Name:", Gdx.graphics.getWidth() / 4.1f, Gdx.graphics.getHeight() / 1.4f + Gdx.graphics.getHeight() / 11f);

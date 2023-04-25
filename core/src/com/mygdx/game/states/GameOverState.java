@@ -42,8 +42,8 @@ public class GameOverState extends State{
         exitButton = new CircleButton(70, (int)(Gdx.graphics.getWidth()/ 1.2), Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / 8, "images/redExitCross.png");
 
         font = new BitmapFont();
-        font.setColor(Color.BLACK);
-        font.getData().setScale(1.5f);
+        font.setColor(Color.WHITE);
+        font.getData().setScale(5f);
     }
 
     // Static method to get the singleton instance
@@ -92,9 +92,12 @@ public class GameOverState extends State{
         this.batch.begin();
         gameOver.render(batch);
         submitButton.render(batch);
-        GlyphLayout layout = new GlyphLayout(font, randomName);
-        float textWidth = layout.width;
-        font.draw(this.batch, randomName, (Gdx.graphics.getWidth() - textWidth) / 2, Gdx.graphics.getHeight() / 2);
+        GlyphLayout yourName = new GlyphLayout(font, "Your name is:");
+        GlyphLayout name = new GlyphLayout(font, randomName);
+        font.getData().setScale(5f);
+        font.draw(this.batch, yourName, Gdx.graphics.getWidth()/2f - yourName.width/2, Gdx.graphics.getHeight()/2.2f);
+        font.getData().setScale(7f);
+        font.draw(this.batch, name, (Gdx.graphics.getWidth()/2f) - name.width/2, Gdx.graphics.getHeight() / 3f);
         this.batch.end();
     }
 
@@ -108,7 +111,7 @@ public class GameOverState extends State{
             if (submitButton.getBounds().contains(x,y)) {
                 //implement firebase logic
 
-                firebaseInterface.SetValueInDb("HighScores", "randomName", 999);
+                firebaseInterface.SetValueInDb("HighScore", randomName, getScore());
 
 
                 gsm.set(new GameMenuState());
