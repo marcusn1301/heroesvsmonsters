@@ -237,7 +237,7 @@ public class Board extends Actor implements MoneyObserver {
             //Creates a new monster entity and places it in the midddle of the cell
             placeMonster(entityPlacement);
         }
-       firebaseInterface.SetValueInDb("HighScores", "sindri", 69);
+       //firebaseInterface.SetValueInDb("HighScores", "sindri", 69);
 
        // fetchData("highScores");
     }
