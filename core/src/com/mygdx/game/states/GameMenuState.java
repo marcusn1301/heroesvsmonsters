@@ -66,7 +66,7 @@ public class GameMenuState extends State {
 
     @Override
     public void handleInput() {
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.justTouched()) {
             int x = Gdx.input.getX();
             int y = Gdx.graphics.getHeight() - Gdx.input.getY();
             if (singleplayerButton.getBounds().contains(x, y)) {
