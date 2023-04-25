@@ -37,6 +37,7 @@ public class GameMenuState extends State {
         settingsButton = new RectangleButton(0.4f, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 200, "images/settings-button.png");
         trophyButton = new RectangleButton(0.5f, 80, Gdx.graphics.getHeight() - 210, "images/trophy.png");
         menuBackground = new Texture("images/menuBackground.png");
+        System.out.println(gsm.getStates().size());
     }
 
     public void create() {
@@ -76,11 +77,11 @@ public class GameMenuState extends State {
             } else if (multiplayerButton.getBounds().contains(x,y)) {
                 System.out.println("Selected multiplayer");
                 soundManager.playSound("menuNavigate");
-                gsm.push(new IntroCutsceneState(Enums.GameType.MULTIPLAYER));
+                gsm.set(new IntroCutsceneState(Enums.GameType.MULTIPLAYER));
             } else if (settingsButton.getBounds().contains(x,y)) {
                 gsm.push(new SettingsState(Enums.SettingsBackground.CITY, Enums.GameType.MENU));
             } else if (trophyButton.getBounds().contains(x,y)) {
-                gsm.push(new LeaderboardState());
+                gsm.set(new LeaderboardState());
             }
         }
     }

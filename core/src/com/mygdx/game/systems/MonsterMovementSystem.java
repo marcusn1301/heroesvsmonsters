@@ -7,9 +7,9 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.mygdx.game.components.CollisionComponent;
+import com.mygdx.game.components.GameOverComponent;
 import com.mygdx.game.components.MonsterComponent;
 import com.mygdx.game.components.PositionComponent;
-import com.mygdx.game.states.GameOverState;
 
 public class MonsterMovementSystem extends IteratingSystem {
     private final ComponentMapper<MonsterComponent> monsterMapper;
@@ -40,10 +40,11 @@ public class MonsterMovementSystem extends IteratingSystem {
         //Remove monsters that are out of bounds
         if (monsterPos.getPosition().x <= 0 + Gdx.graphics.getWidth() / 8f) {
             System.out.print("Game over in MonsterMovementSystem");
-            GameOverState.getInstance().setGameOverBoolean(true);
+            for (Entity entit1 : engine.getEntitiesFor(Family.all(GameOverComponent.class).get())) {
+                entit1.getComponent(GameOverComponent.class).setGameOver(true);
+            }
             entity.removeAll();
             engine.removeEntity(entity);
-
         }
 
 

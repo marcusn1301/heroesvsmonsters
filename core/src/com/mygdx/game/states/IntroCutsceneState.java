@@ -125,7 +125,7 @@ public class IntroCutsceneState extends State {
                 phase += 1;
             } else {
                 soundmanager.stopMusic("avengersHype");
-                gsm.push(new PlayState(getType()));
+                gsm.set(new PlayState(getType()));
             }
         }
     }

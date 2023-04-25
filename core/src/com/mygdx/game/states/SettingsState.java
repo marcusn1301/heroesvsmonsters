@@ -104,6 +104,7 @@ public class SettingsState extends State {
                 dispose();
                 gsm.pop();
             } else if(leaveGameButton.getBounds().contains(touchX, touchY)) {
+                gsm.pop();
                 gsm.set(new GameMenuState());
             } else {
                 SettingsData settingsData = SettingsData.loadSettings();

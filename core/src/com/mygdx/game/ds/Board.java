@@ -31,6 +31,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.FireBaseInterface;
 import com.mygdx.game.FirebaseManager;
 import com.mygdx.game.MoneyObserver;
+import com.mygdx.game.components.GameOverComponent;
 import com.mygdx.game.components.WaveComponent;
 import com.mygdx.game.states.GameOverState;
 import com.mygdx.game.systems.MoneySystem;
@@ -46,6 +47,7 @@ import com.mygdx.game.entities.MonsterFactory;
 import com.mygdx.game.types.HeroType;
 import com.mygdx.game.ds.buttons.DisplayHeroButton;
 import com.mygdx.game.types.MonsterType;
+import com.mygdx.game.utils.Enums;
 
 import java.util.List;
 
@@ -84,6 +86,7 @@ public class Board extends Actor implements MoneyObserver {
     private InputMultiplexer multiplexer;
     private final int gridWidth, gridHeight, startX, startY;
     private boolean gridDrawn;
+    private boolean gameOver;
     private boolean isInputProcessorAdded;
     private int rightPaneWidth;
     private final Engine engine;
@@ -121,13 +124,13 @@ public class Board extends Actor implements MoneyObserver {
         setDisplayHeroes();
         setDisplayMonsters();
         initButtonTextures();
-        //setupInputProcessor();
         displayHeroButtons = new Array<>();
         createDisplayHeroButtons(displayHeroes);
         multiplexer = new InputMultiplexer();
         stage = new Stage();
         multiplexer.addProcessor(stage);
         Gdx.input.setInputProcessor(multiplexer);
+        this.gameOver = false;
         drawGrid();
     }
 
@@ -146,30 +149,6 @@ public class Board extends Actor implements MoneyObserver {
         this.batch.end();
     }
 
-
-
-
-    public int getRows() {
-        return rows;
-    }
-
-    public int getCols() {
-        return cols;
-    }
-
-    public Texture[][] getTextures() {
-        return textures;
-    }
-
-    public void setTextures(Texture[][] textures) {
-        this.textures = textures;
-    }
-
-    public void setTexture(int row, int col, Texture texture) {
-        setCell(row, col, 1);
-        textures[row][col] = texture;
-    }
-
     public int getCell(int row, int col) {
         return cells[row][col];
     }
@@ -178,22 +157,17 @@ public class Board extends Actor implements MoneyObserver {
         cells[row][col] = value;
     }
 
+
     public void render(SpriteBatch batch) {
-        //createLeftTable();
         drawLaneDividers();
         drawPaneBackgrounds();
-        if (!isInputProcessorAdded && !GameOverState.getInstance().isGameOverBoolean()) {
+        if (!isInputProcessorAdded && !gameOver) {
             setupInputProcessor();
             isInputProcessorAdded = true;
         }
-        if (isInputProcessorAdded && GameOverState.getInstance().isGameOverBoolean()) {
+        if (isInputProcessorAdded && gameOver) {
             Gdx.input.setInputProcessor(null);
-
-
         }
-
-        //createRightTable();
-        //drawDisplayPanel(batch);
 
         this.batch.begin();
         drawHeroes();
@@ -258,6 +232,10 @@ public class Board extends Actor implements MoneyObserver {
                 }
             }
         }
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
     }
 
     public void drawGrid() {
@@ -638,7 +616,7 @@ public class Board extends Actor implements MoneyObserver {
         this.displayMonsters.add(goblin_glider);
     }
 
-    private void dispose() {
+    public void dispose() {
         for (Texture buttonTexture : buttonTextures) {
             buttonTexture.dispose();
         }

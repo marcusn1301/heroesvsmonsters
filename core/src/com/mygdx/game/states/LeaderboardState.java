@@ -119,12 +119,12 @@ public class LeaderboardState extends State {
 
     @Override
     public void handleInput() {
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.justTouched()) {
             float x = Gdx.input.getX();
             float y = Gdx.graphics.getHeight() - Gdx.input.getY();
             if (exitButton.getBounds().contains(x,y)) {
                 dispose();
-                gsm.pop();
+                gsm.set(new GameMenuState());
             }
         }
     }

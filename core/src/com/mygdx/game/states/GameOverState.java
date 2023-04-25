@@ -3,59 +3,39 @@ package com.mygdx.game.states;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.FireBaseInterface;
 import com.mygdx.game.FirebaseManager;
 import com.mygdx.game.ds.buttons.CircleButton;
 import com.mygdx.game.ds.buttons.RectangleButton;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-
 
 import java.util.Random;
 
-public class GameOverState extends State{
+public class GameOverState extends State {
     private final GameStateManager gsm;
-    private boolean gameOverBoolean;
     private final RectangleButton gameOver;
     private final SpriteBatch batch;
-
-    // Singleton instance
-    private static GameOverState instance;
     private final RectangleButton submitButton;
     private final CircleButton exitButton;
-    private String username = "Unknown player";
-    private BitmapFont font;
+    private final BitmapFont font;
     private String randomName = "";
-    private FireBaseInterface firebaseInterface;
-    private int score = 0;
+    private final FireBaseInterface firebaseInterface;
+    private final int score;
 
-
-    private GameOverState() {
-        super();
+    public GameOverState(int score) {
         this.firebaseInterface = FirebaseManager.getInstance().getFirebaseInterface();
+        this.gsm = GameStateManager.getGsm();
 
         generateRandomName();
-        gsm = GameStateManager.getGsm();
         gameOver = new RectangleButton(0.5f, null, (int)(Gdx.graphics.getHeight() / 1.4),"images/GameOver.png");
         batch = new SpriteBatch();
         submitButton = new RectangleButton(0.7f, null, Gdx.graphics.getHeight() / 14, "images/submit-button.png");
         exitButton = new CircleButton(70, (int)(Gdx.graphics.getWidth()/ 1.2), Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / 8, "images/redExitCross.png");
-
         font = new BitmapFont();
         font.setColor(Color.WHITE);
         font.getData().setScale(5f);
-    }
-
-    // Static method to get the singleton instance
-    public static GameOverState getInstance() {
-        if (instance == null) {
-            instance = new GameOverState();
-        }
-        return instance;
-    }
-
-    public boolean isGameOverBoolean() {
-        return gameOverBoolean;
+        this.score = score;
     }
 
     public void generateRandomName() {
@@ -70,18 +50,6 @@ public class GameOverState extends State{
         }
     }
 
-    public void setGameOverBoolean(boolean gameOverBoolean) {
-        this.gameOverBoolean = gameOverBoolean;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
     @Override
     public void update(float dt) {
         handleInput();
@@ -89,34 +57,29 @@ public class GameOverState extends State{
 
     @Override
     public void render(SpriteBatch batch) {
-        this.batch.begin();
+        batch.begin();
         gameOver.render(batch);
         submitButton.render(batch);
         GlyphLayout yourName = new GlyphLayout(font, "Your name is:");
         GlyphLayout name = new GlyphLayout(font, randomName);
         font.getData().setScale(5f);
-        font.draw(this.batch, yourName, Gdx.graphics.getWidth()/2f - yourName.width/2, Gdx.graphics.getHeight()/2.2f);
+        font.draw(batch, yourName, Gdx.graphics.getWidth()/2f - yourName.width/2, Gdx.graphics.getHeight()/2.2f);
         font.getData().setScale(7f);
-        font.draw(this.batch, name, (Gdx.graphics.getWidth()/2f) - name.width/2, Gdx.graphics.getHeight() / 3f);
-        this.batch.end();
+        font.draw(batch, name, (Gdx.graphics.getWidth()/2f) - name.width/2, Gdx.graphics.getHeight() / 3f);
+        batch.end();
     }
-
 
     @Override
     public void handleInput() {
-
         if (Gdx.input.justTouched()) {
             int x = Gdx.input.getX();
             int y = Gdx.graphics.getHeight() - Gdx.input.getY();
             if (submitButton.getBounds().contains(x,y)) {
-                //implement firebase logic
-
-                firebaseInterface.SetValueInDb("HighScore", randomName, getScore());
-
-
+                firebaseInterface.SetValueInDb("HighScore", randomName, this.score);
                 gsm.set(new GameMenuState());
                 gsm.push(new LeaderboardState());
             } else if(exitButton.getBounds().contains(x,y)) {
+                gsm.pop();
                 gsm.set(new GameMenuState());
             }
         }

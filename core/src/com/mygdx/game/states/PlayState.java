@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.game.components.GameOverComponent;
 import com.mygdx.game.components.WaveComponent;
 import com.mygdx.game.ds.buttons.CircleButton;
 import com.mygdx.game.systems.MoneySystem;
@@ -44,21 +45,18 @@ public class PlayState extends State{
     private Stage stage;
     private ShapeRenderer shapeRenderer;
     private SoundManager soundManager = SoundManager.getInstance();
-    private MoneySystem moneySystem;
-    private boolean isPlacementAllowed = false;
     private static Engine engine;
     private Board board;
-    private TextButton counterText1;
     private final GameStateManager gsm;
     private final CircleButton settingsButton;
-    private int screenWidth = Gdx.graphics.getWidth();
-    private int screenHeight = Gdx.graphics.getHeight();
+    private final int screenWidth = Gdx.graphics.getWidth();
+    private final int screenHeight = Gdx.graphics.getHeight();
     private int monsterCount = 0;
     private int waveCount = 0;
     private int totalKills = 0;
     private int monsterToKill = 0;
     private int score = 0;
-    private boolean singlePlayer;
+    private final boolean singlePlayer;
     private boolean gameOver = false;
 
     public PlayState(Enums.GameType type) {
@@ -81,6 +79,8 @@ public class PlayState extends State{
     private void initializeGameEngine() {
         //Central game engine
         engine = new Engine();
+        Entity gameOver = new Entity();
+        gameOver.add(new GameOverComponent());
 
         //Systems for game logic
         HeroSystem heroSystem = new HeroSystem(engine);
@@ -94,11 +94,7 @@ public class PlayState extends State{
         engine.addSystem(waveSystem);
         engine.addSystem(monsterMovementSystem);
         engine.addSystem(collisionSystem);
-
-        /*Entity spiderman = HeroFactory.createHero(HeroType.SPIDERMAN, new Vector2(50, 50));
-        Entity captain = HeroFactory.createHero(HeroType.CAPTAIN_AMERICA, new Vector2(50, 50));
-        engine.addEntity(spiderman);
-        engine.addEntity(captain);*/
+        engine.addEntity(gameOver);
     }
 
     private void initFontStageAndRenderer() {
@@ -121,53 +117,13 @@ public class PlayState extends State{
     public void update(float dt) {
         stage.draw();
         handleInput();
-
-        if (!GameOverState.getInstance().isGameOverBoolean()) {
-            engine.update(dt);
-        } else {
-            gameOver = true;
-            GameOverState.getInstance().setScore(this.score);
-            try {
-                // Sleep for a short duration to reduce CPU usage when the game is over
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        for (Entity entit1 : engine.getEntitiesFor(Family.all(GameOverComponent.class).get())) {
+            if (entit1.getComponent(GameOverComponent.class).isGameOver()) {
+                this.board.setGameOver(true);
+                gsm.set(new GameOverState(this.score));
             }
         }
-    }
-
-    public void calculateMoney() {
-        float iconSize = Gdx.graphics.getWidth() / 30f;
-        BitmapFont counterFont = new BitmapFont();
-        counterFont.getData().setScale(4);
-        // First counter
-        counterText1 = new TextButton(String.valueOf(moneySystem.getMoney()), new TextButton.TextButtonStyle(null, null, null, counterFont));
-        counterText1.pad(2);
-        counterText1.setWidth(iconSize);
-        counterText1.setHeight(iconSize / 2);
-        board.getRightTable().add(counterText1);
-
-        Texture counterIconTexture1 = new Texture("images/coin2.png");
-        Image counterIcon1 = new Image(counterIconTexture1);
-        board.getRightTable().add(counterIcon1).size(iconSize, iconSize).pad(5);
-        board.getRightTable().row();
-
-        // Second counter
-        TextButton counterText2 = new TextButton("2000", new TextButton.TextButtonStyle(null, null, null, counterFont));
-        counterText2.pad(2);
-        counterText2.setWidth(iconSize);
-        counterText2.setHeight(iconSize / 2);
-        board.getRightTable().add(counterText2);
-
-        Texture counterIconTexture2 = new Texture("images/coin2.png");
-        Image counterIcon2 = new Image(counterIconTexture2);
-        board.getRightTable().add(counterIcon2).size(iconSize, iconSize).pad(5);
-        board.getRightTable().row();
-    }
-
-    public void renderGameOver(SpriteBatch batch) {
-        GameOverState.getInstance().handleInput();
-        GameOverState.getInstance().render(batch);
+        engine.update(dt);
     }
 
     public void renderHeroes(SpriteBatch batch) {
@@ -229,10 +185,6 @@ public class PlayState extends State{
         renderMonsters(batch);
         renderWaveInfo(batch);
         settingsButton.render(batch);
-
-        if (gameOver) {
-            renderGameOver(batch);
-        }
         batch.end();
 
         stage.act(Gdx.graphics.getDeltaTime());
@@ -255,6 +207,7 @@ public class PlayState extends State{
         batch.dispose();
         font.dispose();
         stage.dispose();
+        board.dispose();
         shapeRenderer.dispose();
     }
 }
