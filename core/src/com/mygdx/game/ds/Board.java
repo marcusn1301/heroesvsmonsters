@@ -316,7 +316,6 @@ public class Board extends Actor implements MoneyObserver {
             buttonClickable.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    System.out.println("Button position: (" + monsterType + ", at " + buttonClickable.getX() + ", " + buttonClickable.getY() + ")");
                     setChosenMonsterType(monsterType);
                 }
             });
@@ -358,7 +357,6 @@ public class Board extends Actor implements MoneyObserver {
             buttonClickable.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    System.out.println("Button position: (" + button.getHeroType() + ", at " + buttonClickable.getX() + ", " + buttonClickable.getY() + ")");
                     setChosenHeroType(button.getHeroType());
 
                     // Sets the cost of the hero to be placed
@@ -421,7 +419,6 @@ public class Board extends Actor implements MoneyObserver {
                 PositionComponent position = positionMapper.get(e);
                 Vector2 heroPos = position.getPosition();
                 if (heroPos.epsilonEquals(placementPosition, epsilon)) {
-                    System.out.println("There is already a hero in this cell");
                     cellHasHero = true;
                     break;
                 }
@@ -432,7 +429,6 @@ public class Board extends Actor implements MoneyObserver {
                 if (moneySystem.getMoney() - chosenHeroPrice >= 0) {
                     Entity hero = HeroFactory.createHero(getChosenHeroType(), placementPosition);
                     engine.addEntity(hero);
-                    System.out.println("Created new hero entity and added to game engine");
 
                     // Subtract the money spent on the hero
                     moneySystem.removeMoney(chosenHeroPrice);
@@ -459,8 +455,6 @@ public class Board extends Actor implements MoneyObserver {
 
             }
 
-            } else {
-                System.out.println("Cell already has a hero");
             }
         }
 
@@ -476,7 +470,6 @@ public class Board extends Actor implements MoneyObserver {
                 PositionComponent position = positionMapper.get(e);
                 Vector2 monsterPos = position.getPosition();
                 if (monsterPos.epsilonEquals(placementPosition, epsilon)) {
-                    System.out.println("There is already a monster in this cell");
                     cellHasMonster = true;
                     break;
                 }
@@ -495,7 +488,6 @@ public class Board extends Actor implements MoneyObserver {
                     placementPosition.x = Gdx.graphics.getWidth() - this.rightPaneWidth - this.textureWidth;
                     Entity monster = MonsterFactory.createMonster(getChosenMonsterType(), placementPosition);
                     engine.addEntity(monster);
-                    System.out.println("Created new monster entity and added to game engine");
                 }
             }
         }

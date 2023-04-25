@@ -39,7 +39,6 @@ public class MonsterMovementSystem extends IteratingSystem {
 
         //Remove monsters that are out of bounds
         if (monsterPos.getPosition().x <= 0 + Gdx.graphics.getWidth() / 8f) {
-            System.out.print("Game over in MonsterMovementSystem");
             for (Entity entit1 : engine.getEntitiesFor(Family.all(GameOverComponent.class).get())) {
                 entit1.getComponent(GameOverComponent.class).setGameOver(true);
             }

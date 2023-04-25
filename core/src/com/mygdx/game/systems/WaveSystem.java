@@ -35,7 +35,6 @@ public class WaveSystem extends IteratingSystem {
         this.engine = engine;
         initializeWaveSystem();
         monsterTypes = MonsterType.values();
-        System.out.println("Wave 1 is starting in 5 seconds");
         this.isSinglePlayer = isSinglePlayer;
         monsterTypes = MonsterType.values();
         gameWidth = Gdx.graphics.getWidth() - Gdx.graphics.getWidth()/6;
@@ -61,13 +60,9 @@ public class WaveSystem extends IteratingSystem {
         wave.setTimeSinceLastSpawn(wave.getTimeSinceLastSpawn() + deltaTime);
         wave.setWaveTimeElapsed(wave.getWaveTimeElapsed() + deltaTime);
 
-        System.out.println("Wave time: " + wave.getWaveTimeElapsed());
-        System.out.println("state " + wave.isActive());
-
         //Begin new wave 5 seconds after all monsters are gone
         if (wave.getWaveTimeElapsed() >= 10f && !wave.isActive()) {
             wave.setActive(true);
-            System.out.println("Beginning wave " + wave.getWaveNumber());
             wave.setWaveNumber(wave.getWaveNumber() + 1);
             wave.setNumberOfMonsters((wave.getWaveNumber() + 1) * 2 + 1);
             wave.setMonstersToKill((wave.getWaveNumber() + 1) * 2 + 1);
@@ -76,7 +71,6 @@ public class WaveSystem extends IteratingSystem {
 
         //End wave and begin timer when all monsters are killed
         if (wave.getNumberOfMonsters() == 0 && wave.isActive()) {
-            //System.out.println("Ending wave " + wave.getWaveNumber());
             wave.setActive(false);
             wave.setWaveTimeElapsed(0);
         }
@@ -94,7 +88,6 @@ public class WaveSystem extends IteratingSystem {
         private void spawnMonster() {
             int monsterType = random.nextInt(monsterTypes.length);
             int randomRow = random.nextInt(rows.size());
-            System.out.println("row: " + rows.get(randomRow));
             monsterPos = new Vector2(gameWidth, rows.get(randomRow));
             Entity monster = MonsterFactory.createMonster(monsterTypes[monsterType], monsterPos);
             engine.addEntity(monster);

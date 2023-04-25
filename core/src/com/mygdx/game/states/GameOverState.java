@@ -45,7 +45,6 @@ public class GameOverState extends State {
         for (int i = 0; i < 10; i++) {
             String animal = animals[random.nextInt(animals.length)];
             int number = random.nextInt(100);
-            System.out.println(animal + " " + number);
             randomName = animal + "" + number;
         }
     }

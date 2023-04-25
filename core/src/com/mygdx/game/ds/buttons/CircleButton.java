@@ -37,25 +37,10 @@ public class CircleButton {
         this.img = new Texture(internalPath);
     }
 
-    public Vector2 getPosition() {
-        return position;
-    }
-
     public Circle getBounds() {
         return bounds;
     }
 
-    public ShapeRenderer getShape() {
-        return shape;
-    }
-
-    public int getRadius() {
-        return radius;
-    }
-
-    public Texture getImg() {
-        return img;
-    }
 
     public void render(SpriteBatch sb) {
         sb.draw(img, position.x - radius, position.y - radius, radius * 2, radius * 2);
