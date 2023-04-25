@@ -71,7 +71,7 @@ public class Slider {
     }
 
     private boolean checkBounds(float touchX, float touchY) {
-        return touchX >= knobX && touchX <= knobX + height && touchY >= knobY + yPos && touchY <= knobY + height + yPos;
+        return touchX >= knobX - 20 && touchX <= knobX + height + 20 && touchY >= knobY + yPos - 20 && touchY <= knobY + height + yPos + 20;
     }
 
     private void handleUpdateSlider() {
