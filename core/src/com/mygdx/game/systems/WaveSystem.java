@@ -67,6 +67,7 @@ public class WaveSystem extends IteratingSystem {
             wave.setNumberOfMonsters((wave.getWaveNumber() + 1) * 2 + 1);
             wave.setMonstersToKill((wave.getWaveNumber() + 1) * 2 + 1);
             wave.setMonstersKilled(0);
+            wave.setSpawnTimer(wave.getSpawnTimer()/2);
         }
 
         //End wave and begin timer when all monsters are killed
