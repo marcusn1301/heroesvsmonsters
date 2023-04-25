@@ -108,7 +108,7 @@ public class GameOverState extends State{
             if (submitButton.getBounds().contains(x,y)) {
                 //implement firebase logic
 
-                firebaseInterface.SetValueInDb("HighScore", "randomName", 999);
+                firebaseInterface.SetValueInDb("HighScores", "randomName", 999);
 
 
                 gsm.set(new GameMenuState());

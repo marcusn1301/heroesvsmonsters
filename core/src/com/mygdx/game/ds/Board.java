@@ -245,7 +245,7 @@ public class Board extends Actor implements MoneyObserver {
             placeMonster(entityPlacement);
         }
 
-       firebaseInterface.SetValueInDb("HighScores", "sindri", 69);
+       firebaseInterface.SetValueInDb("HighScores", "TEST!", 69);
 
     }
 
