@@ -1,54 +1,29 @@
 package com.mygdx.game.states;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.ScreenUtils;
+import com.mygdx.game.ds.buttons.CircleButton;
 import com.mygdx.game.ds.buttons.RectangleButton;
-import com.mygdx.game.utils.Enums;
 
 public class GameOverState extends State{
     private final GameStateManager gsm;
     private boolean gameOverBoolean;
-    private final Texture gameOver;
-    private final Texture playAgain;
-    private final RectangleButton yes;
-    private final RectangleButton no;
-    private int screenHeight = Gdx.graphics.getHeight();
-    private int screenWidth = Gdx.graphics.getWidth();
-    private SpriteBatch batch;
-    private float playAgainY;
-    private float playAgainX;
+    private final RectangleButton gameOver;
+    private final SpriteBatch batch;
 
     // Singleton instance
     private static GameOverState instance;
     private final RectangleButton submitButton;
+    private final CircleButton exitButton;
+    private String username = "Unknown player";
 
-    public GameOverState() {
+    private GameOverState() {
         super();
         gsm = GameStateManager.getGsm();
-        gameOver = new Texture("images/GameOver.png");
-        playAgain = new Texture("images/PlayAgain.png");
-        Texture yesTexture = new Texture("images/Yes.png");
-
-        playAgainX = (screenWidth - playAgain.getWidth()) / 2;
-        playAgainY = (screenHeight / 2) - (playAgain.getHeight());
-
-        float yesX = (screenWidth / 2) - yesTexture.getWidth() - 40;
-        float yesY = (int) playAgainY - playAgain.getHeight() * 2;
-        yes = new RectangleButton(1F, (int) yesX, (int) yesY, "images/Yes.png");
-
-        float noX = (screenWidth / 2) + 10;
-        float noY = (int) (playAgainY - playAgain.getHeight() * 2);
-        no = new RectangleButton(1F, (int) noX, (int) noY, "images/No.png");
+        gameOver = new RectangleButton(0.5f, null, (int)(Gdx.graphics.getHeight() / 1.4),"images/GameOver.png");
         batch = new SpriteBatch();
-
-        submitButton = new RectangleButton(1f, null, Gdx.graphics.getHeight() / 14, "images/submit-button.png");
+        submitButton = new RectangleButton(0.7f, null, Gdx.graphics.getHeight() / 14, "images/submit-button.png");
+        exitButton = new CircleButton(70, (int)(Gdx.graphics.getWidth()/ 1.2), Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / 8, "images/redExitCross.png");
     }
 
     // Static method to get the singleton instance
@@ -74,18 +49,11 @@ public class GameOverState extends State{
 
     @Override
     public void render(SpriteBatch batch) {
-
         this.batch.begin();
-        float gameOverX = (screenWidth - gameOver.getWidth()) / 2;
-        float gameOverY = (screenHeight + gameOver.getHeight()) / 2;
-        batch.draw(gameOver, gameOverX, gameOverY);
-        batch.draw(playAgain, playAgainX, playAgainY);
+        gameOver.render(batch);
         submitButton.render(batch);
-        yes.render(batch);
-        no.render(batch);
-
+        exitButton.render(batch);
         this.batch.end();
-
     }
 
 
@@ -94,18 +62,12 @@ public class GameOverState extends State{
         if (Gdx.input.justTouched()) {
             int x = Gdx.input.getX();
             int y = Gdx.graphics.getHeight() - Gdx.input.getY();
-            if (yes.getBounds().contains(x, y)) {
-                gsm.push(new PlayState());
-                System.out.println("Clicked on yes");
-                setGameOverBoolean(false);
-            } else if (no.getBounds().contains(x,y)) {
-                gsm.push(new GameMenuState());
-                setGameOverBoolean(false);
-            } else if (submitButton.getBounds().contains(x,y)) {
+            if (submitButton.getBounds().contains(x,y)) {
                 //implement firebase logic
-                gsm.pop();
-                gsm.push(new GameMenuState());
+                gsm.set(new GameMenuState());
                 gsm.push(new LeaderboardState());
+            } else if(exitButton.getBounds().contains(x,y)) {
+                gsm.set(new GameMenuState());
             }
         }
     }
@@ -114,8 +76,6 @@ public class GameOverState extends State{
     public void dispose() {
         batch.dispose();
         gameOver.dispose();
-        playAgain.dispose();
-        yes.dispose();
-        no.dispose();
+        submitButton.dispose();
     }
 }

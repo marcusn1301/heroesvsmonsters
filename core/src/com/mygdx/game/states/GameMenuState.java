@@ -87,6 +87,5 @@ public class GameMenuState extends State {
     public void dispose() {
         singleplayerButton.dispose();
         multiplayerButton.dispose();
-        System.out.print("Menu State Disposed");
     }
 }

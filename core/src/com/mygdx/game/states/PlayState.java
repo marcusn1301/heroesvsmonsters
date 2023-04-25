@@ -119,7 +119,6 @@ public class PlayState extends State{
 
         if (!GameOverState.getInstance().isGameOverBoolean()) {
             engine.update(dt);
-            System.out.println("engine running");
         } else {
             gameOver = true;
             try {

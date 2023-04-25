@@ -186,7 +186,6 @@ public class Board extends Actor implements MoneyObserver {
         }
         if (isInputProcessorAdded && GameOverState.getInstance().isGameOverBoolean()) {
             Gdx.input.setInputProcessor(null);
-            System.out.println("Removed input processor");
 
 
         }
@@ -226,19 +225,16 @@ public class Board extends Actor implements MoneyObserver {
     }
     protected void onCellClicked(int row, int col) {
         // Add your logic here for when a cell is clicked
-        System.out.println("Cell clicked: row " + row + ", col " + col);
         int displayPanelWidth = Gdx.graphics.getWidth() / 8;
         int middleOfCellX = (col * cellWidth) + displayPanelWidth;
         int middleOfCellY = row * cellHeight;
 
-        System.out.print(" x: " + middleOfCellX + " y: " + middleOfCellY);
         Vector2 entityPlacement = new Vector2(middleOfCellX, middleOfCellY);
 
         //Creates new hero entity and sets its position to the middle of the clicked cell
         if (getChosenHeroType() != null) {
 
             placeHero(entityPlacement);
-            System.out.println("Cell clicked: row " + row + ", col " + col);
 
         } else if (getChosenMonsterType() != null) {
             //Creates a new monster entity and places it in the midddle of the cell
@@ -290,12 +286,6 @@ public class Board extends Actor implements MoneyObserver {
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 int col = (screenX - startX) / cellWidth;
                 int row = (screenY - startY) / cellHeight;
-                int x = startX + col * cellWidth;
-                int y = startY + row * cellHeight;
-
-                if (screenX >= x && screenX < x + cellWidth && screenY >= y && screenY < y + cellHeight) {
-                    System.out.println("Cell clicked: (" + row + ", " + col + ")");
-                }
 
                 return super.touchDown(screenX, screenY, pointer, button);
             }
