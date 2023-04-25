@@ -57,12 +57,14 @@ public class PlayState extends State{
     private int totalKills = 0;
     private int monsterToKill = 0;
     private int score = 0;
+    private Enums.GameType playerMode;
 
-    public PlayState() {
+    public PlayState(Enums.GameType type) {
         //super(gsm);
         settingsButton = new CircleButton(40, (Gdx.graphics.getWidth() - 140),  60, "images/settings-button.png");
         gsm = GameStateManager.getGsm();
         initialize();
+        this.playerMode = type;
     }
 
     private void initialize() {
@@ -82,7 +84,7 @@ public class PlayState extends State{
         //Systems for game logic
         HeroSystem heroSystem = new HeroSystem(engine);
         ProjectileMovementSystem projectileMovementSystem = new ProjectileMovementSystem(engine);
-        WaveSystem waveSystem = new WaveSystem(engine);
+        WaveSystem waveSystem = new WaveSystem(engine, getPlayerMode());
         MonsterMovementSystem monsterMovementSystem = new MonsterMovementSystem(engine);
         CollisionSystem collisionSystem = new CollisionSystem(engine);
 
@@ -108,6 +110,10 @@ public class PlayState extends State{
     private void createBoard() {
         board = new Board(6,9, engine);
         board.render(batch);
+    }
+
+    public Enums.GameType getPlayerMode() {
+        return playerMode;
     }
 
     @Override

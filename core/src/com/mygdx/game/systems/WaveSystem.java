@@ -12,21 +12,39 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.components.WaveComponent;
 import com.mygdx.game.entities.MonsterFactory;
 import com.mygdx.game.types.MonsterType;
+import com.mygdx.game.utils.Enums;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class WaveSystem extends IteratingSystem {
     private ComponentMapper<WaveComponent> waveMapper;
     private MonsterType[] monsterTypes;
+    private Enums.GameType playerMode;
     private Engine engine;
+    private Vector2 monsterPos;
+    private int gameWidth;
+    private int gameHeight;
+    private int cellHeight;
+    private int rowCount;
+    private ArrayList<Integer> rows;
 
-    public WaveSystem(Engine engine) {
+    public WaveSystem(Engine engine, Enums.GameType playerMode) {
         super(Family.all(WaveComponent.class).get());
         waveMapper = ComponentMapper.getFor(WaveComponent.class);
         this.engine = engine;
         initializeWaveSystem();
         monsterTypes = MonsterType.values();
         System.out.println("Wave 1 is starting in 5 seconds");
+        this.playerMode = playerMode;
+        monsterTypes = MonsterType.values();
+        monsterPos = new Vector2(gameWidth - gameWidth/8f, 0);
+        gameWidth = Gdx.graphics.getWidth();
+        gameHeight = Gdx.graphics.getHeight();
+        rowCount = 6;
+        cellHeight = gameHeight / rowCount;
+        rows = new ArrayList<Integer>();
+        initRows();
     }
 
     private void initializeWaveSystem() {
@@ -59,5 +77,22 @@ public class WaveSystem extends IteratingSystem {
             wave.setActive(false);
             wave.setWaveTimeElapsed(wave.getWaveTimeElapsed() + deltaTime);
         }
+
+        if (this.playerMode == Enums.GameType.SINGLEPLAYER) {
+            spawnMonster();
+        }
+
     }
+
+        private void spawnMonster() {
+            int monsterType = random.nextInt(monsterTypes.length);
+            int randomRow = random.nextInt(rows.size());
+            Entity monster = MonsterFactory.createMonster(monsterTypes[monsterType], monsterPos.set(monsterPos.x, randomRow));
+        }
+
+        private void initRows() {
+            for (int i = 0; i < rowCount; i++) {
+                rows.add((cellHeight/2) * i);
+            }
+        }
 }
