@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.components.WaveComponent;
+import com.mygdx.game.ds.buttons.CircleButton;
 import com.mygdx.game.systems.MoneySystem;
 import com.mygdx.game.SoundManager;
 import com.mygdx.game.components.AttackComponent;
@@ -48,8 +49,8 @@ public class PlayState extends State{
     private static Engine engine;
     private Board board;
     private TextButton counterText1;
-    private final RectangleButton menuButton;
     private final GameStateManager gsm;
+    private final CircleButton settingsButton;
     private int screenWidth = Gdx.graphics.getWidth();
     private int screenHeight = Gdx.graphics.getHeight();
     private int monsterCount = 0;
@@ -61,7 +62,7 @@ public class PlayState extends State{
 
     public PlayState() {
         //super(gsm);
-        menuButton = new RectangleButton(0.5f, Gdx.graphics.getWidth() - 137, Gdx.graphics.getHeight() - 100, "images/Lobby-button.png");
+        settingsButton = new CircleButton(40, (Gdx.graphics.getWidth() - 140),  60, "images/settings-button.png");
         gsm = GameStateManager.getGsm();
         initialize();
     }
@@ -127,6 +128,36 @@ public class PlayState extends State{
                 e.printStackTrace();
             }
         }
+        handleInput();
+    }
+
+    public void calculateMoney() {
+        float iconSize = Gdx.graphics.getWidth() / 30f;
+        BitmapFont counterFont = new BitmapFont();
+        counterFont.getData().setScale(4);
+        // First counter
+        counterText1 = new TextButton(String.valueOf(moneySystem.getMoney()), new TextButton.TextButtonStyle(null, null, null, counterFont));
+        counterText1.pad(2);
+        counterText1.setWidth(iconSize);
+        counterText1.setHeight(iconSize / 2);
+        board.getRightTable().add(counterText1);
+
+        Texture counterIconTexture1 = new Texture("images/coin2.png");
+        Image counterIcon1 = new Image(counterIconTexture1);
+        board.getRightTable().add(counterIcon1).size(iconSize, iconSize).pad(5);
+        board.getRightTable().row();
+
+        // Second counter
+        TextButton counterText2 = new TextButton("2000", new TextButton.TextButtonStyle(null, null, null, counterFont));
+        counterText2.pad(2);
+        counterText2.setWidth(iconSize);
+        counterText2.setHeight(iconSize / 2);
+        board.getRightTable().add(counterText2);
+
+        Texture counterIconTexture2 = new Texture("images/coin2.png");
+        Image counterIcon2 = new Image(counterIconTexture2);
+        board.getRightTable().add(counterIcon2).size(iconSize, iconSize).pad(5);
+        board.getRightTable().row();
     }
 
     public void renderGameOver(SpriteBatch batch) {
@@ -193,10 +224,7 @@ public class PlayState extends State{
         renderProjectiles(batch);
         renderMonsters(batch);
         renderWaveInfo(batch);
-        if (gameOver) {
-            renderGameOver(batch);
-        }
-        batch.draw(menuButton.getImg(), menuButton.getPosition().x - menuButton.getWidth() / 2f,10,  menuButton.getWidth(), menuButton.getHeight());
+        settingsButton.render(batch);
         batch.end();
 
         stage.act(Gdx.graphics.getDeltaTime());
@@ -208,8 +236,7 @@ public class PlayState extends State{
         if (Gdx.input.isTouched()) {
             float touchX = Gdx.input.getX();
             float touchY = Gdx.graphics.getHeight() - Gdx.input.getY();
-            if (menuButton.getBounds().contains(touchX, touchY)) {
-                //Implement Game.pause();
+            if (settingsButton.getBounds().contains(touchX, touchY)) {
                 gsm.push(new SettingsState(Enums.SettingsBackground.CITY, Enums.GameType.SINGLEPLAYER));
             }
         }

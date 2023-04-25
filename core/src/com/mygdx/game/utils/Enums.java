@@ -16,4 +16,10 @@ public class Enums {
         AUDIO,
         SFX
     }
+
+    public enum Trophy {
+        GOLD,
+        SILVER,
+        BRONZE
+    }
 }
