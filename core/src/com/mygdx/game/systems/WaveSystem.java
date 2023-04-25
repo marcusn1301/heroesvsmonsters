@@ -65,8 +65,11 @@ public class WaveSystem extends IteratingSystem {
             wave.setActive(true);
             wave.setWaveNumber(wave.getWaveNumber() + 1);
             wave.setNumberOfMonsters((wave.getWaveNumber() + 1) * 2 + 1);
-            wave.setMonstersToKill((wave.getWaveNumber() + 1) * 2 + 1);
+            wave.setMonstersToKill((wave.getWaveNumber() + 1)* 2 + 1);
             wave.setMonstersKilled(0);
+            if (wave.getWaveNumber() > 2) {
+                wave.setSpawnTimer(0.2f);
+            }
             wave.setSpawnTimer(wave.getSpawnTimer()/2);
         }
 

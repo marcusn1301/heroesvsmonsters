@@ -16,7 +16,7 @@ public class MoneySystem {
 
     public static MoneySystem getInstance() {
         if (instance == null) {
-            instance = new MoneySystem(1200); // You can set your initial money value here
+            instance = new MoneySystem(1000); // You can set your initial money value here
         }
         return instance;
     }
