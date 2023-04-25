@@ -32,6 +32,7 @@ import com.mygdx.game.FireBaseInterface;
 import com.mygdx.game.FirebaseManager;
 import com.mygdx.game.MoneyObserver;
 import com.mygdx.game.components.WaveComponent;
+import com.mygdx.game.states.GameOverState;
 import com.mygdx.game.systems.MoneySystem;
 import com.mygdx.game.components.AttackComponent;
 import com.mygdx.game.components.HeroComponent;
@@ -80,7 +81,7 @@ public class Board extends Actor implements MoneyObserver {
     private HeroType chosenHeroType;
     private MonsterType chosenMonsterType;
     private Integer chosenHeroPrice = 0;
-    private final InputMultiplexer multiplexer;
+    private InputMultiplexer multiplexer;
     private final int gridWidth, gridHeight, startX, startY;
     private boolean gridDrawn;
     private boolean isInputProcessorAdded;
@@ -179,9 +180,15 @@ public class Board extends Actor implements MoneyObserver {
         //createLeftTable();
         drawLaneDividers();
         drawPaneBackgrounds();
-        if (!isInputProcessorAdded) {
+        if (!isInputProcessorAdded && !GameOverState.getInstance().isGameOverBoolean()) {
             setupInputProcessor();
             isInputProcessorAdded = true;
+        }
+        if (isInputProcessorAdded && GameOverState.getInstance().isGameOverBoolean()) {
+            Gdx.input.setInputProcessor(null);
+            System.out.println("Removed input processor");
+
+
         }
 
         //createRightTable();

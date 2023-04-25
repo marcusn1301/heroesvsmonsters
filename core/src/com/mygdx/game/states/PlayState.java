@@ -3,6 +3,7 @@ package com.mygdx.game.states;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -116,6 +117,7 @@ public class PlayState extends State{
 
         if (!GameOverState.getInstance().isGameOverBoolean()) {
             engine.update(dt);
+            System.out.println("engine running");
         } else {
             gameOver = true;
             try {
@@ -127,40 +129,9 @@ public class PlayState extends State{
         }
     }
 
-    /*
-    public void calculateMoney() {
-        float iconSize = Gdx.graphics.getWidth() / 30;
-        BitmapFont counterFont = new BitmapFont();
-        counterFont.getData().setScale(4);
-        // First counter
-        counterText1 = new TextButton(String.valueOf(moneySystem.getMoney()), new TextButton.TextButtonStyle(null, null, null, counterFont));
-        counterText1.pad(2);
-        counterText1.setWidth(iconSize);
-        counterText1.setHeight(iconSize / 2);
-        board.getRightTable().add(counterText1);
-
-        Texture counterIconTexture1 = new Texture("images/coin2.png");
-        Image counterIcon1 = new Image(counterIconTexture1);
-        board.getRightTable().add(counterIcon1).size(iconSize, iconSize).pad(5);
-        board.getRightTable().row();
-
-        // Second counter
-        TextButton counterText2 = new TextButton("2000", new TextButton.TextButtonStyle(null, null, null, counterFont));
-        counterText2.pad(2);
-        counterText2.setWidth(iconSize);
-        counterText2.setHeight(iconSize / 2);
-        board.getRightTable().add(counterText2);
-
-        Texture counterIconTexture2 = new Texture("images/coin2.png");
-        Image counterIcon2 = new Image(counterIconTexture2);
-        board.getRightTable().add(counterIcon2).size(iconSize, iconSize).pad(5);
-        board.getRightTable().row();
-    }
-     */
-
     public void renderGameOver(SpriteBatch batch) {
+        GameOverState.getInstance().handleInput();
         GameOverState.getInstance().render(batch);
-        //Make yes and no button able to access
     }
 
     public void renderHeroes(SpriteBatch batch) {
@@ -225,7 +196,6 @@ public class PlayState extends State{
         if (gameOver) {
             renderGameOver(batch);
         }
-
         batch.draw(menuButton.getImg(), menuButton.getPosition().x - menuButton.getWidth() / 2f,10,  menuButton.getWidth(), menuButton.getHeight());
         batch.end();
 
@@ -251,6 +221,5 @@ public class PlayState extends State{
         font.dispose();
         stage.dispose();
         shapeRenderer.dispose();
-        //TODO dispose displayHeroes
     }
 }

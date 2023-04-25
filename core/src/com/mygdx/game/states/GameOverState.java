@@ -15,7 +15,6 @@ import com.mygdx.game.utils.Enums;
 public class GameOverState extends State{
     private final GameStateManager gsm;
     private boolean gameOverBoolean;
-    private boolean gameWonBoolean;
     private final Texture gameOver;
     private final Texture playAgain;
     private final RectangleButton yes;
@@ -39,7 +38,7 @@ public class GameOverState extends State{
         playAgainX = (screenWidth - playAgain.getWidth()) / 2;
         playAgainY = (screenHeight / 2) - (playAgain.getHeight());
 
-        float yesX = (screenWidth / 2) - yesTexture.getWidth() - 20;
+        float yesX = (screenWidth / 2) - yesTexture.getWidth() - 40;
         float yesY = (int) playAgainY - playAgain.getHeight() * 2;
         yes = new RectangleButton(1F, (int) yesX, (int) yesY, "images/Yes.png");
 
@@ -47,7 +46,6 @@ public class GameOverState extends State{
         float noY = (int) (playAgainY - playAgain.getHeight() * 2);
         no = new RectangleButton(1F, (int) noX, (int) noY, "images/No.png");
         batch = new SpriteBatch();
-
     }
 
     // Static method to get the singleton instance
@@ -65,8 +63,6 @@ public class GameOverState extends State{
     public void setGameOverBoolean(boolean gameOverBoolean) {
         this.gameOverBoolean = gameOverBoolean;
     }
-
-
 
     @Override
     public void update(float dt) {
@@ -97,8 +93,11 @@ public class GameOverState extends State{
             int y = Gdx.graphics.getHeight() - Gdx.input.getY();
             if (yes.getBounds().contains(x, y)) {
                 gsm.push(new PlayState());
+                System.out.println("Clicked on yes");
+                setGameOverBoolean(false);
             } else if (no.getBounds().contains(x,y)) {
                 gsm.push(new GameMenuState());
+                setGameOverBoolean(false);
             }
         }
     }
