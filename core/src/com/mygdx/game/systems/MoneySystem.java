@@ -10,7 +10,7 @@ public class MoneySystem {
     private int money;
     private MoneyChangeListener moneyChangeListener;
 
-    public MoneySystem(int initialMoney) {
+    private MoneySystem(int initialMoney) {
         this.money = initialMoney;
     }
 

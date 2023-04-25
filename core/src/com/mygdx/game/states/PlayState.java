@@ -70,7 +70,6 @@ public class PlayState extends State{
     private void initialize() {
         initializeGameEngine();
         batch = new SpriteBatch();
-        moneySystem = new MoneySystem(4000);
         initFontStageAndRenderer();
         createBoard();
         soundManager.playSequence();
