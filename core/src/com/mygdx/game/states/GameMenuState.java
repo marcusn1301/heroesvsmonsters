@@ -70,8 +70,10 @@ public class GameMenuState extends State {
             int y = Gdx.graphics.getHeight() - Gdx.input.getY();
             if (singleplayerButton.getBounds().contains(x, y)) {
                 soundManager.playSound("menuNavigate");
+                System.out.println("Selected singleplayer");
                 gsm.push(new IntroCutsceneState(Enums.GameType.SINGLEPLAYER));
             } else if (multiplayerButton.getBounds().contains(x,y)) {
+                System.out.println("Selected multiplayer");
                 soundManager.playSound("menuNavigate");
                 gsm.push(new IntroCutsceneState(Enums.GameType.MULTIPLAYER));
             } else if (settingsButton.getBounds().contains(x,y)) {

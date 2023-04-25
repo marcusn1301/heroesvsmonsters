@@ -20,7 +20,6 @@ import java.util.Random;
 public class WaveSystem extends IteratingSystem {
     private ComponentMapper<WaveComponent> waveMapper;
     private MonsterType[] monsterTypes;
-    private Enums.GameType playerMode;
     private Engine engine;
     private Vector2 monsterPos;
     private int gameWidth;
@@ -28,19 +27,19 @@ public class WaveSystem extends IteratingSystem {
     private int cellHeight;
     private int rowCount;
     private ArrayList<Integer> rows;
+    private boolean isSinglePlayer;
 
-    public WaveSystem(Engine engine, Enums.GameType playerMode) {
+    public WaveSystem(Engine engine, boolean isSinglePlayer) {
         super(Family.all(WaveComponent.class).get());
         waveMapper = ComponentMapper.getFor(WaveComponent.class);
         this.engine = engine;
         initializeWaveSystem();
         monsterTypes = MonsterType.values();
         System.out.println("Wave 1 is starting in 5 seconds");
-        this.playerMode = playerMode;
+        this.isSinglePlayer = isSinglePlayer;
         monsterTypes = MonsterType.values();
-        monsterPos = new Vector2(gameWidth - gameWidth/8f, 0);
-        gameWidth = Gdx.graphics.getWidth();
-        gameHeight = Gdx.graphics.getHeight();
+        gameWidth = Gdx.graphics.getWidth() - Gdx.graphics.getWidth()/6;
+        gameHeight = Gdx.graphics.getHeight()*2;
         rowCount = 6;
         cellHeight = gameHeight / rowCount;
         rows = new ArrayList<Integer>();
@@ -59,6 +58,7 @@ public class WaveSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         WaveComponent wave = waveMapper.get(entity);
         wave.setScore(wave.getScore() + 1);
+        wave.setTimeSinceLastSpawn(wave.getTimeSinceLastSpawn() + deltaTime);
 
         //Begin new wave 5 seconds after all monsters are gone
         if (wave.getWaveTimeElapsed() >= 5f && !wave.isActive()) {
@@ -78,8 +78,12 @@ public class WaveSystem extends IteratingSystem {
             wave.setWaveTimeElapsed(wave.getWaveTimeElapsed() + deltaTime);
         }
 
-        if (this.playerMode == Enums.GameType.SINGLEPLAYER) {
-            spawnMonster();
+        if (this.isSinglePlayer && wave.getNumberOfMonsters() > 0) {
+            if (wave.getTimeSinceLastSpawn() > 5f) {
+                wave.setTimeSinceLastSpawn(0);
+                spawnMonster();
+                wave.setNumberOfMonsters(wave.getNumberOfMonsters() - 1);
+            }
         }
 
     }
@@ -87,7 +91,10 @@ public class WaveSystem extends IteratingSystem {
         private void spawnMonster() {
             int monsterType = random.nextInt(monsterTypes.length);
             int randomRow = random.nextInt(rows.size());
-            Entity monster = MonsterFactory.createMonster(monsterTypes[monsterType], monsterPos.set(monsterPos.x, randomRow));
+            System.out.println("row: " + rows.get(randomRow));
+            monsterPos = new Vector2(gameWidth, rows.get(randomRow));
+            Entity monster = MonsterFactory.createMonster(monsterTypes[monsterType], monsterPos);
+            engine.addEntity(monster);
         }
 
         private void initRows() {
