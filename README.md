@@ -27,6 +27,6 @@ Heroes vs Monsters is a 2D game inspired by Plants vs Zombies, built with LibGDX
 ## Dependencies
 - [LibGDX](https://libgdx.badlogicgames.com/) - Game development framework
 - [FireBase Interface](https://firebase.google.com/) - Backend for data storage and real-time updates
-- Ashely ECS
+- [Ashely](https://github.com/libgdx/ashley) - Entity framework
 
 
